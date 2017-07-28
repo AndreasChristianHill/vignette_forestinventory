@@ -1,0 +1,93 @@
+% !Rnw root = JStatSoft_forestinventory_master.Rnw
+
+\section[Small Area Estimators and their Application in R]{Small Area Estimators and their Application}
+\label{sec:saeest_and_appl}
+
+
+% ---------------------------------------------------------------------------- %
+\subsection{Double Sampling (Two-Phase) Estimators}
+
+% - Merge Mathematical Background and Application
+% - Quite Likely, we cannot go through all estimators ...
+%   Idea: --> maybe only for non-exhaustive case, and then demonstrate with one example how the exhaustive can be applied in general
+%
+% - 
+%
+% - We could give the function call for all cases, but we should only show the output
+%   for demonstrating particular things
+
+% Concentrate on subset of estimators to go through the "tree": --> non-exhaustive case
+% 1) nex, simple sampling, pseudo extended sae estimator
+% 2) nex, simple sampling, pseudo sae estimator
+% 3) nex, simple sampling, pseudo synthetic sae estimator --> give reason when to use (if n2G < 5, because ...)
+% 
+% 4) for the cluster case, show: nex, simple sampling, pseudo extended sae estimator
+% 5) for the exhaustive case, show: ex, simple sampling, pseudo extended sae estimator
+%    (mention that in cluster case, the cluster means shall be used)
+% always use bw-adjustment (?)
+%
+
+
+\subsection{Triple Sampling (Three-Phase) Estimators}
+
+
+
+
+
+
+
+
+
+
+
+
+
+% The psynth estimator:
+% 
+% \begin{equation}\label{pseudosynth1}
+% \hat{Y}_{G,psynth}=\hat{\bar{\pmb{Z}}}_{1,G}^t\hat{\pmb{\beta}}_{s_2}
+% =\frac{1}{n_{1,G}}\sum_{x\in{s_{1,G}}}\hat{Y}(x)
+% \end{equation}
+% 
+% \begin{equation}\label{estvarpseudosynth1}
+% \hat{\var}(\hat{Y}_{G,psynth}): =
+% \hat{\bar{\pmb{Z}}}_{1,G}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}\hat{\bar{\pmb{Z}}}_{1,G}
+% + \hat{\pmb{\beta}}_{s_2}^t\hat{\Sigma}_{\hat{\bar{\pmb{Z}}}_{1,G}}\hat{\pmb{\beta}}_{s_2}
+% \end{equation}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

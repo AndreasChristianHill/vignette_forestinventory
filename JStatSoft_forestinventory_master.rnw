@@ -1,0 +1,253 @@
+
+\documentclass[article]{jss}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% declarations for jss.cls %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% almost as usual
+\author{Andreas Hill \\ETH Z\"urich \And 
+        Alexander Massey}
+\title{The \proglang{R} Package \pkg{forestinventory}: Design-Based Global and Small Area Estimations for Multiphase Forest Inventories}
+
+%% for pretty printing and a nice hypersummary also set:
+\Plainauthor{Andreas Hill, Alexander Massey} %% comma-separated
+\Plaintitle{A Capitalized Title: Something about a Package foo} %% without formatting
+\Shorttitle{\pkg{forestinventory}: Design-Based Global and Small Area Estimations} %% a short title (if necessary)
+
+%% an abstract and keywords
+\Abstract{
+Forest inventories provide reliable and evidence-based information to assess the state and development of forests over time. The information is collected at discrete sample locations distributed over the forest area by means of statistical sampling methods. This sample is then used to provide estimates of a target variable for a given spatial unit. Due to the high costs of the terrestrial campaigns, there is a need for alternative methods that can provide a) the same estimation precision at lower costs or b) higher estimation precision at identical costs. With respect to this objective, the application of double- and triple-sampling regression estimators (so-called \textit{multiphase} forest inventory methods) has proved to be efficient. The core concept of multiphase methods is to combine the terrestrial sample with a much larger sample of target variable \textit{predictions} based on \textit{auxiliary information} that is available in high quantity and low costs. Whereas these methods have been successfully applied in practice, the availability of repective open-source software has been rare up to non-existent. The \proglang{R} package \pkg{forestinventory} provides a comprehensive set of global and small area regression estimators for multiphase forest inventories under simple and cluster sampling. The implemented methods have been demonstrated in various scientific studies covering small to large scale forest inventories, and can be used for double- and triple sampling for stratification, regression and regression within strata. This article provides a bridge from the mathematical summary of the estimators to their implementation and application in \proglang{R}.}
+
+\Keywords{forest inventory, design-based, infinite population approach, two and three phase sampling, regression estimators, small area estimation}
+\Plainkeywords{forest inventory, design-based, infinite population approach, two and three phase sampling, regression estimators, small area estimation}
+
+%% publication information
+%% NOTE: Typically, this can be left commented and will be filled out by the technical editor
+%% \Volume{50}
+%% \Issue{9}
+%% \Month{June}
+%% \Year{2012}
+%% \Submitdate{2012-06-04}
+%% \Acceptdate{2012-06-04}
+
+%% The address of (at least) one author should be given
+%% in the following format:
+\Address{
+  Andreas Hill\\
+  Department of Environmental Systems Science\\
+  Chair of Landuse Engineering\\
+  ETH Z\"urich\\
+  Universit\"atstrasse 16\\
+  8092 Z\"urich, Switzerland\\
+  E-mail: \email{andreas.hill@usys.ethz.ch}\\
+  Telephone: +41/44/632 32 36\\
+  URL: \url{http://www.lue.ethz.ch/people/hilla}
+  
+  Alexander Massey\\
+  Department of Environmental Systems Science\\
+  Chair of Landuse Engineering\\
+  ETH Z\"urich\\
+  Universit\"atstrasse 16\\
+  8092 Z\"urich, Switzerland\\
+  E-mail: \email{afmass@gmail.com}\\}
+}
+
+
+%% for those who use Sweave please include the following line (with % symbols):
+
+%% need no \usepackage{Sweave.sty}
+
+%% end of declarations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%------------------------------------------------------------------------------------------------%
+% -------------------------------------- Tex Settings ------------------------------------------ %
+
+% used packages
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{mathptmx} 
+\usepackage{latexsym}
+\usepackage{a4}
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{flafter}
+\usepackage{bm}
+\usepackage{setspace}
+\usepackage{lineno}
+\usepackage{natbib}
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ left=28mm,
+ bottom=28mm
+ }
+\usepackage[labelfont=bf]{caption}
+\usepackage[font=footnotesize]{caption}
+\usepackage[font=footnotesize]{subcaption}
+
+% new commands
+\newcommand{\bwi}{BWI3}
+\newcommand{\LF}{\ensuremath{\lambda(F)}}
+\newcommand{\LFC}{\ensuremath{\lambda^2(F)}}
+\newcommand{\EX}{\mathbb{E}}
+\newcommand{\PR}{\mathbb{P}}
+\newcommand{\var}{\mathbb{V}}
+\newcommand{\COV}{\mathbb{COV}}
+\newcommand{\MAV}{\mathbb{MAV}}
+\newcommand{\MRAV}{\mathbb{MRAV}}
+\newcommand{\POP}{\mathcal{P}}
+\newcommand{\SAMP}{\mathcal{S}}
+\newcommand{\RE}{\mathbb{RE}}
+\newcommand{\PLAN}{\Re^2}
+\newcommand{\SUR}{\mathbb{S}}
+\newcommand{\ING}{\mathbb{I}}
+\newcommand{\DEP}{\mathbb{D}}
+
+%\setlength{\parindent}{1em}
+
+%------------------------------------------------------------------------------------------------%
+% -------------------------------------- Main Document------------------------------------------ %
+
+\begin{document}
+
+
+%------------------------------------------------------------------------------------------------%
+% -------------------------------------- R Settings -------------------------------------------- %
+
+
+% set global options for R-output:
+<<echo=FALSE>>=
+options(prompt = "R> ", continue = " + ")
+@
+
+
+%------------------------------------------------------------------------------------------------%
+% ---------------------------------- Introduction ---------------------------------------------- %
+
+\SweaveInput{rnw/Introduction.Rnw}
+
+
+% NOTES:
+% --> take parts of the old introduction version of the diploma-thesis!
+
+% NOTES:
+% 1st section: - general introduction to forest inventories --> model-'supported' inventories --> 
+%                model-dependent vs. design-based
+% 2nd section: + (more R-specific): what's already there? --> mention sampling / inventory packages
+%                 and seperate them from our package (focus, applied areas, approach)
+%              + important reasoning for our package: we are the first that implemented and provide 
+%                a large range of design-based estimators
+% 3rd section: what is the motivation of the package: - to make the broad range of Mandallaz-estimators
+%              available to a large user community, to facilitate their application in science as well as 
+%              operational forest management (why is this important? --> because the methods have demonstrate
+%              the potential of considerably increasing the estimation precision)
+% 4th section: whats the purpose of the paper? --> the objective of the paper is to 
+%             a) establish the link between the mathematical description of the estimators (given in Mandallaz ...) 
+%                and their implementation in our package
+%             b) illustrate the application of the various estimators by the respsective functions in our package 
+%                to real-world inventory scenarios
+%             c) highlight 'special cases' , i.e. rare inventory scenarios, and demonstrate how the package-functions
+%                deal with such situations (error-checking functions and data-adjustments)
+
+% Idee: Reine Theory und Applikation NICHT stark trennen --> Jeweils für jeden Schätzer die nötigsten Formeln geben 
+%       (Punktschätzung und g-weight und external variance, wenn nötig noch zusätzliche Infos wie Dummy Variable)
+%      WICHITG: Davor muss das generelle Konzept kommen (Entscheidungsbaum und konzeptionelle Erklärung (z.B.: was heisst
+%               "exhaustive" usw.) --> auf der Graphik dann ansetzen
+%
+% evtl auch noch die Art von Graphik für den Aufbau einer 2- und 3-phaisgen Inventurs (wie in den Präsentationen)
+
+
+%------------------------------------------------------------------------------------------------%
+% --------------------------- Structure of the Package ----------------------------------------- %
+
+\SweaveInput{rnw/Main structure and modules of the Package.Rnw}
+
+
+% NOTES:
+% - Pyramide / decision tree Graphik
+% - Confidence Interval calculation
+% - Analysis of estimations results. a) Visualization functions; b) Gain-analysis
+%
+% --> explain each point briefly without to much (mathematical) detail
+
+
+
+%------------------------------------------------------------------------------------------------%
+% ---------------------------------- Estimators and their Application -------------------------- %
+
+%\SweaveInput{rnw/One-Phase Estimators and their Application.Rnw}
+
+\SweaveInput{rnw/Global Estimators and their Application in R (2).Rnw}
+
+\SweaveInput{rnw/SAE Estimators and their Application in R.Rnw}
+
+% NOTES:
+% 1st subsection: Global 2 and 3-phase estimators for simple and cluster sampling
+% 2nd subsection: 2- and 3-phase Small Area estiamtors for simple and cluster sampling
+%
+
+
+
+%------------------------------------------------------------------------------------------------%
+% ---------------------------------- Special Cases and Scenarios ------------------------------- %
+
+
+% NOTES:
+% - Error handling and adjustments: Sampling designs not nested
+% - Error warning: unbalanced designs and singularities due to missing factor levels in s2-sample (2-phase)
+%                   or s2 or/and s1 sample in 3-phase case
+% - Error warning: cluster not completely within one small area (--> g-weight variance estimator) +  recommendation
+
+
+
+%------------------------------------------------------------------------------------------------%
+% ---------------------------------- Calculation of Confidence Intervals ----------------------- %
+
+
+% NOTES:
+% - demonstrate calculation of confidence intervals (give the formulas)
+
+
+
+%------------------------------------------------------------------------------------------------%
+% ----------------------------- Visualization and Analysis of Estimation Results --------------- %
+
+% NOTES:
+% - demonstrate visualization of errors and point-ests + CIs
+% - demonstrate a) releff-calculation and gain-analysis
+
+
+
+%------------------------------------------------------------------------------------------------%
+% ---------------------------------------- Literature ------------------------------------------ %
+
+
+\bibliography{bib/literature}\newpage\cleardoublepage
+
+
+% -------------------------------------------------------------------------- %
+\end{document}
+
+
+
+
+Hallo. Here comes a first try:
+
+<<>>=
+library(forestinventory)
+op <- onephase(formula = tvol~1 ,data = grisons,
+              phase_id =list(phase.col = "phase_id_2p",terrgrid.id = 2))
+summary(op)
+@
+
+This was the result
+
+
+
+
+
+

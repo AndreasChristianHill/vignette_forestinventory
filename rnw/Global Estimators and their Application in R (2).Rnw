@@ -1,0 +1,166 @@
+% !Rnw root = JStatSoft_forestinventory_master.Rnw
+
+\section[Global Estimators and their Application in R]{Global Estimators and their Application}
+\label{sec:globest_and_appl}
+
+
+% ---------------------------------------------------------------------------- %
+\subsection{Double Sampling (Two-Phase) Estimators}
+
+% Note: As the mathematical form of estimators is still quite simple and short, we can here
+%       focus on presenting and explaining important 'components' of the estimators, such as Z, C, ...)
+% 
+% \subsection{Mathematical Background}
+% 
+% Here, we give the \textbf{mathematical background} of:
+% \begin{itemize}
+%   \item the classical two-phase estimator, including:
+%     \item the external and g-weight variance. Explain the differences and pros for using the g-weight version
+%     \item the auxiliary components (Z) and covvar(Z) as well as their use in the point and variance estimator
+%   \item the boundary weight adjustment (mathematically: weighted means of Z) --> our extension to the already published stuff
+%   \item ...
+% \end{itemize}
+% 
+% 
+% 
+% \subsubsection{Application}
+% 
+% Here, we give the \textbf{application} examples:
+% \begin{itemize}
+%   \item example for non-exhaustive case: use grison dataset
+%     \item with boundary adjustments, just mention that this is optional and can be left out, in which case the simple means of Z are used
+%   \item example for exhaustive case: use cluster set
+% \end{itemize}
+
+\subsubsection{Mathematical Background}
+
+Mention:
+\begin{itemize}
+  \item What is the difference between model-dependent and design-based? (bias-correction, dont have to believe in model predictions.
+  \item explain the structure of the package (graphic) and state that we will only concentrate on specific cases ...
+\end{itemize}
+
+
+
+
+The regression coefficients of the OLS regression model are found by solving the sample-based normal equation. In case of \textbf{simple sampling}, the vector of regression coefficients are derived as
+
+\begin{equation}\label{normequ_simple}
+  \hat{\pmb{\beta}}_{s_2}&=& \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}(x)\pmb{Z}^t(x) \Big)^{-1} \Big(\frac{1}{n_2}\sum_{x\in{s_2}}Y(x)\pmb{Z}(x)\Big)
+\end{equation}
+
+The design-based variance-covariance matrix of the regression coefficients is then calculated as
+
+\begin{equation}\label{eq:estvarmatrix}
+  \hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}:=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}(x)\pmb{Z}^t(x) \Big)^{-1}
+  \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}^2(x)\pmb{Z}(x)\pmb{Z}(x)^t\Big)
+  \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}(x)\pmb{Z}^t(x) \Big)^{-1} 
+\end{equation}
+
+with the empirical residuals, i.e. the regression model residuals, available at all sample location $x \in s_2$ being
+\begin{equation}\label{eq:resids}
+  \hat{R}(x)=Y(x)-\hat{Y}(x)
+\end{equation}
+
+The \textbf{point estimate} for simpe sampling is calculated according to equation \ref{eq:pointest_simple}. Note that this form results under particular case where the regression coefficients are derived using the data from the current inventory (\textbf{internal} regression model). In this case, the mean of the residuals $\frac{1}{n_2}\sum_{x\in{s_2}}R(x)$ is zero by definition and does not have to be added as is necessary for \textbf{external} models. Since in the package \pkg{forestinventory} only allows for internal models, the equation simplifies to
+
+\begin{equation}\label{eq:pointest_simple}
+\hat{Y}_{reg}=\hat{\bar{\pmb{Z}}}^t\hat{\pmb{\beta}}_{s_2}
+\end{equation}
+
+The estimation precision of the point estimate is specified by the estimated \textbf{design-based variance} as given in equation \ref{eq:gw_var_simple}. Note that this is mathematically identical to the \textbf{g-weight} formulation of the design-based variance given in \citep{mandallaz2016}. The package \pkg{forestinventory} additionally provides the \textbf{external} variance (equation \ref{eq:varexternalsimple}). Note that the external variance neglects the uncertainty in the regression coefficients and is thus usually slightly lower than the design-based variance, where this uncertainty is considered by the variance-covariance matrix of the regression coefficients.
+
+\begin{equation}\label{eq:gw_var_simple}
+\hat{\var}(\hat{Y}_{reg})=\hat{\bar{\pmb{Z}}}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}\hat{\bar{\pmb{Z}}}
+\end{equation}
+
+
+\begin{equation}\label{eq:varexternalsimple}
+\hat{\var}(\hat{Y}_{reg})=
+\frac{1}{n_1}\frac{1}{n_2-1}\sum_{x\in{s_2}}(Y(x)-\bar{Y}_2)^2+
+(1-\frac{n_2}{n_1})\frac{1}{n_2}\frac{1}{n_2-1}\sum_{x\in{s_2}}(R(x)-\bar{R})^2
+\end{equation}
+
+
+
+
+\subsubsection{Application}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Triple Sampling (Three-Phase) Estimators}
+
+
+\subsubsection{Mathematical Background}
+
+\subsubsection{Application}
+
+
+
+% The psynth estimator:
+% 
+% \begin{equation}\label{pseudosynth1}
+% \hat{Y}_{G,psynth}=\hat{\bar{\pmb{Z}}}_{1,G}^t\hat{\pmb{\beta}}_{s_2}
+% =\frac{1}{n_{1,G}}\sum_{x\in{s_{1,G}}}\hat{Y}(x)
+% \end{equation}
+% 
+% \begin{equation}\label{estvarpseudosynth1}
+% \hat{\var}(\hat{Y}_{G,psynth}): =
+% \hat{\bar{\pmb{Z}}}_{1,G}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}\hat{\bar{\pmb{Z}}}_{1,G}
+% + \hat{\pmb{\beta}}_{s_2}^t\hat{\Sigma}_{\hat{\bar{\pmb{Z}}}_{1,G}}\hat{\pmb{\beta}}_{s_2}
+% \end{equation}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

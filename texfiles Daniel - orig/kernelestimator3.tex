@@ -1,0 +1,1242 @@
+\documentclass[a4paper,12pt,leqno, titlepage]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{a4}
+\usepackage{graphicx}
+\usepackage{flafter}
+\usepackage{bm}
+\usepackage{setspace}
+\usepackage{lineno}
+\usepackage{natbib}
+\usepackage[margin=0.5in]{geometry}
+\bibliographystyle{mystyle2}
+\newcommand{\LF}{\ensuremath{\lambda(F)}}
+\newcommand{\LFC}{\ensuremath{\lambda^2(F)}}
+\newcommand{\EX}{\mathbb{E}}
+\newcommand{\PR}{\mathbb{P}}
+\newcommand{\VAR}{\mathbb{V}}
+\newcommand{\COV}{\mathbb{COV}}
+\newcommand{\MAV}{\mathbb{MAV}}
+\newcommand{\MRAV}{\mathbb{MRAV}}
+\newcommand{\POP}{\mathcal{P}}
+\newcommand{\SAMP}{\mathcal{S}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\PLAN}{\R^2}
+\newcommand{\SUR}{\mathbb{S}}
+\newcommand{\ING}{\mathbb{I}}
+\newcommand{\DEP}{\mathbb{D}}
+\setlength{\topmargin}{0cm}
+\setlength{\headheight}{3mm}
+\setlength{\headsep}{1cm}
+\setlength{\topskip}{0cm}
+\setlength{\textwidth}{16cm}
+\setlength{\textheight}{22cm}
+\setlength{\oddsidemargin}{0cm}
+\makeatletter
+\def\tagform@#1{\maketag@@@{[\ignorespaces#1\unskip\@@italiccorr]}}
+\makeatother
+
+
+
+
+\begin{document}
+\pagestyle{empty}
+\begin{center}
+\large
+$ $\\[5cm]
+\textbf{Regression and non-parametric estimators for two-phase forest inventories in the design-based Monte-Carlo approach}\\[2cm]
+\normalsize
+Daniel Mandallaz and Alexander Massey \\[2cm]
+Chair of Land Use Engineering \\[1cm]
+Department of Environmental Systems Science \\[1cm]
+ETH Zurich\\[1cm]
+April 2015
+\end{center}
+\newpage
+
+
+
+
+
+\nolinenumbers
+\begin{abstract}
+This technical report adapts rank based nearest neighbor methods to classical kernel estimators using neighborhoods defined by a metric in the feature space resting upon the predictions obtained from a linear model. The approach is purely design-based. The main concepts of kernel-based density and regression estimators are summarized and reformulated in the design-based Monte-Carlo approach to forest inventory. New estimators are proposed which are based on the conditional expectation of the response variable given its prediction and are compared to the classical two-phase regression estimator and to two-phase k-nearest neighbor (k-NN) estimators, using either a multidimensional metric or a one-dimensional metric based on the Euclidian distance between the predictions. The results suggest that the commonly used analytical external variance formula may systematically underestimate the true variance for a variety of nonparametric kernel based estimators including kNN, but is still adequate for the classical regression estimator. Although using a bootstrap variance can help to correct this underestimation it was also found that the bootstrap variance estimates can be unstable if the bandwidth or the number of neighbors are recalculated in each bootstrap sample. These findings suggest that if the model captures the main features of the underlying process, which is clearly the case for timber volume estimates based on canopy characteristics obtained from LiDAR measurements, then it is advisable to use the classical regression estimator because it performs at least as well as the other techniques and is by far the simplest to implement.
+\end{abstract}
+\clearpage
+\pagestyle{plain}
+\pagenumbering{arabic}
+\section{Introduction}\label{intro}
+\pagenumbering{arabic} \setcounter{page}{1}
+In this note we use the Monte-Carlo approach (infinite population model), as described in \cite{mandallaz} (Chapter 5). We consider the forested area $F$ of surface area $\lambda(F)$ for which the sum $Y_F=\sum_{i=1}^N Y_i$ of the response variable $Y_i$ for a well defined population of $N$ trees, e.g. the total volume of the $N$ trees, and the spatial mean $\bar{Y}_F=\frac{1}{\lambda(F)}\sum_{i=1}^N Y_i$ must be estimated.
+
+\section{Two-phase sampling}\label{twophase}
+We have a sample $s_1$ of $n_1$ points independently and uniformly distributed in $F$ out of which $n_2$ are selected by simple random sampling without replacement. At all points $x\in{s_{1}}$ we have the vector of auxiliary information $\pmb{Z}(x)\in{\R^p}$ and at all terrestrial points $x\in{s_{2}}$  we have the local density $Y(x)$ which is essentially a Horwitz-Thompson estimator at point $x\in{\R^2}$. In the Monte-Carlo approach we have the fundamental relationship
+   \begin{equation}\label{montecarlo}
+   \frac{1}{\lambda(F)}\int_F Y(x)dx=\frac{1}{\lambda(F)}\sum_{i=1}^NY_i
+   \end{equation}
+    We consider the linear model
+
+   \begin{equation}\label{linearmodel1}
+ Y(x)=\pmb{Z}^t(x)\pmb{\beta}+ R(x)
+ \end{equation}
+ In the \textbf{model-dependent approach} the point $x$ is fixed and $R(x)$ is a random variable with zero mean and a given covariance structure (in most instances very simple and not really adapted to the spatial nature of the problem in contrast to geostatistical techniques). In the \textbf{design-based approach} $Y(x)$, $\pmb{Z}(x)$ and $R(x)$ are random variables  because $x$ is random. According to the terminology of \cite{sarndal} our approach is \textbf{model-assisted}, i.e. we use models to reduce the variance but we do not assume that they are correct. The inference is design-based and valid because it rests upon the randomization principle. Some authors call model-based the model-dependent approach, which is in our opinion a source of confusion because the inference is valid only if the model is true. Here, the true regression coefficient $\pmb{\beta}$ is by definition the theoretical least squares estimate minimizing
+ $$\int_F R^2(x)dx=\int_F(Y(x)-\pmb{Z}^t(x)\pmb{\beta})^2 dx$$
+ It satisfies the normal equation
+ \begin{equation}\label{normaleq1}
+ \Big(\int_F\pmb{Z}(x)\pmb{Z}^t(x)dx\Big)\pmb{\beta}=\int_F Y(x)\pmb{Z}(x)dx
+ \end{equation}
+ and the orthogonality relationship
+ \begin{equation}\label{linearmodel2}
+ \int_F R(x)\pmb{Z}(x)dx=\pmb{0}
+ \end{equation}
+  We shall assume that $\pmb{Z}(x)$ contains the intercept term $1$, or, more generally, that the intercept can be expressed as a linear combination of the components of $\pmb{Z}(x)$, which then ensures that the mean residual is zero, i.e. $\int_F R(x)dx=0$. To simplify the notation we define the following
+  \begin{eqnarray}
+  \pmb{U}(x)&:=&Y(x)\pmb{Z}(x) \nonumber \\
+  \pmb{A}_{s_2}&:=&\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}(x)\pmb{Z}^t(x)\nonumber \\
+  \pmb{U}_{s_2}&:=&\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{U}(x)
+  \end{eqnarray}
+ The theoretical and empirical regression vector parameters can then be written as
+ \begin{eqnarray}\label{linearmodel3}
+ \pmb{\beta}&:=&\pmb{A}^{-1}\pmb{U} \nonumber \\
+ \hat{\pmb{\beta}}_{s_2}&:=&\pmb{A}_{s_2}^{-1}\pmb{U}_{s_2}
+ \end{eqnarray}
+ where we have set $\pmb{A}=\EX_{x\in{F}}\pmb{Z}(x)\pmb{Z}^t(x)$ and $\pmb{U}=\EX_{x\in{F}}\pmb{Z}(x)Y(x)$.
+$\hat{\pmb{\beta}}_{s_2}$ is asymptotically design-unbiased for $\pmb{\beta}$. \\
+ The empirical predictions and residuals are $\hat{Y}(x)=\pmb{Z}^t(x)\hat{\pmb{\beta}}_{s_2}$ and $\hat{R}(x)=Y(x)-\hat{Y}(x)$. The asymptotic design-based variance-covariance matrix of $\hat{\pmb{\beta}}_{s_2}$ is
+ \begin{equation}\label{estvarmatrix}
+\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}:=\pmb{A}_{s_2}^{-1}
+\Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}^2(x)\pmb{Z}(x)\pmb{Z}(x)^t\Big)\pmb{A}_{s_2}^{-1}
+\end{equation}
+and the two-phase classical regression estimator is
+  \begin{eqnarray}\label{regressionestimators}
+\hat{Y}_{reg}&=&\frac{1}{n_{1}}\sum_{x\in{s_{1}}}\hat{Y}(x)+\frac{1}{n_{2}}
+\sum_{x\in{s_{2}}}\hat{R}(x)\nonumber
+\end{eqnarray}
+\noindent
+In the following we shall work under the external model assumption, i.e. we neglect the error in $\hat{\pmb{\beta}}_{s_2}$ and set formally $\hat{\pmb{\beta}}_{s_2}\equiv \pmb{\beta}$, which is asymptotically equivalent to the variance obtained via the design-based variance covariance matrix (\cite{mandallaz}, p. 125). One has the theoretical external variance
+\begin{eqnarray}\label{varreg2}
+\VAR(\hat{Y}_{reg})& =&
+\frac{1}{n_{1}}\VAR_{x\in{F}}(Y(x))+(1-\frac{n_{2}}{n_{1}})\frac{1}{n_{2}}\VAR_{x\in{F}}\hat{R}(x)\nonumber \\
+& =&
+\frac{1}{n_{1}}\VAR_{x\in{F}}(\hat{Y}(x))+\frac{1}{n_{2}}\VAR_{x\in{F}}\hat{R}(x)
+\end{eqnarray}
+Sample copies of the second version yields the external variance estimate asymptotically equivalent to the g-weight variance based on $\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}$ discussed in
+(\cite{mandallaz} and \cite{mandallaz3},), which has slightly better statistical properties from a theoretical point of view. The working model $\pmb{Z}(x)$ yielding $\hat{Y}(x)$ does not have to be identical with the true model model generating $Y(x)$. On the other hand, the closer the working model comes to the true model the smaller the residual variance and therefore the error of the regression estimator.\\
+ In this report the predictions are based on linear models, external or internal, the difference being asymptotically negligible. It is intuitively clear that the predictions $\hat{Y}(x)$ could also be based on non-linear models, which leads to so-called calibration model discussed by \cite{wusitter1}. The proof of this result is sketched in Appendix \ref{calibration}.
+
+\section{Kernel-based estimators}\label{kernelbased}
+In this section we consider non-parametric kernel based regression estimator. The idea is very simple: if the working model departs from the true unknown model, e.g. because relevant explanatory variables have not been incorporated into the working model due to either inadequate or unavailable hidden variables, then one can attempt to combine locally $\hat{Y}(x)$ and $Y(x)$ to reduce the residual size $\mid Y(x)-\hat{Y}(x)\mid $.\\
+\subsection{Preliminaries}\label{preliminaries}
+We first consider one dimensional kernels
+\begin{equation}
+K: u\in{\R}\rightarrow K(u)>0
+\end{equation}
+The kernel $K()$ is a probability density function with zero mean and finite variance, i.e $\int_\R K(u)du=1$, $\int_\R uk(u)du=0$ and $\int_\R u^2K(u)du <\infty$. Popular choices are
+\begin{eqnarray}\label{threekernels}
+K(u)&=& 0.5 I_{[-1,1]}(u)\quad \text{uniform kernel} \nonumber \\
+K(u)&=& \frac{1}{\sqrt{2\pi}}\exp(-u^2/2)  \quad \text{normal kernel} \nonumber \\
+K(u)&=& \frac{3}{4\sqrt{5}}(1-\frac{u^2}{5})I_{\mid u \mid \le \sqrt{5}}(u)\quad \text{Epanechnikov kernel}
+\end{eqnarray}
+The first and third kernels have a finite support whereas the normal kernel does not. The concept can be easily generalized to multidimensional kernel $K(\pmb{u})$ with $\pmb{u}=(u_1,u_2,\ldots u_p)\in{\R}^p$, by setting $k(\pmb{u})= \prod_{l=1}^pK_l(u_l)$ where the $K_l(\cdot)$ are 1-d kernels.\\
+For a sample size $n_2$ (or respectively $n_1$ ) we can use a global bandwidth $\epsilon(n_2)\rightarrow 0$ or a local bandwidth sequence $\epsilon(n_2,x_0)$ ($x_0$ being a given point $x_0\in{F}$ for which one wants to get estimates) where the dependence on $x_0$ is usually via $Y(x_0)$, $\hat{Y}(x_0)$ or $R(x_0)$ depending on the context. Many results follow intuitively from the fact that $K(\frac{u}{\varepsilon(n_2,x_0)})$ tends to the Dirac $\delta$ function as $\epsilon(n_2,x_0)$ tends to $0$. \\
+In the nearest neighbor literature a wide choice of metric in the feature space (i.e. distances between points $\pmb{Z}(u)$ and $\pmb{Z}(v)$ for any two $u,v\in{F}$) have been used. From a geometric point of view one can always orthogonalize the $\pmb{Z}(u)$ so that the Euclidian and Mahalanobis distances are essentially equivalent. Also, it is clear that
+$$\mid\mid \pmb{Z}(u)-\pmb{Z}(v)\mid \mid=:\mid \pmb{\beta}^t(\pmb{Z}(u)-\pmb{Z}(v))\mid=\mid \hat{Y}(u)-\hat{Y}(v)\mid$$ also defines a metric in the feature space, which is for any given $\pmb{\beta}$ and in particular for the theoretical least squares estimate, a natural choice for the problem at hand. Furthermore, the multidimensional feature space is reduced to the one-dimensional space of the predictions, thus avoiding the use of multidimensional kernels, the curse of dimensionality, as well as the difficulties arising from the different scales of the explanatory variables. One should also recall that in finite dimensional spaces, all norms are equivalent from a topological point of view ($\mid \mid\pmb{Z}(u)\mid \mid:=\mid \pmb{\beta}^t\pmb{Z}(u)\mid$ is a norm). Of course, in practice one will usually replace $\pmb{\beta}$ by its estimate and do as if it were a fixed value, as under the external model assumption. \\
+We shall consider the kernel-based prediction $\hat{Y}^{(1)}_{\epsilon}(x_0)$ defined point-wise for a point $x_0\in{s_1}$ as
+\begin{equation}\label{Yregepsilon}
+\hat{Y}^{(1)}_{\epsilon}(x_0):=\frac{ \frac{1}{n_2\epsilon(n_2,\hat{y}_0)}
+\sum_{x\in{s_2}}Y(x)K\big(\frac{\hat{Y}(x_0)-\hat{Y}(x)}{\epsilon(n_2,\hat{y}_0)}\big)}
+{\frac{1}{n_2\epsilon(n_2,\hat{y}_0)}\sum_{x\in{s_2}}K\big(\frac{\hat{Y}(x_0)-\hat{Y}(x)}{\epsilon(n_2,\hat{y}_0)}\big)}
+\end{equation}
+where $\hat{y}_0=\hat{Y}(x_0)$. If the numerator in [\ref{Yregepsilon}] is zero then one sets $\hat{Y}^{(1)}_{\epsilon}(x_0)=\hat{Y}(x_0)$.\\
+$\hat{Y}^{(1)}_{\epsilon}(x_0)$ is the Nadaraya-Watson estimator based on the euclidian distance between linear predictions and can be viewed as an estimate of the conditional expectation of $Y(x_0)$ given $\hat{Y}(x_0)$ (see section \ref{dbestimators} and Appendix \ref{appendixnadaraya}).\\
+It is interesting to consider the special case in which the $\hat{Y}(x)$ can only take a finite number of different values, such as in post-stratification, still an important and widely used technique in forest inventory. Recall that in post-stratification $\hat{Y}(x)$ is simply the observed stratum mean. For $\epsilon(n_2,\hat{y}_0)$ small enough (very moderate smoothing) it is easy to see that $\hat{Y}^{(1)}_{\epsilon}(\hat{y}_0)$ will tend to the mean of the $Y(x)$ for the $x$ in the same stratum $F_k\subset F$ as $x_0$. If the $\hat{Y}(x)$ (for $x\in{s_1}$ ) are all distinct then the limit for $\epsilon(n_2,\hat{y}_0)\rightarrow 0$ is $Y(x_0)$ for $x_0\in{s_2}$. when the bandwidth $\epsilon(n_2,\hat{y}_0)$ tends to infinity (strong smoothing) then $\hat{Y}^{(1)}_{\epsilon}(x_0)$ will tend to the overall sample mean $\frac{1}{n_2}\sum_{x\in{s_2}}Y(x)=\bar{Y}_{s_2}$, so that the model is completely ignored. \\
+Note that if all explanatory variables are discrete then $\pmb{Z}(u)$  can be viewed as a set of $0-1$ indicator variables and the distance between two points will also take a finite number of values (e.g. say $0,1$ in the case of one-way analysis of variance and $0,1,\ldots q$ in general ANOVA models). Hence, kernel estimators are likely to be potentially useful only if some of the explanatory variables are continuous so that the set of local densities and predictions $(Y(x),\hat{Y}(x))\in{\R^2}$ can be viewed as a continuum from a mathematical point of view (in practice everything is discrete!).\\
+For the uniform kernel $\hat{Y}^{(1)}_{\epsilon}(x_0)$ is simply the mean of all observations in the $\varepsilon(n_2,x_0)$ neighborhood, whereas the k-nearest neighbors methods takes the mean of the observations whose ranked distances are less than the integer $k$. With discrete metrics one has ties in the ranked distances and one could raise the question whether it is meaningful to take the mean of only $k$ observations if there are more with the same ranks. \\
+For the above reasons and for mathematical convenience we shall assume in the following that $\hat{Y}(x)$ and $Y(x)$ have sufficiently regular probability density functions (e.g. twice differentiable), even if the proposed kernel estimators can be used in practice when this is not the case. In other words we have
+\begin{equation}\label{regulardensities1}
+\PR(\hat{Y}(x)\in{A})=\int_A f_{\hat{Y}}(y)dy, \;\;\forall A\subset \R
+\end{equation}
+\begin{equation}\label{regulardensities2}
+\PR( Y(x)\in{A})=\int_A f_{Y}(y)dy, \;\;\forall A\subset \R
+\end{equation}
+Note that this implies that $\PR(Y(x_1)=Y(x_2))=0$ for all $x_1 \ne x_2$ and likewise for $\hat{Y}(\cdot)$.
+Under some regularity assumptions one can show for $\hat{Y}(x)$ with a continuous distribution function on $\R$ that one has $\hat{Y}_{\epsilon}(x_0)\rightarrow Y(x_0)$ as $\epsilon(n_2,x_0)\rightarrow 0$, convergence being in the mean, probability, almost surely, point-wise or uniform, depending on the regularity assumptions (see \cite{Tsybakov1} for a modern introduction).\\
+We define the two-phase kernel-based regression estimator as
+\begin{equation}\label{kernelyreg}
+\hat{Y}^{(1)}_{\epsilon,reg}:=\frac{1}{n_1}\sum_{x_0\in{s_1}}\hat{Y}^{(1)}_{\epsilon}(x_0)
++\frac{1}{n_2}\sum_{x\in{s_2}}\hat{R}^{(1)}_{\epsilon}(x)
+\end{equation}
+where $\hat{R}^{(1)}_{\epsilon}(x)=Y(x)-\hat{Y}^{(1)}_{\epsilon}(x)$. Note that the sum of the residuals is no longer zero in general.
+ \\By analogy with the classical theory one can hope that $\hat{Y}^{(1)}_{\epsilon,reg}$ is asymptotically design unbiased with the following design-based variance estimate
+\begin{equation}\label{estvarkernelyreg}
+\hat{\VAR}(\hat{Y}^{1)}_{\epsilon,reg})=\frac{1}{n_1}\hat{\VAR}(Y(x))+(1-\frac{n_2}{n_1})\frac{1}{n_2(n_2-1)}
+\sum_{x\in{s_2}}(\hat{R}^{(1)}_{\epsilon}(x)-\bar{\hat{R}}^{(1)}_{\epsilon,2})^2
+\end{equation}
+where
+$$\hat{\VAR}(Y(x))=\frac{1}{n_2-1}\sum_{x\in{s_2}}(Y(x)-\bar{Y}_2)^2, \; \bar{Y}_2=\frac{1}{n_2}\sum_{x\in{s_2}}Y(x),\;\bar{\hat{R}}^{(1)}_{\epsilon,2}=\frac{1}{n_2}
+\sum_{x\in{s_2}}\hat{R}^{(1)}_{\epsilon}(x)$$.
+
+\subsection{Design-based kernel regression estimators}\label{dbestimators}
+There is an immense literature on kernel-based estimators but the overwhelming majority of the papers are in the model-dependent one-dimensional framework, i.e. $Y(x_i)=m(x_i)+\epsilon(x_i), \;x_i\in{Re^1}$, $i=1,2\ldots n$, with $m(x_i)=\EX(Y(x_i)\mid x_i)$ and $\VAR(Y(x_i)\mid x_i)=\sigma^2(x_i)$, the $x_i$ may be fixed or randomly independently distributed on $\R^1$. Informal proofs of the most important results in the standard set-up are given in Appendix \ref{appendixnadaraya} and Appendix \ref{appendixdesignbased}.\\
+Recall that in general the best predictor is given by the conditional expectation. Ideally one would therefore consider the conditional expectation of $Y(x)$ given the auxiliary information, i.e. $\EX(Y(x)\mid\pmb{Z}(x)\in\R^p)$ which requires the use of multivariate kernels to estimate multivariate densities and, as afore mentioned, is subject to the curse of dimensionality problem when $p$ is large (in practice one rarely goes beyond $p=2$). In some sense one can view $\hat{Y}(x)\in\R^1$ as a concise summary of $\pmb{Z}(x)\in\R^p$ which leads us to consider instead
+\begin{equation}\label{startconditionalexpectation}
+ \EX(Y(x)\mid\hat{Y}(x))=\EX(\hat{Y}(x)+R(x)\mid\hat{Y}(x))= \hat{Y}(x)+\EX(R(x)\mid\hat{Y}(x))
+ \end{equation}
+ To have an approximation of this conditional expectation we need estimates of the joint bivariate density of $(R(x),\hat{Y}(x))$ and of the marginal density of $\hat{Y}(x)$. This is done with bivariate and univariate Nadaraya-Watson estimators to obtain first an estimate of the conditional density and then, by integration, the estimate of the conditional expectation (see Appendix \ref{appendixnadaraya} for details). Asymptotically we replace the true predictions $\hat{Y}(x)=\pmb{\beta}^t\pmb{Z}(x)$ and residuals $R(x)=Y(x)-\pmb{\beta}^t\pmb{Z}(x)$ by their empirical versions, e.g. after replacing $\pmb{\beta}$ by $\hat{\pmb{\beta}}_{s_2}$. Using the first term in [\ref{startconditionalexpectation}] this leads to the estimator $\hat{Y}^{(1)}_{\epsilon}(x_0)$  given in [\ref{Yregepsilon}] and using the third  we have the following estimate for the conditional expectation of the residual
+ \begin{eqnarray}\label{conditionalmeanofresiduals2}
+ \hat{\EX}(\hat{R}(x_0)\mid\hat{Y}(x_0))&=&\frac{\frac{1}{n_2\epsilon_{\hat{y}}(n_2,\hat{y}_0)}\sum_{x\in{s_2}}\hat{R}(x)
+ K\big(\frac{\hat{Y}(x_0)-\hat{Y}(x)}{\epsilon_{\hat{y}}(n_2,\hat{y}_0)}\big)}{\frac{1}{n_2\epsilon_{\hat{y}}(n_2,\hat{y}_0)}\sum_{x\in{s_2}}
+ K\big(\frac{\hat{Y}(x_0)-\hat{Y}(x)}{\epsilon_{\hat{y}}(n_2,\hat{y}_0)}\big)}\nonumber\\
+ &=&\frac{\sum_{x\in{s_2}}\hat{R}(x)
+ K\big(\frac{\hat{Y}(x_0)-\hat{Y}(x)}{\epsilon_{\hat{y}}(n_2,\hat{y}_0)}\big)}{\sum_{x\in{s_2}}
+ K\big(\frac{\hat{Y}(x_0)-\hat{Y}(x)}{\epsilon_{\hat{y}}(n_2,\hat{y}_0)}\big)} \nonumber\\
+ &=&:\hat{R}^{(2)}_{\epsilon}(x_0) \;\; \forall x_0\in{s_1}
+ \end{eqnarray}
+ and consequently the following kernel-based estimators at $x_0$ at any point $x_0\in{s_1}$ in the large sample
+ \begin{equation}\label{Yepsilonstar}
+ \hat{Y}^{(2)}_{\epsilon}(x_0)= \hat{Y}(x_0)+ \hat{R}^{(2)}_{\epsilon}(x_0)
+ \end{equation}
+From a formal point of view $\hat{Y}_{\epsilon}^{(2)}(x_0)$ has a slight advantage over $\hat{Y}_{\epsilon}^{(1)}(x_0)$ when the bandwidth goes to $\infty$ as it tends to $\hat{Y}(x_0)$ whereas
+$\hat{Y}_{kernel}^{(1)}(x_0)$ tends to the overall sample mean $\bar{Y}_{s_2}$. This also means that
+$\hat{Y}_{\epsilon}^{(2)}(x_0)$ can escape the range of observations $Y(x)$ where $x\in{s_2}$ whereas $\hat{Y}_{\epsilon}^{(1)}(x_0)$  can not.\\
+ Note that the probability density function of the predictions could also be estimated in the large sample $s_1$, a possibility we shall not pursue further here, primarily because it has not been investigated yet in the literature and because it is not available in standard software (such as \textbf{R}), at least not to our knowledge.\\
+
+ \noindent \textbf{Mathematical difficulties}\\
+The true predictions $\hat{Y}_0(x)=\pmb{\beta}^t\pmb{Z}(x)$ and observations $Y(x)$ are i.i.d.  but the points $(\hat{Y}_0(x),Y(x))$ are on a 1-d curve in $\R^2$ (possibly with discontinuities) so that one has a degenerate bivariate distribution. This is not the case with the empirical predictions $\hat{Y}(x)=\hat{\pmb{\beta}}_{s_2}^t\pmb{Z}(x)$, which are only asymptotically uncorrelated so that the formulae for the variances of the various kernel-based estimators (given in Appendix \ref{appendixnadaraya} and Appendix \ref{appendixdesignbased}) are probably at best only asymptotically valid, possibly  with a lower convergence rate. On the other hand, the kernel-estimators have a strong intuitive background, and they remain meaningful even if the set of predictions is discrete.\\
+
+Neglecting the correlation between the predictions (asymptotically of order $O(\frac{\varepsilon(n_2,\hat{y}_0)}{n_2})$), the results given in Appendix \ref{appendixdesignbased} show that the convergence rate at $x_0$ is of order $O(\frac{\varepsilon(n_2,\hat{y}_0)}{n_2})$. It can be conjectured that the convergence rate will be slower if one takes the correlations of the predictions into account, but this seems to be beyond simple analytical treatment. In any case, one often relies in practice on the external model approach and use as usual [\ref{kernelyreg}] and [\ref{estvarkernelyreg}] with
+$\hat{Y}^{(2)}_{\epsilon}(x_0)$ and $\hat{R}^{(2)}_{\epsilon}(x_0)$. It turns out that the external variance can severely underestimates the true variance, except for the classical regression estimator $\hat{Y}_{reg}$, and that one must use bootstrap to obtain correct variance estimates and confidence intervals. \\[0.5cm]
+\noindent
+ \textbf{Remarks:}\\
+ \begin{enumerate}
+ \item
+ In the case of post-stratification $\hat{R}^{(2)}_{\epsilon}(x_0)$ will tend to the sum of the residuals in the stratum of $x_0$ as $\epsilon_{\hat{y}}(n_2,\hat{y}_0)\to 0$,and therefore to zero. Hence, in this case, $\hat{Y}^{(2)}_{\epsilon}(x_0)\to \hat{Y}(x_0)$ and nothing is gained.  If the predictions are all distinct it will tend to $\hat{R}(x_0)$ for $x_0\in{s_2}$ and
+ $\hat{Y}^{(2)}_{\epsilon}(x_0)\to Y(x_0)$.
+ \item
+ If the predictions are all different and $\epsilon_{\hat{y}}(n_2,\hat{y}_0)\to 0$ then $\hat{R}^{(2)}_{\epsilon}(x_0)$ will tend to $\hat{R}(x_0)$ for $x_0\in{s_2}$ and to $0$ if $x_0\in{s_1\setminus s_2}$. Hence, $\hat{Y}^{(2)}_{\epsilon}(x_0)\rightarrow Y(x_0) \;\forall x_0\in{s_2}$ and $\hat{Y}^{(2)}_{\epsilon}(x_0)\rightarrow \hat{Y}(x_0) \;\forall x_0\in{s_1\setminus s_2}$. The resulting regression estimator is then $\frac{1}{n_1}\sum_{x_0\in{s_1}}\hat{Y}(x_0)$ with estimated external variance $\frac{1}{n_1}\hat{\VAR}(Y(x))$ because all the residuals in $s_2$ are zero! This is of course to good to be true! The reason is that to ensure consistency of the estimated densities we cannot simply set $\epsilon_{\hat{y}}(n_2,\hat{y}_0)=0$, one needs also
+$\lim_{n_2\to\infty}n_2\varepsilon_{\hat{y}}(n_2,\hat{y}_0)=\infty$. Hence, we cannot determine the bandwidth by minimizing the resulting variance of the regression estimator (the minimum being achieved with zero residual variance) but we have to rely instead on cross-validation procedures. Note also that for $\epsilon_{\hat{y}}(n_2,\hat{y}_0)\to \infty$ one has $\hat{Y}^{(2)}_{\epsilon}(x_0)\to \hat{Y}(x_0)$ and $\hat{Y}^{(1)}_{\epsilon}(x_0)\to \bar{Y}_{s_2}$.
+ \item
+  If some important explanatory variables are not accounted for it may well be that locally we do not have zero mean residual (i.e. a pattern in the structure of the residuals), in which case the new kernel-based regression estimators might be better. Note, that correct exploratory data analysis should identify such problems. If the choice of the explanatory variables is adequate one can hope that the kernel-based point estimates will be close to the classical regression estimate. The simulations and the case study discussed in section \ref{simandcasestudy} and others in the literature, provide some evidence for that, as well as for the \textbf{k-NN} methods. For the variance estimate, the situation is more intricate and analytical derivations of the design-based variance are, so far, only available for $\hat{Y}_{reg}$.
+
+ \end{enumerate}
+
+ Note that the kernel-based regression estimator $\hat{Y}^{(1)}_{\epsilon}(x_0)$ is a convex linear combinations of the observations (i.e. a weighted average of the observations,  where the weights are positive and sum up to $1$). Hence, the range of the predictions is always contained in the range of the observations, which can be a disadvantage if  the prediction model can be trusted. The estimator
+ $\hat{Y}^{(2)}_{\epsilon}(x_0)$ does not have this disadvantage. Other estimators using kernels but not in the same way as $\hat{Y}^{(1)}_{\epsilon}(x_0)$ lead to non-convex linear combinations, such as the widely used \textbf{R}-functions \textbf{glkern} (with global optimal bandwidth) and \textbf{lokern} (with local optimal bandwidth) where the option "derivative=0" is used. The resulting estimators are known to have good performances (see \cite{gasser1} and \cite{gasser2} for details). In this work we have used the \textbf{R}-function \textbf{npreg} to calculate $\hat{Y}^{(1)}_{\epsilon}(x_0)$ and the residual component of $\hat{Y}^{(2)}_{\epsilon}(x_0)$. The global optimal bandwidth is obtained by the standard leave one out cross-validation technique, which can be calculated very efficiently for $\hat{Y}^{(1)}_{\epsilon}(x_0)$ but not for $\hat{Y}^{(2)}_{\epsilon}(x_0)$, an unfortunate development for variance estimation via bootstrap.\\
+ The overwhelming majority of kernel based non-parametric curve-fitting procedures are primarily concerned with interpolation, whereas in the forest inventory context with two-phase sampling the extrapolation aspects are also very important. In the case study below we will see that the mean-canopy height obtained by remote sensing (LiDAR) in the large sample $s_1$ is the most important explanatory variable, leading single-handedly to $R^2$ above $50\%$, and it clear that the highest values will most likely be in $s_1$ and not in $s_2$. Thus, forcing the prediction range to be contained in the observation range is a disadvantage. As afore mentioned, this is not the case for $\hat{Y}^{(2)}_{\epsilon}(x_0)$.
+
+ \section{Design-based k-NN}\label{knn}
+As for kernel-based estimators the literature on k-Nearest Neighbors (\textbf{k-NN}) is immense and largely model-dependent. In the forest inventory context \cite{bafetta1,bafetta2} are key references in the design-based context whereas \cite{McRoberts1}, \cite{McRoberts2}, \cite{magnussen1}, \cite{MacRoberts3}, \cite{breidenbach1} are more model-dependent. Also, most authors work in the finite population framework of pixels in which the first phase is exhaustive.\\
+We shall use here the procedure described by \cite{hechenbichler1}, which is implemented in the \textbf{R} program \textbf{kknn}. For an arbitrary point $x_0\in{s_1}$ the nearest neighbor in $s_2$, with respect to a distance $d(\cdot,\cdot)$ in $\R^p$ is the point $x_{(1)}\in{s_2}$ such that $d(\pmb{Z}(x_0),\pmb{Z}(x_{(1)})=\min_{x\in{s_2}}d(\pmb{Z}(x_0),\pmb{Z}(x))$. The second nearest neighbor $x_{(2)}$ is defined by
+$d(\pmb{Z}(x_0),\pmb{Z}(x_{(2)})=\min_{ x\in{s_2}\setminus{x_{(1)}}}d(\pmb{Z}(x_0),\pmb{Z}(x))$
+and so on until we have obtained the $k+1$ nearest neighbors. We emphasize the fact that if $x_0$ is in $s_2$ then we set $x_{(1)}=x_0$. If the components of $\pmb{Z}(x)$ have very different scales it is usually recommended to standardize the component so that they all have standard deviation equal to $1$.\\
+The simulations and case study presented in section \ref{simandcasestudy} contain only continuous variables so that ties do not occur. The k-nn methods with the uniform kernel simply take the mean $\frac{1}{k}\sum_{l=1}^k Y(x_{(l)})=\hat{Y}_{knn}(x_0)$. In this case it is possible, in principle, to calculate the theoretical variance of the corresponding regression estimator, albeit in the finite population case with exhaustive first phase (see \cite{bafetta1}). However, it is usually more efficient to give larger weights to the closest neighbors. To achieve that we have to standardize
+the distances according to
+\begin{equation}\label{knnstandarddist}
+D(\pmb{Z}(x_0),\pmb{Z}(x_{(i)})=\frac{d(\pmb{Z}(x_0),\pmb{Z}(x_{(i)})}{d(\pmb{Z}(x_0),\pmb{Z}(x_{(k+1)})}
+\end{equation}
+and the weighted k-NN estimator is given by
+\begin{equation}\label{kernelknn}
+\hat{Y}_{knn}(x_0)=\frac{\sum_{l=1}^k K\big(D(\pmb{Z}(x_0),\pmb{Z}(x_{(i)})\big)Y(x_{(i)})}
+{\sum_{l=1}^k K\big(D(\pmb{Z}(x_0),\pmb{Z}(x_{(i)})\big)}
+\end{equation}
+for an arbitrary one-dimensional kernel $K(\cdot)$ (Note that the kernel is one-dimensional whereas the distance is calculated in the multidimensional feature space). This leads to the \textbf{k-NN regression estimator}
+\begin{equation}\label{knnreg}
+\hat{Y}_{knn}=\frac{1}{n_1}\sum_{x_0\in{s_1}}\hat{Y}_{knn}(x_0)+
+\frac{1}{n_2}\sum_{x_0\in{s_2}}(Y(x_0)-\hat{Y}_{knn}(x_0))
+\end{equation}
+Note that the predictions, $\hat{Y}_{knn}(x_0)$, are a weighted mean of the observations and therefore constrained to be in the observed range of the observations. Thus \textbf{k-nn} is a purely interpolation technique and never extrapolates, which, as already mentioned, can be a disadvantage.\\
+As for kernel-based regression estimator one can use the one dimensional metric based on the predictions alone, i.e. $d(\pmb{Z}(x_0),\pmb{Z}(x_{(i)}))=\mid \hat{\pmb{\beta}}^t\big(\pmb{Z}(x_0)-\pmb{Z}(x_{(i)})\big)\mid$. The resulting estimator is denoted by
+$\hat{Y}_{pred,knn}$.\\
+The external variance estimates are obtained as usual via sample copies of [\ref{varreg2}].\\
+In practice one has to be careful about the tuning options available in software packages, in particular
+with respect to the definition of nearest neighbors when $x_0\in{s_2}$. If the point itself is viewed as its nearest neighbor the optimal choices $k=1$ can result from cross-validation and should of course not be retained as it its leads to constant $0$ residuals. We recommend at least $k \ge 3$ and to plot $\hat{Y}_{knn}$ and $\hat{\VAR}(\hat{Y}_{knn})$ as a function of $k$. In our experience, except for $\hat{Y}_{reg}$, the external variance estimate is to small and the bootstrap variance estimate should be preferred.
+\clearpage\newpage
+
+ \section{Examples}\label{simandcasestudy}
+To illustrate the various techniques we consider the real case study discussed in \cite{mandallaz4} and the artificial simulation example used in \cite{mandallaz3}.\\
+We have compared several kernel-based estimators calculated with the widely used \textbf{R}-functions \textbf{glkern}, \textbf{lokern} (both from the \textbf{R}-package \textbf{lokern}), \textbf{npreg} (from the \textbf{R}-package \textbf{np}) and the \textbf{k-NN} estimators calculated with the \textbf{R}-package \textbf{kknn}. In the main text we do not discuss the function \textbf{lokern} because it was found that the local optimal bandwidth led to very spurious results near the boundaries, particularly at the lower end (see e.g. Fig. \ref{predict1} of Appendix \ref{appendixfigures} obtained from the case study).\\
+The two-phase bootstrap procedure is very simple: first a bootstrap sample $s_{1boot}$ is generated from $s_1$ and the points $x\in{s_{1boot}}$ that are in $s_2$ define the the second-phase bootstrap sample $s_{2boot}$.\\
+The bootstrap variances with optimal bandwidth recalculated in each bootstrap sample were very unstable and frequently led to extreme outliers (above 1000 times the mean), particularly for \textbf{lokern} as can be seen from Fig. \ref{boot1} and \ref{boot2} in the Appendix \ref{appendixfigures} based on the simulation example. This was also the case, but not as extreme, for the case study as can be seen from Tables \ref{appcasestudy1} and \ref{appcasestudy2} given in the Appendix \ref{appendixtables}. \\
+For $\hat{Y}^{(2)}_{glkern}$ the \textbf{R}-function \textbf{glkern} was applied to the residual part only and the optimal bandwidth was obtained via the imbedded cross-validation procedure. For
+$\hat{Y}^{(2)}_{npreg}$ the optimal bandwidth obtained via the imbedded cross-validation procedure and applied to only the residual part led essentially to a flat horizontal line close to $0$ (i.e. making $\hat{Y}^{(2)}_{npreg}\approx \hat{Y}_{reg}$). For this reason we wrote our own very simple cross-validation procedure based on the mean squared sequentially deleting each $x_0\in{s_2}$ and refitting both $\hat{Y}(x_0)$ using the linear model as well as the smoothed residual part (using \textbf{npreg} on the second term) to get the optimal bandwidth out of a small set of feasible values. \\ The resulting $\hat{Y}^{(2)}_{npreg}$ then differs slightly from $\hat{Y}_{reg}$. The same procedure was used for the simulation presented in section \ref{simul}.
+
+
+
+ \subsection{Case study}\label{casestudy}
+
+  The auxiliary vector $\pmb{Z}(x)\in{\R^p}$ has $p=7$ components: $Z_0(x)\equiv 1$, mean canopy height $Z_1(x)$, maximal canopy height $Z_2(x)$, $75\%$ quantile of the canopy height, $Z_3(x)$, standard deviation of canopy height $Z_4(x)$, the LiDAR estimated volume density $Z_5(x)$ and the LiDAR estimated density of stems $Z_6(x)$. The sample sizes were $n_1=306,n_2=67$. The fitted model is
+ \begin{equation*}
+ \hat{Y}(x)=322.57 + 52.55Z_1(x) -19.24Z_2(x) -33.04Z_3(x)+71.06Z_4(x) +0.19Z_5(x)-0.09Z_6
+ \end{equation*}
+ The coefficient of determination for this model is $R^2=0.64$. \\
+ For the estimator $\hat{Y}_{knn}$ we use the gaussian kernel with $k=7$, which is the optimal value obtained from the leave-one-out cross-validation procedure. Fig. \ref{choiceofkcasestudy} in the Appendix \ref{appendixfigures} shows the relation between the variance and the parameter $k$ and justifies the choice $k=7$ for $\hat{Y}_{knn}$. The corresponding value for the $\hat{Y}_{pred,knn}$, also based on the gaussian kernel, was found to be $k=9$.\\
+ \textbf{To stabilize the bootstrap variances, the optimal global bandwidth obtained from the original full sample was used in all the bootstrap samples, and likewise for the optimal number $k$ of neighbors}. The regression coefficients, on the other hand, were re-calculated in each bootstrap sample.\\
+ There are very slight differences in the point estimates $\hat{Y}_{reg}$  between the results presented here and those discussed in \cite{mandallaz4} because the boundary adjustments at the forest edge had to be simplified in order to reduce the computing time for the bootstrap calculations, based on 1000 replicates.\\
+\noindent
+ Table \ref{casestudy1} displays the results for the entire domain.
+ \clearpage\newpage
+ \begin{table}[ht]
+\centering
+\caption{ \label{casestudy1}\textbf{Global estimation for the case study in Canton Grisons}}\\[0.5cm]
+\small
+ \begin{tabular}{lccc}\hline
+  Estimator & point estimate & external s.e.   & bootstrap s.e.\\ \hline\hline
+ $\bar{Y}_F$               & 399.43  & 23.82    & 23.90    \\ \hline
+ $\hat{Y}_{reg}$           & 384.95  & 16.52    & 18.34  \\ \hline\hline
+ $\hat{Y}^{(1)}_{glkern}$  & 389.89  & 16.08    & 19.36      \\ \hline
+ $\hat{Y}^{(1)}_{npreg}$   & 388.58  & 16.08    & 17.79    \\ \hline \hline
+ $\hat{Y}^{(2)}_{glkern}$  & 389.79  & 16.08    & 19.41 \\ \hline
+ $\hat{Y}^{(2)}_{npreg}$   & 387.51  & 16.28    & 18.55    \\ \hline \hline
+ $\hat{Y}_{knn}$           & 390.53  & 16.35    & 17.83 \\ \hline
+ $\hat{Y}_{pred,knn}$      & 389.22  & 15.69    & 17.42 \\ \hline\hline
+ \end{tabular}
+ \end{table}
+ \normalsize
+\noindent\textbf{Discussion:}\\[0.5cm]
+The differences between the estimators are not statistically significant, which is reassuring. The bootstrap standard errors are roughly $15\%$ larger than the external standard errors. For $\hat{Y}_{reg}$ the g-weight variance is $16.96$ and closer to the bootstrap variance (see \cite{mandallaz4}). To calculate confidence intervals with the external variance one can use the normal distribution or the Student's distribution on $n_2-p$ degrees of freedom. \\[1cm]
+
+We now consider the small-area estimation problem: we have a partition of the entire domain $F$, in 4 small areas $G_k$, i.e. $F=\cup_{k=1}^4 G_k$, with approximately equal surface areas $\lambda(G_k)$.\\
+We use the simple external model approach after restricting the samples to the small areas. The regression coefficients, predictions and nearest neighbors are always based on the entire domain $F$. For the bootstrap calculations the re-sampling takes place in $F$ and the samples are then restricted to the small areas $G\in F$. Table \ref{casestudy2} displays the results.
+\clearpage\newpage
+\begin{table}[ht]
+\begin{center}
+\caption{ \label{casestudy2}\textbf{Small area estimation for the case study in Canton Grisons}}\\[0.5cm]
+\small
+\begin{tabular}{lrrrr}
+  \hline
+small area               & $G_1$ & $G_2$ & $G_3$ & $G_4$ \\
+$n_1:n_2$                & 94:19   & 81:17   & 66:15   & 65:16 \\ \hline \hline
+$\bar{Y}_G$              & 410.40  & 461.44  & 318.00  & 396.85  \\
+                         & (44.58) & (56.35) & (34.36) & (47.86) \\
+                         & [44.17] & [55.37] & [33.93] & [47.88] \\  \hline
+$\hat{Y}_{reg}$          & 397.27  & 426.81  & 327.64  & 366.44 \\
+                         & (28.80) & (35.01) & (31.64) & (36.01) \\
+                         & [31.61] & [34.93] & [32.06] & [35.53] \\ \hline \hline
+$\hat{Y}^{(1)}_{glkern}$ & 405.60  & 427.16  & 340.50  & 364.63 \\
+                         & (28.82) & (34.63) & (29.65) & (34.65) \\
+                         & [34.40] & [34.30] & [30.80] & [34.76] \\  \hline
+$\hat{Y}^{(1)}_{npreg}$  & 397.36  & 428.37  & 341.08  & 369.36   \\
+                         & (28.65) & (35.11) & (29.17) & (34.76) \\
+                         & [30.72] & [33.27] & [29.21] & [33.67] \\  \hline \hline
+$\hat{Y}^{(2)}_{glkern}$ & 405.46  & 426.94  & 340.58  & 364.59 \\
+                         & (28.81) & (34.62) & (29.67) & (34.64) \\
+                         & [34.42] & [34.25] & [30.86] & [34.70] \\ \hline
+$\hat{Y}^{(2)}_{npreg}$  & 400.43  & 430.39  & 334.59  & 363.70   \\
+                         & (29.61) & (34.73) & (30.09) & (35.01) \\
+                         & [32.72] & [34.23] & [30.91] & [34.98] \\  \hline \hline
+$\hat{Y}_{knn}$          & 382.46  & 464.14  & 319.42  & 376.96 \\
+                         & (27.07) & (36.64) & (32.59) & (32.14) \\
+                         & [28.28] & [34.77] & [28.04] & [30.02] \\ \hline
+$\hat{Y}_{pred,knn}      & 398.60  & 424.02  & 353.21  & 364.48 \\
+                         & (28.87) & (34.09) & (29.96) & (32.14) \\
+                         & [29.36] & [32.42] & [28.41] & [30.62] \\ \hline \hline
+\end{tabular}
+\end{center}
+\end{table}
+\noindent\normalsize
+\textbf{Legend}: \\
+The standard error based on the external model assumption are given in $()$ and the standard errors based on the bootstrap variance estimates are given in $[]$.
+\end{table}
+\clearpage\newpage
+
+\noindent\textbf{Discussion:}
+\begin{itemize}
+\item
+All points estimators are close to each other and  not significantly different.
+\item
+The external variance estimates and bootstrap variances of all estimators are comparable.
+\item
+The small-area point estimates in the extended model and their g-weight variance estimates (as discussed in \cite{mandallaz4}) are also very close to to their counterparts in Table \ref{casestudy2}.
+\item
+One may eventually obtain better bootstrap results for the small areas by using a modified balanced replication as suggested in \cite{magnussen2}. However, this was not the case here.
+\item
+To calculate confidence intervals with the external variance we recommend to use the Student's distribution on $n_{2,G}-1$ degrees of freedom rather than the normal distribution.
+
+\end{itemize}
+
+
+ \subsection{Simulations}\label{simul}
+ To illustrate the theory and check empirically the validity of the various mathematical approximation used to derive the variance estimates we present simulations performed on a purely artificial example, already used in \cite{mandallaz3}. The local density $Y(x)$ is defined according to the following procedure: at point $x=(x_1,x_2)^t\in\R^2$, the auxiliary vector is defined as $\pmb{Z}(x)=(1,x_1,x_2,x_1^2,x_1x_2,x_2^2)^t\in\R^p$ ($p=6$ in this example). The true parameter is
+ $\pmb{\beta}_0=(30,13,-6,-4,3,2)^t\in\R^6$ and the local density over the domain $F=[0,2]\times [0,3]$ is given by the function
+ \begin{equation}\label{simul1}
+ Y(x)=\pmb{Z}^t(x)\pmb{\beta}_0+6\cos(\pi x_1)\sin(2\pi x_2):=\hat{Y}_0(x)+R(x)
+ \end{equation}
+ Figure \ref{plotdensity2} in Appendix \ref{appendixfigures} displays the local density.\\
+ $\hat{Y}_{knn}$ is based on the Euclidian distance for $\pmb{Z}(x)$. We fixed the number of neighbors to $k=3$ because if the software is allowed to choose the optimal value of $k$ (on average $2.7$) we obtain $k_{opt}=1$ in about $30\%$ of the runs, which is totally absurd since this leads to constant zero residuals (essentially the best prediction at $x_0\in{s_2}$ is then the true observation $Y(x_0)$). This corresponds roughly to setting the local bandwidth $h(x_0)$ to zero for kernel-based estimators, which is not allowed because consistency requires $n_2h(x_0) \to \infty$ (see the remarks at the end of Appendix \ref{appendixdesignbased}). Fig. \ref{choiceofksim} in Appendix \ref{appendixfigures} illustrates the fact that the external variance of $\hat{Y}_{knn}$ underestimates the correct empirical variance, particularly in the range of interesting $k$ values. For the estimator $\hat{Y}_{pred,knn}$ the optimal values of $k$ were obtained from restricted simulations with 500 runs for each scenario.\\
+ Tables \ref{simul1} and \ref{simul2} give the results for global estimation when the fitted model is indeed the true model and Tables \ref{simul3} and \ref{simul4} when the fitted model is a subset of the true model. All simulations are based on $10'000$ runs. The $95\%$ bootstrap confidence intervals are obtained via the well-known formula
+ $[2\hat{Y}-q^{*}_{0.975},2\hat{Y}-q^{*}_{0.025}]$, where $q^{*}_{\alpha}$ is the $\alpha$-bootstrap quantile of the bootstrap estimate $\hat{Y}^{*}$, defined as the mean of the point estimates of the 1000 bootstrap samples obtained in each of the 10'000 runs.
+ \clearpage\newpage
+
+\begin{table}[h]
+\small
+\centering
+\caption{$n_1=400,n_2=100$: fitted model is the true model }\label{simul1}\\[0.5cm]
+\begin{tabular}{lrrrrrr}
+  \hline
+Estimator & $\EX^*()$ & $\VAR^*()$ & $\EX^*(\hat{\VAR}())$ & $\EX^*(\hat{\VAR}_{boot}())$ & $\EX^*(\hat{P})$ & $\EX^*(\hat{P}_{boot})$ \\ \hline\hline
+
+$\hat{Y}_{reg}$             & 39.17 & 0.19 & 0.19 &0.20  &0.95  & 0.95  \\ \hline
+$\hat{Y}^{(1)}_{glkern}$    & 39.15 & 0.20 & 0.19 &0.20  &0.94  & 0.95  \\
+$\hat{Y}^{(1)}_{npreg}$     & 39.15 & 0.20 & 0.18 &0.20  &0.94  & 0.94   \\ \hline
+$\hat{Y}^{(2)}_{glkern}$    & 39.15 & 0.20 & 0.19 &0.20  &0.94  & 0.95  \\
+$\hat{Y}^{(2)}_{npreg}$     & 39.17 & 0.20 & 0.18 &0.20  &0.94  & 0.95  \\ \hline
+$\hat{Y}_{pred,knn,k=11}$   & 39.16 & 0.20 & 0.18 &0.20  &0.93  & 0.94  \\
+$\hat{Y}_{knn,k=3}$         & 39.15 & 0.18 & 0.14 &0.19  &0.92  & 0.95  \\ \hline \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\small
+\centering
+\caption{$n_1=200,n_2=50$: fitted model is the true model }\label{simul2}\\[0.5cm]
+\begin{tabular}{lrrrrrr}
+  \hline
+Estimator  & $\EX^*()$ & $\VAR^*()$ & $\EX^*(\hat{\VAR}())$ & $\EX^*(\hat{\VAR}_{boot}())$
+& $\EX^*(\hat{P})$ &  $\EX^*(\hat{P}_{boot})$\\
+  \hline\hline
+
+$\hat{Y}_{reg}$             & 39.18 & 0.41 & 0.38 & 0.42       &0.95  & 0.95 \\ \hline
+$\hat{Y}^{(1)}_{glkern}$    & 39.17 & 0.42 & 0.36 & 0.45       &0.92  & 0.95\\
+$\hat{Y}^{(1)}_{npreg}$     & 39.15 & 0.42 & 0.35 & 0.43       &0.92  & 0.94   \\ \hline
+$\hat{Y}^{(2)}_{glkern}$    & 39.17 & 0.42 & 0.36 & 0.45       &0.92  & 0.95 \\
+$\hat{Y}^{(2)}_{npreg}$     & 39.17 & 0.43 & 0.36 & 0.42       &0.93  & 0.94   \\ \hline
+$\hat{Y}_{pred,knn,k=6}$    & 39.15 & 0.43 & 0.35 & 0.43       &0.92  & 0.94\\
+$\hat{Y}_{knn,k=3}$         & 39.15 & 0.43 & 0.31 & 0.43       &0.91  & 0.94  \\ \hline \hline
+\end{tabular}
+\end{table}
+
+\normalsize
+\noindent\textbf{Legend}: \\
+The true mean value is $\bar{Y}=39.17$ and the true coefficient of determination is $R^2=0.83$.\\
+$\EX^*(\hat{P})$ is the empirical coverage probability of the $95\%$ confidence interval based on the estimated variance and the normal distribution.\\
+$\EX^*(\hat{P}_{boot})$ is the empirical coverage probabilities based on the bootstrap confidence intervals.
+$\EX^*(\cdot)$ and $\VAR^*(\cdot)$ denote the empirical mean and variances over 10'000 runs.\\
+$\hat{\VAR}(\hat{Y}_{estimator})$ is the estimated variance under the external model assumption.\\
+$\hat{\VAR}_{boot}(\cdot)$ is the variance obtained from 1000 bootstrap replicates.
+\clearpage\newpage
+\begin{table}[h]
+\small
+\centering
+\caption{$n_1=400,n_2=100$: fitted model is not the true model }\label{simul3}\\[0.5cm]
+\begin{tabular}{lrrrrrr}
+  \hline
+Estimator & $\EX^*()$ & $\VAR^*()$ & $\EX^*(\hat{\VAR}())$ & $\EX^*(\hat{\VAR}_{boot}())$ & $\EX^*(\hat{P})$ & $\EX^*(\hat{P}_{boot})$ \\ \hline\hline
+ $\hat{Y}_{reg}$              & 39.18 & 0.28 & 0.26 &0.27 &0.95 & 0.95 \\ \hline
+ $\hat{Y}^{(1)}_{glkern}$     & 39.19 & 0.27 & 0.25 &0.28 &0.93 & 0.94\\
+ $\hat{Y}^{(1)}_{npreg}$      & 39.18 & 0.28 & 0.24 &0.27 &0.92 & 0.94   \\ \hline
+ $\hat{Y}^{(2)}_{glkern}$     & 39.19 & 0.27 & 0.25 &0.28 &0.93 & 0.94\\
+ $\hat{Y}^{(2)}_{npreg}$      & 39.18 & 0.27 & 0.25 &0.27 &0.93 & 0.94  \\ \hline
+ $\hat{Y}_{knn,pred,k=15}$    & 39.17 & 0.28 & 0.24 &0.27 &0.93 & 0.94\\
+ $\hat{Y}_{knn,k=3}$          & 39.12 & 0.21 & 0.12 &0.22 &0.91 & 0.96  \\ \hline \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\small
+\centering
+\caption{$n_1=200,n_2=50$: fitted model is not the true model }\label{simul4}\\[0.5cm]
+\begin{tabular}{lrrrrrr}
+  \hline
+Estimator & $\EX^*()$ & $\VAR^*()$ & $\EX^*(\hat{\VAR}())$ & $\EX^*(\hat{\VAR}_{boot}())$ & $\EX^*(\hat{P})$ & $\EX^*(\hat{P}_{boot})$ \\ \hline\hline
+$\hat{Y}_{reg}$              & 39.21 & 0.56 & 0.50 & 0.56      & 0.94 &  0.95\\ \hline
+ $\hat{Y}^{(1)}_{glkern}$    & 39.21 & 0.57 & 0.48 & 0.62      & 0.92 &  0.94\\
+ $\hat{Y}^{(1)}_{npreg}$     & 39.18 & 0.57 & 0.46 & 0.56      & 0.92 &  0.93   \\ \hline
+ $\hat{Y}^{(2)}_{glkern}$    & 39.21 & 0.57 & 0.48 & 0.62      & 0.92 &  0.94\\
+ $\hat{Y}^{(2)}_{npreg}$     & 39.19 & 0.57 & 0.48 & 0.56      & 0.92 &  0.94  \\ \hline
+ $\hat{Y}_{knn,pred,k=9}$    & 39.17 & 0.56 & 0.46 & 0.56      & 0.92 &  0.94\\
+ $\hat{Y}_{knn,k=3}$         & 39.12 & 0.50 & 0.32 & 0.51      & 0.89 &  0.94  \\ \hline \hline
+\end{tabular}
+\end{table}
+\normalsize
+\noindent\textbf{Legend}: \\
+The columns headers are the same as in Tables \ref{simul1} and \ref{simul2}. The true mean value is the same, i.e. $\bar{Y}=39.17$. The fitted model did not include the explanatory variables $x_1$ and $x_1x_2$. The true coefficient of determination decreases from $R^2=0.83$ to $R^2=0.66$.
+\newpage
+
+\noindent\textbf{Discussion}:
+\begin{enumerate}
+\item All estimators are practically design-unbiased, whether the fitted model is true or not, which is the main advantage of the design-based approach. The empirical (i.e.'true') variances are smaller when the fitted model is the true model, as expected.
+\item
+ The external variances always underestimate the empirical, i.e. true, variance. The underestimation can be substantial, except for $\hat{Y}_{reg}$.
+ \item
+The bootstrap variance estimates are close to the empirical variances.
+\item
+With respect to the nominal $95\%$ confidence intervals the classical regression estimator $\hat{Y}_{reg}$ performs very well in all investigated cases, and can be even further improved by using the g-weight variance instead of the external variance (\cite{mandallaz3}). For all other estimators one must use the bootstrap confidence intervals  because their external variances clearly underestimates the empirical variances. Slightly higher coverage probabilities can be achieved with the external variance by using the Student's t-distribution on $n_2-p$ degrees of freedom, which is recommended for small $n_2$, particularly for small area estimation.
+\item
+On the whole the sophisticated kernel-based or \textbf{knn} estimators do not perform better than than the classical regression estimator $\hat{Y}_{reg}$, which is disappointing but worth knowing. The nearest neighbor estimator $\hat{Y}_{knn}$ with the optimal choice $k=3$ yields a slightly smaller empirical variance (correctly estimated with the bootstrap) when the fitted model is not the true model.
+\item
+The excellent performances of the classical regression estimator $\hat{Y}_{reg}$ is probably due to the fact that the coefficients of determination are rather high under the true and under the working models, even if the value $R^2=0.66$ in the later case is not outstanding in the context e.g. of forest inventories with timber volume as response variable and with LiDAR canopy measurements as explanatory variables.
+\item
+Great care is needed with respect to the tuning options and the implementation of the bootstrap procedures.
+\item
+A further theoretical advantage of $\hat{Y}_{reg}$ is that it allows for correct analytical expressions of the asymptotic variances, which seems to be very difficult to obtain for the other estimators.
+
+\end{enumerate}
+
+
+
+\section{Conclusions}
+These preliminary comparisons between the various estimators show that the simple classical two-phase regression estimator $\hat{Y}_{reg}$ with the external or g-weight variance estimates performs on the whole at least as well as the more sophisticated kernel-based or \textbf{knn} regression estimators with the bootstrap variance estimates. Also, the choice of the tuning options and re-sampling procedures of the later estimators is not trivial. The \textbf{knn} estimators share with some kernel-based estimators the disadvantage that they cannot extrapolate beyond the range of the observations, which is not the case for $\hat{Y}_{reg}$. The resulting coverage probabilities of the confidence intervals based on the bootstrap are satisfactory, likewise for the simpler external and g-weight variance estimates of $\hat{Y}_{reg}$. A definite advantage of the regression estimator $\hat{Y}_{reg}$ is that it is also available for more complex situations such as three-phase cluster sampling with two-types of auxiliary information, or with two-stage sampling of trees at the plot level, as well as their extension to small-area estimation (\cite{mandallaz3,mandallaz4,mandallaz5}). It can reasonably be expected that these conclusions will hold in general if the model is adequate, i.e. if it incorporates the most important explanatory variables (say with an $R^2 \ge 0.6$), which is certainly the case for timber volume with the standard LiDAR explanatory variable (mean canopy height being the most important). \\
+In this context the main advantage of $\hat{Y}_{reg}$ is its simplicity and the uniqueness of the results, independently of the choice of kernels, metrics and further tuning options. It might be wise to use also $\hat{Y}_{knn}$, with well chosen options and bootstrap variance, to have a second opinion.
+
+
+\newpage
+\bibliography{biblio1}
+\newpage
+
+\begin{appendix}
+\section{The Nadaraya-Watson regression estimator}\label{appendixnadaraya}
+This estimator goes back to \cite{nadaraya1}, but the original idea is even older, going back to \cite{rosenblatt} and \cite{parzen}. The third kernel given in [\ref{threekernels}] was suggested by \cite{epanechnikov}.
+ There is an immense literature on the subject of non-parametric kernel based estimation (for densities as well as for regression) in the mainstream model-dependent literature, but not so many in the design-based approach to survey sampling, and even less so in forest inventory.\\
+In this appendix we summarize the main ideas and results and give informal proofs without going into the details of the regularity assumptions.\\
+In the classical model-dependent approach to non-parametric kernel-based regression (see e.g. \cite{nonparametricreg1})
+one considers $n_2$ i.i.d random vectors $(X_i,Y_i)$ with bivariate joint density $p(x,y)$ and marginal density $g(x)$ for the $X_i$. One wants to estimate the conditional expectation $m(x_0)=\EX(Y \mid X=x_0)$, which is the best predictor of $Y$ given $X=x_0$. The Nadaraya-Watson estimate of the marginal density $g(x)$ at the point $x_0$ is defined by
+\begin{equation}\label{nadarayamarginal}
+\hat{g}_{\varepsilon}(x_0)=\frac{1}{n_2\varepsilon(n_2,x_0)}\sum^{n_2}_{i=1}K\big(\frac{x_0-X_i}{\varepsilon(n_2,x_0)}\big)
+\end{equation}
+Under the conditions $\lim_{n_2\to\infty}\varepsilon(n_2,x_0))=0$ and $\lim_{n_2\to\infty}n_2\varepsilon(n_2,x_0)=\infty$ it is shown below that $\hat{g}_{\varepsilon}(x_0)$ is a consistent estimate (convergence in probability since the variance decreases as $\frac{1}{n_2\varepsilon(n_2,x_0)}$).
+ Under the  condition $\lim_{n_2\to\infty}n_2(\varepsilon^2(n_2,x_0))=\infty$ one has also uniform convergence in probability,  i.e. $\lim_{n_2\to\infty}\PR(\sup_{x_0}\mid \hat{g}(x_0)-g(x_0)\mid > \eta)=0\;\forall \eta>0$, and even almost surely under further regularity conditions.\\
+From a practical point of view we have good consistent estimates of the density functions, albeit in large samples. With respect to the mean square error $\EX_x(\hat{g}_{\varepsilon}(x_0)-g(x_0))^2$ the Epanechnikov kernel is optimal and the optimal bandwidth should go to zero as $n_2^{-\frac{1}{5}}$ so that squared bias and variance are of order $n_2^{-\frac{4}{5}}$ and and not as usual $n_2^{-1}$ (see \cite{lehmann}, p. 413).\\
+The Nadaraya-Watson estimate of the bivariate density $p(x,y)$ with the bivariate product kernel $K(u,v)=K_1(u)K_2(u)$ ($K_1(u)$ and $K_2(v)$ are arbitrary kernels, e.g. such as those given in [\ref{threekernels}]) at the point $(x,y)$ is defined as
+\begin{equation}\label{nadarayabivariate}
+\hat{p}_{\varepsilon}(x,y)=\frac{1}{n_2\epsilon_{X}(n_2,x)\epsilon_{Y}(n_2,y)}\sum_{i=1}^{n_2}
+ K_1\big(\frac{x-X_i}{\epsilon_X(n_2,x)}\big)
+ K_2\big(\frac{y-Y_i}{\epsilon_{Y}(n_2,y)}\big)
+ \end{equation}
+One has consistency under the conditions
+$$\lim_{n_2\to\infty}\varepsilon_X(n_2,x))=0 \;, \lim_{n_2\to\infty}\varepsilon_Y(n_2,y))=0$$ and $$\lim_{n_2\to\infty}n_2\varepsilon_X(n_2,x)\varepsilon_Y(n_2,y)=\infty$$
+From the above a consistent estimate of the conditional density  $p_{Y\mid X}(y,x_0)$ of $Y$ given $X=x_0$ at the point $(y,x_0)$ is
+\begin{equation}\label{conditionaldensityYgivenX}
+\hat{p}_{Y\mid X}(y,x_0)=\frac{\hat{p}_{\varepsilon}(x_0,y)}{\hat{g}_{\varepsilon}(x_0)}
+\end{equation}
+To obtain a consistent estimate of the conditional expectation of $Y$ given $X=x_0$ it suffices to calculate the integral
+$$\int_{\R}y\hat{p}_{Y\mid X}(y,x_0)dy$$
+This integration is feasible only with a constant bandwidth $\varepsilon_Y(n_2,y)\equiv \varepsilon_Y(n_2)$ for $Y$. After changing the variable to $u=\frac{y-Y_i}{\varepsilon_Y(n_2)}$ and using $\int_{\R}K_2(u)=1$, $\int_{\R}uK_2(u)=0$ we get (after replacing $K_2(u)$ with $K(u)$)
+\begin{equation}\label{estcondexpectationofYgivenX}
+\hat{\EX}(Y \mid X=x_0)=\hat{m}(x_0)=
+\frac{\frac{1}{n_2\varepsilon(n_2,x_0)}\sum^{n_2}_{i=1}Y_iK\big(\frac{x_0-X_i}{\varepsilon(n_2,x_0)}\big)}
+{\frac{1}{n_2\varepsilon(n_2,x_0)}\sum^{n_2}_{i=1}K\big(\frac{x_0-X_i}{\varepsilon(n_2,x_0)}\big)}
+\end{equation}
+which is the celebrated Nadaraya-Watson non-parametric regression estimator.\\
+\textbf{Remark}\\
+For $p$-dimensional densities the the squared bias and variance term (with the optimal bandwidths) tend to $0$ at the rate $n_2^{-\frac{4}{4+p}}$, which can be viewed as the curse of dimensionality (see \cite{lehmann}, p.419-420, for  a dramatic example). This is a further motivation for minimizing the dimension of the feature space, i.e. $p=1$, by choosing the metric based on the $\hat{Y}(x)$ alone.\\
+We now proceed to calculate the overall expectation and variance of [\ref{estcondexpectationofYgivenX}], i.e. under both random mechanisms generating the $X_i$ and $Y_i$. For the expectation we get
+\begin{equation}\label{overallexpectation1}
+\EX_{Y_i,X_i}(\hat{m}(x_0))=\EX_{X_i}\EX_{Y_i\mid X_i}(\hat{m}(x_0))=\EX_x\Big(\frac{\frac{1}{n_2\varepsilon(n_2,x_0)}\sum_{x\in{s_2}}m(x)K\big(\frac{x_0-x}{\varepsilon(n_2,x_0)}\big)}
+{\frac{1}{n_2\varepsilon(n_2,x_0)}\sum_{x\in{s_2}}K\big(\frac{x_0-x}{\varepsilon(n_2,x_0)}\big)}\Big)
+\end{equation}
+It is shown in Appendix \ref{appendixdesignbased} that one has
+\begin{equation}\label{overallexpectation2}
+\EX(\hat{m}(x_0))=m(x_0)+O(\varepsilon^2(n_2,x_0))
+\end{equation}
+
+For the variance we use the decomposition
+\begin{equation}\label{overallvar1}
+\VAR_{X_i,Y_i}(\hat{m}(x_0))=\VAR_{X_i}\EX_{Y_i\mid X_i}(\hat{m}(x_0))+\EX_{X_i}\VAR_{Y_i\mid X_i}(\hat{m}(x_0))
+\end{equation}
+With $m(x)=\EX(Y\mid X=x)$ and $\sigma^2(x)=\VAR(Y\mid X=x)$ we see that the first term can be written as
+\begin{equation}\label{overallvar2}
+\VAR_{X_i}\EX_{Y_i\mid X_i}(\hat{m}(x_0))=\VAR_x\Big(\frac{\frac{1}{n_2\varepsilon(n_2,x_0)}\sum_{x\in{s_2}}m(x)K\big(\frac{x_0-x}{\varepsilon(n_2,x_0)}\big)}
+{\frac{1}{n_2\varepsilon(n_2,x_0)}\sum_{x\in{s_2}}K\big(\frac{x_0-x}{\varepsilon(n_2,x_0)}\big)}\Big)
+\end{equation}
+and the second as
+\begin{equation}\label{overallvar3}
+\EX_x\Big(\frac{\frac{1}{n^2_2\varepsilon^2(n_2,x_0)}\sum_{x\in{s_2}}\sigma^2(x)K^2\big(\frac{x_0-x}{\varepsilon(n_2,x_0)}\big)}
+{(\frac{1}{n_2\varepsilon(n_2,x_0)}\sum_{x\in{s_2}}K\big(\frac{x_0-x}{\varepsilon(n_2,x_0)}\big))^2}\Big)
+\end{equation}
+The denominator in [\ref{overallvar3}] tends to $g^2(x_0)$ and it is shown below that the numerator is asymptotically equivalent to
+$$\frac{1}{n_2\varepsilon(n_2,x_0)}\sigma^2(x_0)g(x_0)\int_{\R}K^2(u)du$$
+so that we finally have under the conditions
+$$\lim_{n_2\to\infty}\varepsilon(n_2,x_0)=0\quad, \lim_{n_2\to\infty}n_2\varepsilon(n_2,x_0)=\infty$$
+\begin{eqnarray}\label{overallvar4}
+\EX_{Y_i,X_i}(\hat{m}(x_0))&=&m(x_0)+ O\big(\varepsilon^2(n_2,x_0)\big) \nonumber\\
+\VAR_{Y_i,X_i}(\hat{m}(x_0))&=&\frac{1}{n_2\varepsilon(n_2,x_0)}\frac{\sigma^2(x_0)}{g(x_0)}\int_{\R}K^2(u)du
++O\big(\frac{\varepsilon(n_2,x_0)}{n_2}\big)
+\end{eqnarray}
+See also \cite{glad1} for more details and further developments.\\
+ In the next section we shall analyze in more details the case when the $Y_i$ in the original Nadaraya-Watson estimator [\ref{estcondexpectationofYgivenX}] are replaced by a deterministic function $f(x_i)$ at random locations $X_i=x_i$ with probability density function $g(x)$, which is sometimes called the random design context.
+
+
+
+\section{Kernel estimators in the design-based approach}\label{appendixdesignbased}
+In the design-based approach and we consider instead the following kernel estimator of a deterministic function  $f:x\in{\R}\rightarrow f(x)\in{\R}$ at a point $x_0$
+\begin{equation}\label{kerneldetermfofx}
+\hat{f}_{\varepsilon}(x_0)=\frac{\frac{1}{n_2\varepsilon(n_2,x_0)}\sum_{x\in{s_2}}f(x)K\big(\frac{x_0-x}{\varepsilon(n_2,x_0)}\big)}
+{\frac{1}{n_2\varepsilon(n_2,x_0)}\sum_{x\in{s_2}}K\big(\frac{x_0-x}{\varepsilon(n_2,x_0)}\big)}
+:=\frac{\hat{e}_{\varepsilon}(x_0)}{\hat{g}_{\varepsilon}(x_0)}
+\end{equation}
+where $x_0$ is given and \textbf{the $n_2$ points $x\in{s_2}$ are i.i.d on $\R$ with density distribution function $g(x)$} satisfying some regularity conditions (e.g. twice differentiable). $f(x)$ is known for all $x\in{s_2}$. The expected value of the numerator (under the random location of the observations at points $x\in{s_2}$) is
+$$\EX_x(\hat{e}_{\varepsilon}(x_0))=
+\frac{1}{\varepsilon(n_2,x_0)}\int_{\R}f(x)K\big(\frac{x_0-x}{\varepsilon(n_2,x_0)}\big)g(x)dx$$
+Changing the integration variable to $u:=\frac{x_0-x}{\varepsilon(n_2,x_0)}$ we get
+$$\EX_x(\hat{e}_{\varepsilon}(x_0))=\int_{\R}h(x_0-\varepsilon(n_2,x_0)u)K(u)du$$
+where $h(x)=f(x)g(x)$. The gist of many arguments (see \cite{lehmann}, section 6.4 for details) is to use the Taylor expansion of $h(x)$ at $x_0$. Because by assumption $\int_{\R}K(u)du=1$, $\int_ {\R}uK(u)du=0$,$\int_{\R}u^2K(u)du<\infty$, we obtain the following result for the expected value
+ \begin{equation}\label{nadaraya1}
+\EX_x(\hat{e}_{\varepsilon}(x_0))=h(x_0)=f(x_0)g(x_0)+ O(\varepsilon^2(n_2,x_0))
+\end{equation}
+With similar arguments one obtains for the variance
+\begin{equation}\label{nadaraya2}
+\VAR_x(\hat{e}_{\varepsilon}(x_0))=\frac{1}{n_2\varepsilon(n_2,x_0)}f^2(x_0)g(x_0)\int_{\R}K^2(u)du
+-\frac{1}{n_2}f^2(x_0)g^2(x_0)+O(\frac{\varepsilon(n_2,x_0)}{n_2})
+\end{equation}
+The Nadaraya-Watson estimator of the probability density function $g(x)$ at the point $x_0$ is by definition
+\begin{equation}\label{nadaraya3}
+\hat{g}_{\varepsilon}(x_0)=\frac{1}{n_2\varepsilon(n_2,x_0)}\sum_{x\in{s_2}}K\big(\frac{x_0-x}{\varepsilon(n_2,x_0)}\big)
+\end{equation}
+Using the previous result in the special case $f(x)\equiv 1$ we obtain
+\begin{eqnarray}\label{nadaraya4}
+\EX(\hat{g}_{\varepsilon}(x_0))&=& g(x_0)+O(\varepsilon^2(n_2,x_0))\nonumber\\
+\VAR_x(\hat{g}_{\varepsilon}(x_0))&=& \frac{g(x_0)}{n_2\varepsilon(n_2,x_0)}\int_{\R}K^2(u)du-\frac{1}{n_2}g^2(x_0)+O(\frac{\varepsilon(n_2,x_0)}{n_2})\nonumber\\
+\end{eqnarray}
+Hence, we have consistent estimates of $f(x_0)g(x_0)$. $g(x_0)$ and therefore of $f(x_0)=\frac{f(x_0)g(x_0)}{g(x_0)}$ provided that $\lim_{n_2\to\infty}\varepsilon(n_2,x_0)=0$ and $\lim_{n_2\to\infty}n_2\varepsilon(n_2,x_0)=\infty$. \\ \textbf{Recall that the band-width must go to zero but not so fast in order to ensure} $\lim_{n_2\to\infty}n_2\varepsilon(n_2,x_0)=\infty$.\\
+With the same techniques and after some tedious but simple algebra one obtains for the covariance
+\begin{equation}\label{nadaraya5}
+\COV(\hat{e}_{\varepsilon}(x_0),\hat{g}_{\varepsilon}(x_0))=
+\frac{f(x_0)g(x_0)}{n_2\varepsilon(n_2,x_0)}\int_{\R}K^2(u)du-\frac{1}{n_2}f(x_0)g^2(x_0)+O(\frac{\varepsilon(n_2,x_0)}{n_2})
+\end{equation}
+
+Using the well-known approximation formula for the variance of a ratio of two random variables $R$ and $S$, we get
+\begin{equation}\label{varianceratio}
+\VAR(\frac{R}{S})\approx
+\frac{\EX^2(R)}{\EX^2(S)}\Big(\frac{\VAR(R)}{\EX^2(R)}-2\frac{COV(R,S)}{\EX(R)\EX(S)}+\frac{\VAR(S)}{\EX^2(S)}\Big)
+\end{equation}
+and after some algebra we see that the Nadaraya-Watson non-parametric regression estimator
+\begin{equation}\label{nadarayareg1}
+\hat{f}_{\varepsilon}(x_0)=\frac{\frac{1}{n_2\varepsilon(n_2,x_0)}\sum_{x\in{s_2}}f(x)K\big(\frac{x_0-x}{\varepsilon(n_2,x_0)}\big)}
+{\frac{1}{n_2\varepsilon(n_2,x_0)}\sum_{x\in{s_2}}K\big(\frac{x_0-x}{\varepsilon(n_2,x_0)}\big)}
+\end{equation}
+under the conditions
+$$\lim_{n_2\to\infty}\varepsilon(n_2,x_0)=0\quad \lim_{n_2\to\infty}n_2\varepsilon(n_2,x_0)=\infty$$
+is a consistent estimator of $f(x_0)$ satisfying
+\begin{eqnarray}\label{nadarayareg2}
+\EX_(\hat{f}_{\varepsilon}(x_0))&=& f(x_0)+O(\varepsilon^2(n_2,x_0)) \nonumber\\
+\VAR_x(\hat{f}_{\varepsilon}(x_0))&=& O(\frac{\varepsilon(n_2,x_0)}{n_2})
+\end{eqnarray}
+It is interesting to note that the terms in $\frac{1}{n_2(\varepsilon(n_2,x_0))}$ and $\frac{1}{n_2}$ occurring in [\ref{nadaraya4}] and [\ref{nadaraya5}] cancel out and that the design-based variance goes to zero as $O(\frac{\varepsilon(n_2,x_0)}{n_2})$, whereas in the model-dependent approaches the term of order $\frac{1}{n_2(\varepsilon(n_2,x_0))}$ remains as in [\ref{overallvar4}] above. The above design-based result [\ref{nadarayareg2}] corresponds formally, as expected, to the model-dependent case [\ref{overallvar4}] with $\sigma^2(x_0)=0$.\\
+In the forest inventory context we estimate the probability density function of the predictions with
+$$\hat{f}_{\hat{Y}}(\hat{y}_0)=
+\frac{1}{n_2\varepsilon(n_2,x_0)}\sum_{x\in{s_2}}K\big(\frac{\hat{Y}(x_0)-\hat{Y}(x)}{\epsilon(n_2,x_0)}\big)$$
+We see from the above arguments, after the substitution $x\rightarrow \hat{Y}(x)$ and $dx\rightarrow f_{\hat{Y}}(y)dy$,  that $\hat{f}_{\hat{Y}}(\hat{y}_0)$ is an asymptotically design unbiased estimate of the density function $f_{\hat{Y}}(y)$ at the point $y_0=\hat{Y}(x_0)$. Likewise, we see that
+$$\frac{1}{n_2\varepsilon(n_2,x_0)}\sum_{x\in{s_2}}\hat{Y}(x)K\big(\frac{\hat{Y}(x_0)-\hat{Y}(x)}{\epsilon(n_2,x_0)}\big)$$
+converges towards $\hat{y}_0f_{\hat{Y}}(y_0)$ (as usual convergence in the mean, in probability or almost surely depending on the regularity assumptions). Likewise, we have also shown that
+\begin{equation}\label{consistency2}
+\hat{\hat{Y}}_{\epsilon}(x_0):=\frac{ \frac{1}{n_2\epsilon(n_2,x_0)}
+\sum_{x\in{s_2}}\hat{Y}(x)K\big(\frac{\hat{Y}(x_0)-\hat{Y}(x)}{\epsilon(n_2,x_0)}\big)}
+{\frac{1}{n_2\epsilon(n_2,x_0)}\sum_{x\in{s_2}}K\big(\frac{\hat{Y}(x_0)-\hat{Y}(x)}{\epsilon(n_2,x_0)}\big)}
+\end{equation}
+will converge towards $\hat{Y}(x_0)$.\\
+\noindent However, we are here primarily interested in estimators of the form
+\begin{equation}
+\hat{Y}^{(1)}_{\epsilon}(x_0):=\frac{ \frac{1}{n_2\epsilon(n_2,x_0)}
+\sum_{x\in{s_2}}Y(x)K\big(\frac{\hat{Y}(x_0)-\hat{Y}(x)}{\epsilon(n_2,x_0)}\big)}
+{\frac{1}{n_2\epsilon(n_2,x_0)}\sum_{x\in{s_2}}K\big(\frac{\hat{Y}(x_0)-\hat{Y}(x)}{\epsilon(n_2,x_0)}\big)}
+\end{equation}
+and
+\begin{equation}
+\hat{R}^{(2)}_{\epsilon}(x_0):=\frac{ \frac{1}{n_2\epsilon(n_2,x_0)}
+\sum_{x\in{s_2}}\hat{R}(x)K\big(\frac{\hat{Y}(x_0)-\hat{Y}(x)}{\epsilon(n_2,x_0)}\big)}
+{\frac{1}{n_2\epsilon(n_2,x_0)}\sum_{x\in{s_2}}K\big(\frac{\hat{Y}(x_0)-\hat{Y}(x)}{\epsilon(n_2,x_0)}\big)}
+\end{equation}
+This is only meaningful if we can write the local density $Y(x)$ as a function of its prediction $\hat{Y}(x)$, i.e. $Y(x)=Y(\hat{Y}(x))$ (and likewise $\hat{R}(x)=\hat{R}(\hat{Y}(x))$). This is not always possible, e.g. if the $\{\hat{Y}(x)\mid x\in{F}\}$ is a discrete set of points as with post-stratification, where for one $\hat{Y}(x)$ one has infinitely many $Y(x)$. In the continuous case the exact regression line (i.e. with the true optimal $\pmb{\beta}$) of $Y(x)$ (ordinate) on $\hat{Y}(x)$ (abscissa) is the diagonal (because $Y(x)=\hat{Y}(x)+R(x)$ and to each $\hat{Y}(x)$ one has one $Y(x)$, with probability $1$ ).\\
+Neglecting the correlation between predictions (or using an independent training data set to fit the model) the mean and variance of $\hat{Y}^{(1)}_{\epsilon}(x_0)$ will be given by [\ref{nadarayareg2}]. The convergence seems to be fast, but recall that the recommended  optimal bandwidth is of order $n_2^{-\frac{1}{5}}$.
+
+\noindent \textbf{Remark:}\\
+Since $\hat{Y}^{(1)}_{\epsilon}(x_0)$ is asymptotically unbiased for $Y(x_0)$ it is tempting to consider the following estimator
+\begin{equation}\label{badproposal}
+\hat{Y}^{(1)}_{\varepsilon,reg}=\frac{1}{n_1}\sum_{x_0\in{s_1}}\hat{Y}^{(1)}_{\epsilon}(x_0)
+\end{equation}
+The covariance $\COV\big(\hat{Y}^{(1)}_{\epsilon}(x_1),\hat{Y}^{(1)}_{\epsilon}(x_2)\big)$ is of order $O\big(\frac{\varepsilon(n_2)}{n_2}\Big)$, so one may hope that the standard variance estimate
+$$\frac{1}{n_1(n_1-1)}\sum_{x_0\in{s_1}}(\hat{Y}^{(1)}_{\epsilon}(x_0)-\bar{\hat{Y}}^{(1)}_{\epsilon})^2$$ is consistent. Let us denote with $R_{(1)}^2$ the R-squared of the kernel-based predictions $\hat{Y}^{(1)}_{\epsilon}(x_0)$ (regression line of the $Y(x_0)$ on the $\hat{Y}^{(1)}_{\epsilon}(x_0)$). The variance under the external model-approach is (see e.g. \cite{mandallaz}, eqn. 5.4)
+\begin{equation}\label{extvar}
+\VAR(\hat{Y}^{(1)}_{\varepsilon,reg})=\VAR_x(Y(x))\Big(\frac{1-R_{(1)}^2}{n_2}+ \frac{R_{(1)}^2}{n_1}\Big)
+\end{equation}
+whereas the above proposal yields
+\begin{equation}\label{wrongvar1}
+\VAR(\hat{Y}^{(1)}_{\varepsilon,reg})=\VAR_x(Y(x))\frac{R_{(1)}^2}{n_1}
+\end{equation}
+The same difficulty occurs with the classical two-phase regression estimator. In this case, the mean of the empirical residuals is zero and the empirical design-based covariance between predictions and residuals is zero by the orthogonality properties of ordinary least squares, so that one could naively think that the estimated variance is
+\begin{equation}\label{wrongvar2}
+\hat{\VAR}(\hat{Y}_{reg})=\frac{1}{n_1}\hat{\VAR}_x(\hat{Y})
+\end{equation}
+However, $\hat{Y}_{reg}=\hat{\bar{\pmb{Z}}}^t_{s_1}\hat{\pmb{\beta}}_{s_2}$ and one obtains, using Taylor expansion and the estimated covariance matrix $\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}$ given in [\ref{estvarmatrix}], the correct answer, i.e. the g-weight based variance
+\begin{equation}\label{correctvar}
+\hat{\VAR}(\hat{Y}_{reg})=\frac{1}{n_1}\hat{\VAR}_x(\hat{Y})+
+\hat{\pmb{\beta}}^t_{s_2}\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}\hat{\pmb{\beta}}^t_{s_2}
+\end{equation}
+which can be shown to be asymptotically equivalent (see \cite{mandallaz3} for examples and \cite{mandallazreport1} for detailed proofs) to the classical external variance estimate
+\begin{eqnarray}\label{classicalexternalvar}
+\hat{\VAR}(\hat{Y}_{reg})&=&\frac{1}{n_1}\hat{\VAR}_x(\hat{Y}(x))+ \frac{1}{n_2}\hat{\VAR}_x(\hat{R }(x)) \nonumber\\
+&=& \frac{1}{n_1}\hat{\VAR}_x(Y(x))+ (1-\frac{n_2}{n_1})\frac{1}{n_2}\hat{\VAR}_x(\hat{R}(x))
+\end{eqnarray}
+The second version can be expected to be better for kernel estimators since predictions and residuals do not have an exact zero design-based empirical covariance. Obviously, the same holds for the other estimators . Intuitively the result is obvious: there is no free lunch; one cannot expect to have with $n_2<<n_1$ costly terrestrial observations $Y(x)$ (plus the comparatively low cost of the remote sensing data) the same accuracy as with $n_1$!
+\clearpage \newpage
+\section{Calibration model}\label{calibration}
+\subsection{Background}
+In the recent literature on finite population surveys the concepts of calibration (calage in French, see \cite{tille1}) and balanced sampling have played, and still play an important role. The former does not deal with the given inclusion probabilities, i.e. the design, but determines weights $w_i$ in estimators of the type $\sum_{i\in{s}}w_iY_i$ such that the total distance $\sum_{i=1}^N d(w_i,d_i)$ to the original weights $d_i=\pi_i^{-1}$, with respect to some metric $d(\cdot,\cdot)$, is minimized under the constraint for the auxiliary variables $\sum_{i=1}^N \pmb{Z}_i=\sum_{i\in{s}}w_i\pmb{Z}_i$. As the original weights (i.e. $d_i=\pi_i^{-1}$) lead to the Horwitz-Thompson estimators (HT), the bias of the resulting estimator, i.e. calibration estimator, is small because it is close to HT. It can be expected to have good properties because it is exact for the auxiliary variables, assumed to be strongly related to the response variable. It can be shown that the calibration estimator is essentially asymptotically equivalent to linear regression estimators (i.e. linear prediction models, see \cite{sarndaldeville1}). In balanced sampling, on the other hand, one constructs a design with given inclusion probabilities $\pi_i$ such that the constraint $\sum_{i\in{s}}\frac{\pmb{Z}_i}{\pi_i}=\sum_{i=1}^N\pmb{Z}_i$ is satisfied, which can be done by the the so-called cube algorithm (\cite{tille2}). Hence, the two techniques achieve the same objective, calibration via the choice of the estimator and balanced sampling via the choice of the design. \\
+  The paper \cite{wusitter1} is an important contribution as it generalizes the original calibration techniques to non-linear and generalized linear models used for the predictions. The inference is design-based but the construction of the calibration estimators is based on considerations coming from a super-population.
+  \subsection{Calibration estimators in the Monte-Carlo approach}\label{calibrationmontecarlo}
+  So far, the calibration estimators are only available in the finite population framework with exhaustive auxiliary information. We shall give below an informal proof of the main result given in \cite{wusitter1} in the infinite population framework germane to the Monte-Carlo approach. The only technical difficulty is that the inclusion probabilities of a given point is constant but $0$.m\\
+   Recall that under the external model assumption the predictions are totally arbitrary and can be obtained from a non-linear model. Mathematically they must depend only on the auxiliary information $\pmb{Z}(x)$ at point $x$, at least asymptotically. More formally one can consider non-linear models of the form
+ $$Y(x)=\mu(\pmb{Z}(x),\pmb{\beta}) + R(x)=:\mu(x,\pmb{\beta})+R(x)$$
+ or generalized linear models $g(\mu(x,\pmb{\beta})=\pmb{Z}^t(x)\pmb{\beta}$
+  with a given link function $g(\cdot)$. The ordinary non-linear least square uses the identity function $g(u)=u$. The estimating equation [7] in Wu-Sitter (with the common choice $q_i \equiv 1$ ) reads
+ \begin{equation}
+ \int_F\pmb{Z}(x)\phi(\mu(x,\pmb{\beta}))v^{-1}(\mu(x,\pmb{\beta})(Y(x)-\mu(x,\pmb{\beta})=0
+ \end{equation}
+ with $\phi(u)=(\frac{dg(u)}{du})^{-1}$ and an arbitrary weight function $v(\cdot)$. $\hat{\pmb{\beta}}$ can be obtained via sample copy version. The predictions are $\hat{Y}(x)=\mu(\pmb{Z}(x),\hat{\pmb{\beta}})$.\\
+ In non-linear least-squares one has to minimize
+ \begin{equation}
+ Q(\pmb{\beta})=\frac{1}{\lambda(F)}\int_F (Y(x)-\mu(x,\pmb{\beta}))^2dx
+ \end{equation}
+  $\hat{\pmb{\beta}}$ can be obtained via the sample copy version
+  \begin{equation}
+  Q_{n_2}(\pmb{\beta})=\frac{1}{n_2}\sum_{x\in{s_2}} (Y(x)-\mu(x,\pmb{\beta}))^2
+  \end{equation}
+  $Q_{n_2}(\pmb{\beta})$ is a random function of $\pmb{\beta}}$ which converges almost surely point-wise and, under regularity conditions, also uniformly against the non-random function  $Q(\pmb{\beta})$. It is intuitively plausible that the maximum $\hat{\pmb{\beta}}$ of the random function $Q_{n_2}(\pmb{\beta})$ will also converge to the maximum of $Q(\pmb{\beta})$, which is by definition the true value $\pmb{\beta}_0$. Indeed, by the Law of Large Numbers we know that $Q_{n_2}(\pmb{\beta}$ converges point-wise almost surely against $\Q(\pmb{\beta)$. We can slightly strengthen this by requiring uniform convergence in a neighborhood $U_0$ of $\pmb{\beta}_0$. We can also reasonably assume that the functions $Q_{n_2}(\pmb{\beta}$ and $\Q(\pmb{\beta)$ twice differentiable in $U_0$. The derivatives (gradients in the multidimensional case) of $Q_{n_2}(\pmb{\beta}$ and $\Q(\pmb{\beta)$ are $0$ at $\pmb{\beta}_0$ and $\hat{\pmb{\beta}_{s_2}$ since they are minima. Using now the second order Taylor expansion at both minima we get (with 1-d notation) the asymptotic relation
+
+  \begin{eqnarray*}
+  Q_{n_2}(\pmb{\beta}&=&-Q(\pmb{\beta}&=& Q_{n_2}(\hat{\pmb{\beta}}_{s_2}-Q(\pmb{\beta}_0)\\
+  &+& \frac{(\pmb{\beta}-\hat{\pmb{\beta}}_{s_2})^2{2}Q^{''}(\hat{\pmb{\beta}}_{s_2})+
+  \frac{(\pmb{\beta}-\pmb{\beta}}_0)^2{2}Q^{''}(\pmb{\beta}_0)
+  \end{eqnarray*}
+
+
+  It can be proved by standard arguments (see e.g. \cite{cox} for the consistency of the Maximum Likelihoodthat $\hat{\pmb{\beta}}=\pmb{\beta}_0+O_p(n_2^{-\frac{1}{2}})$. Note that proofs of similar results for finite populations are more intricate because both the population and the sample have to tend to infinity. In the Monte-Carlo approach the population is infinite from scratch. We can obtain formally the results given in \cite{wusitter1} (specialized to the case of equal inclusions probabilities $\pi_i$ and weights $q_i$ ) with the following correspondences
+  \begin{eqnarray*}
+  N & \rightarrow & \lambda(F) \\
+  Y_i &\rightarrow & Y(x) \\
+  \sum_{i=1}^N Y_i &\rightarrow & \int_{F} Y(x)dx \\
+  \pi_i \equiv \pi &\rightarrow & \pi(x)\equiv \frac{n_2}{\lambda(F)} \\
+  d_i=\pi_i^{-1}\equiv \pi^{-1} &\rightarrow & d(x)\equiv \pi(x)^{-1}=\frac{\lambda(F)}{n_2} \\
+  w_i &\rightarrow & w(x)             \\
+  \end{eqnarray*}
+  \begin{eqnarray*}
+  q_i \equiv q &\rightarrow & q(x)\equiv q \\
+  \sum_{i\in{s}}w_i=N &\rightarrow & \sum_{x\in{s_2}}w(x)=\lambda(F) \\
+  \sum_{i\in{s}}\mu(\pmb{x}_i,\hat{\pmb{\beta}}) = \sum_{i=1}^N\mu(\pmb{x}_i,\hat{\pmb{\beta}})
+  &\rightarrow &\sum_{x\in{s_2}}w(x)\hat{Y}(x) =  \int_F \hat{Y}(x)dx \\
+  \min \sum_{i\in{s}}\frac{(d_i-w_i)^2}{q_i d_i} & \rightarrow & \min \sum_{x\in_{s_2}}(w(x)-d(x))^2\\
+  \hat{\bar{Y}}_{HT} &\rightarrow & \frac{1}{n_2}\sum_{x\in{s_2}}Y(x) \\
+  \hat{B}_N &\rightarrow & \frac{\sum_{x\in{s_2}}(\hat{Y}(x)-\bar{\hat{Y}}_{s_2}))(Y(x)-\bar{Y}_{s_2})}
+  {\sum_{x\in{s_2}}(Y(x)-\bar{Y}_{s_2})^2}
+  \end{eqnarray*}
+  Note that with this notation one has $\EX_x(\sum_{x\in{s_2}}\frac{Y(x)}{\pi(x)})=\int_{F}Y(x)dx$, which is the standard Horwitz-Thompson form.\\
+  The optimal weights $w_{opt}(x)$ minimize $\sum_{x\in_{s_2}}(w(x)-d(x))^2$ subject to the constraints
+  $\sum_{x\in{s_2}}w(x)=\lambda(F) $ and $\sum_{x\in{s_2}}w(x)\hat{Y}(x)= \int_F \hat{Y}(x)dx$. The resulting \textbf{calibration estimator} $\hat{Y}_{MC}=\sum_{x\in{s_2}}w_{opt}(x)Y(x)$ can be rewritten, according to equation [10] in \cite{wusitter1}, as
+ \begin{equation}
+ \hat{Y}_{MC}=\frac{1}{n_2}\sum_{x\in{s_2}}Y(x)+\Big(\frac{1}{\lambda(F)}\int_F \hat{Y}(x)
+ -\frac{1}{n_2}\sum_{x\in{s_2}}\hat{Y}(x)\Big)\hat{B}
+ \end{equation}
+ If  the first phase is not exhaustive the obvious choice is to set
+ \begin{equation}
+ \hat{Y}_{MC}=\frac{1}{n_2}\sum_{x\in{s_2}}Y(x)+\Big(\frac{1}{n_1}\sum_{x\in{s_1}} \hat{Y}(x)
+ -\frac{1}{n_2}\sum_{x\in{s_2}}\hat{Y}(x)\Big)\hat{B}
+ \end{equation}
+ For linear prediction with intercept term the regression line of $Y(x)$ on $\hat{Y}(x)$ has intercept $0$ and slope $1$ so that $\hat{B}=1$ so that the calibration estimator is the same as the regression estimator.  Note that with linear models the regression estimator, because of zero mean residuals, can also be written  as a weighted sum of the observations, namely $\sum_{x\in{s_2}}\omega(x)Y(x)$ with $\omega(x)=\frac{1}{n_2}g(x)$ and $g(x)=\bar{\pmb{Z}}^t\pmb{A}_2\pmb{Z}(x)$. $g(x)$ are the so-called g-weights. One has $\sum_{x\in{s_2}}\omega(x)\pmb{Z}(x)=\bar{\pmb{Z}}$, which in this case is equivalent to the calibration constraint $\sum_{x\in{s_2}}\omega(x)\hat{Y}(x)=\int_F \hat{Y}(x)$. \\
+ In the general case one has
+ \begin{equation*}
+ \hat{B} = \frac{\hat{\COV}(Y(x),\hat{Y}(x))}{\hat{\VAR}(\hat{Y}(x))}
+ =\frac{\hat{\rho} \sqrt{\hat{\VAR}(Y(x)\hat{\VAR}(\hat{Y}(x))}}{\hat{\VAR}(\hat{Y}(x))}=\frac{\hat{\rho}}{\hat{R}}
+ \end{equation*}
+ where $\hat{\rho}$ is the empirical correlation between $Y(x)$ and
+ $\hat{Y}(x)$ and $\hat{R}^2=\frac{\hat{\VAR}(\hat{Y}(x))}{\hat{\VAR}(\hat{Y}(x))}}$ is the empirical coefficient of determination. If the model is adequate one will also have $\sqrt{\hat{R}^2}=\hat{R}=\hat{rho}$ so that in general $\hat{B}$ will be very close to one.
+ With the coefficient of determination $R^2=\frac{\VAR(\hat{Y}(x))}{\VAR(Y(x))}$ we get, as the regression line of $Y(x)$ on $\hat{Y}(x)$ should ideally have slope $1$ and intercept $0$ also with non linear predictions, the result
+ $$\hat{B} \approx \frac{\rho}{R}\approx 1$$.
+Hence, we have shown that the regression estimator can also be based on non-linear predictions models and that the external variance formula remains asymptotically valid. Furthermore, the regression estimator is asymptotically equivalent to the calibration estimator, but it does not require the first-phase to be exhaustive.
+\clearpage\newpage
+
+\section{Tables}\label{appendixtables}
+
+ \subsection{Case study}\label{appendixtablescasestudy}
+ Results when the optimal bandwidth is recalculated for each bootstrap sample.
+
+ \begin{table}[h]
+\centering
+\caption{ \label{appcasestudy1}\textbf{Global estimation for the case study in Canton Grisons}}\\[0.5cm]
+\small
+ \begin{tabular}{lccc}\hline
+  Estimator & point estimate & standard error   & s.e. bootstrap \\ \hline\hline
+ $\hat{Y}^{(1)}_{lokern}$  & 396.30  & 15.98    & 35.82 \\ \hline
+ $\hat{Y}^{(1)}_{glkern}$  & 389.88  & 16.08    & 24.76 \\ \hline\hline
+ $\hat{Y}^{(2)}_{lokern}$  & 395.71  & 15.82    & 35.26 \\ \hline
+ $\hat{Y}^{(2)}_{glkern}$  & 389.77  & 16.08    & 24.78 \\ \hline\hline
+ \end{tabular}
+ \end{table}
+\normalsize
+\begin{table}[ht]
+\centering
+\caption{ \label{appcasestudy2}\textbf{Small area estimation for the case study in Canton Grisons}}\\[0.5cm]
+\small
+\begin{tabular}{rrrrr}
+  \hline
+small area               & $G_1$ & $G_2$ & $G_3$ & $G_4$ \\
+$n_1:n_2$                & 94:19   & 81:17   & 66:15   & 65:16 \\ \hline\hline
+$\hat{Y}^{(1)}_{lokern}$ & 403.36  & 436.21  & 350.43  & 374.74 \\
+                         & (27.89) & (33.93) & (29.94) & (33.66) \\
+                         & [51.75] & [41.04] & [42.67] & [44.22] \\ \hline
+$\hat{Y}^{(1)}_{glkern}$ & 405.60  & 427.16  & 340.50  & 364.63 \\
+                         & (28.82) & (34.63) & (29.65) & (34.65) \\
+                         & [48.97] & [38.34] & [35.79] & [37.48] \\  \hline
+$\hat{Y}^{(2)}_{lokern}$ & 402.82  & 435.84  & 350.42  & 374.50 \\
+                         & (27.89) & (33.93) & (29.95) & (33.67) \\
+                         & [51.56] & [37.72] & [42.81] & [44.40] \\ \hline
+$\hat{Y}^{(2)}_{glkern}$ & 405.45  & 426.94  & 340.54  & 364.58 \\
+                         & (28.81) & (34.62) & (29.67) & (34.64) \\
+\end{tabular}
+\end{table}
+The standard error based on the external model assumption are given in $()$ and the standard errors based on the bootstrap variance estimates are given in $[]$.\newpage
+
+\clearpage \newpage
+
+ \subsection{Simulations}\label{appendixtablessimul}
+ \normalsize
+ Results when the optimal bandwidth is recalculated for each bootstrap sample.\\
+ The legends are the same as in Tables \ref{simul1}, \ref{simul2},\ref{simul3}, \ref{simul4}. The ? mark  in the column $\EX^*(\hat{\VAR}_{boot}())$ indicates that the value is corrupted by some extreme outliers as illustrated in Figures \ref{boot1} and \ref{boot2}.
+\small
+\begin{table}[h]
+\centering
+\caption{$n_1=400,n_2=100$: fitted model is the true model }\label{appsimul1}\\[0.5cm]
+\begin{tabular}{lrrrrrr}
+  \hline
+Estimator & $\EX^*()$ & $\VAR^*()$ & $\EX^*(\hat{\VAR}())$ & $\EX^*(\hat{\VAR}_{boot}())$ & $\EX^*(\hat{P})$ & $\EX^*(\hat{P}_{boot})$ \\ \hline
+$\hat{Y}^{(1)}_{lokern}$    & 39.16 & 0.20 & 0.18 &0.24  &0.94  & 0.96  \\
+$\hat{Y}^{(1)}_{glkern}$    & 39.16 & 0.19 & 0.19 &0.22  &0.94  & 0.95  \\
+$\hat{Y}^{(2)}_{lokern}$    & 39.16 & 0.20 & 0.18 &0.24  &0.94  & 0.96   \\
+$\hat{Y}^{(2)}_{glkern}$    & 39.16 & 0.19 & 0.19 &0.22  &0.94  & 0.95  \\ \hline
+\end{tabular}
+\end{table}
+\begin{table}[h]
+\centering
+\caption{$n_1=200,n_2=50$: fitted model is the true model }\label{appsimul2}\\[0.5cm]
+\begin{tabular}{lrrrrrr}
+  \hline
+Estimator  & $\EX^*()$ & $\VAR^*()$ & $\EX^*(\hat{\VAR}())$ & $\EX^*(\hat{\VAR}_{boot}())$
+& $\EX^*(\hat{P})$ &  $\EX^*(\hat{P}_{boot})$\\ \hline
+$\hat{Y}^{(1)}_{lokern}$    & 39.17 & 0.43 & 0.36 & 3.24?      &0.93 & 0.96 \\
+$\hat{Y}^{(1)}_{glkern}$    & 39.18 & 0.42 & 0.36 & 0.52       &0.94 & 0.96\\
+$\hat{Y}^{(2)}_{lokern}$    & 39.17 & 0.43 & 0.36 & 0.60       &0.93 & 0.96 \\
+$\hat{Y}^{(2)}_{glkern}$    & 39.18 & 0.43 & 0.36 & 0.51       &0.94 & 0.96 \\ \hline
+
+\end{tabular}
+\end{table}
+\clearpage\newpage
+\small
+\begin{table}[h]
+\centering
+\caption{$n_1=400,n_2=100$: fitted model is not the true model }\label{appsimul3}\\[0.5cm]
+\begin{tabular}{lrrrrrr}
+  \hline
+Estimator & $\EX^*()$ & $\VAR^*()$ & $\EX^*(\hat{\VAR}())$ & $\EX^*(\hat{\VAR}_{boot}())$ & $\EX^*(\hat{P})$ & $\EX^*(\hat{P}_{boot})$ \\ \hline
+ $\hat{Y}^{(1)}_{lokern}$     & 39.17 & 0.28 & 0.27 &0.39 &0.94 & 0.96\\
+ $\hat{Y}^{(1)}_{glkern}$     & 39.18 & 0.28 & 0.26 &0.33 &0.94 & 0.96\\
+ $\hat{Y}^{(2)}_{lokern}$     & 39.18 & 0.28 & 0.26 &0.38 &0.94 & 0.96\\
+ $\hat{Y}^{(2)}_{glkern}$     & 39.18 & 0.28 & 0.26 &0.33 &0.94 & 0.96\\ \hline
+\end{tabular}
+\end{table}
+\begin{table}[h]
+\centering
+\caption{$n_1=200,n_2=50$: fitted model is not the true model }\label{appsimul3}\\[0.5cm]
+\begin{tabular}{lrrrrrr}
+  \hline
+Estimator & $\EX^*()$ & $\VAR^*()$ & $\EX^*(\hat{\VAR}())$ & $\EX^*(\hat{\VAR}_{boot}())$ & $\EX^*(\hat{P})$ & $\EX^*(\hat{P}_{boot})$ \\ \hline
+$\hat{Y}^{(1)}_{lokern}$     & 39.20 & 0.61 & 0.47 & 1.78?     & 0.92 &  0.96\\
+ $\hat{Y}^{(1)}_{glkern}$    & 39.20 & 0.58 & 0.48 & 0.76      & 0.92 &  0.95\\
+ $\hat{Y}^{(2)}_{lokern}$    & 39.20 & 0.61 & 0.47 & 1.02?     & 0.91 &  0.96\\
+ $\hat{Y}^{(2)}_{glkern}$    & 39.20 & 0.58 & 0.48 & 0.77      & 0.92 &  0.95\\ \hline
+\end{tabular}
+\end{table}
+
+
+\clearpage\newpage
+
+
+
+
+
+
+
+
+
+\section{Figures}\label{appendixfigures}
+
+\subsection{Case study}\label{appendixfigurescasestudy}
+
+\begin{figure}[h]
+\begin{center}
+\caption{\label{predict1} Predictions $\hat{Y}^{(1,2)}_{gl-lokern}(x_0)$ versus $\hat{Y}(x_0)$}
+\end{center}
+\begin{center}
+\includegraphics[width=16cm,height=14cm]{predictionplot.pdf}
+\end{center}
+\end{figure}
+
+\begin{figure}[h]
+\begin{center}
+\caption{\label{choiceofkcasestudy} Variance as a function of $k$}
+\end{center}
+\begin{center}
+\includegraphics[width=16cm,height=14cm]{kcasestudy.pdf}
+\end{center}
+\end{figure}
+\clearpage\newpage
+
+
+\subsection{Simulation}\label{appendixfiguressimulation}
+ \begin{figure}[h]
+\begin{center}
+\caption{\label{plotdensity2}\textbf{Local density} $Y(x)$}
+\end{center}
+\begin{center}
+\includegraphics[width=12cm,height=14cm]{plottrue.jpg}
+\end{center}
+\end{figure}
+\clearpage \newpage
+
+\begin{figure}[h]
+\begin{center}
+\caption{\label{boot1} \textbf{Bootstrap variances for} $n_1=400,n_2=100$}
+\end{center}
+\begin{center}
+\includegraphics[width=14cm,height=18cm]{scatter400_100.pdf}
+\end{center}
+\end{figure}
+
+\clearpage\newpage
+\begin{figure}[h]
+\begin{center}
+\caption{\label{boot2} \textbf{Bootstrap variances for} $n_1=200,n_2=50$}
+\end{center}
+\begin{center}
+\includegraphics[width=14cm,height=18cm]{scatter200_50.pdf}
+\end{center}
+\end{figure}
+\clearpage\newpage
+\begin{figure}[h]
+\begin{center}
+\caption{\label{choiceofksim} \textbf{Variance as a function of} $k$}
+\end{center}
+\begin{center}
+\includegraphics[width=12cm,height=14cm]{ksim.pdf}
+\end{center}
+\end{figure}
+\newpage
+\subsection{R-Code}\label{appendix_R_code}
+Below we give the R-code to run a single iteration of the simulation to produce an artificial data set and to calculate with it all the estimators discussed in this report, in particular the bootstrap variance estimates. Potential users can easily change the variables names to run the program on their own data sets.
+\tiny{
+\begin{verbatim}
+
+######################
+### SAMPLE R CODE  ###
+######################
+
+#LOAD LIBRARIES
+library(kknn)
+library(lokern)
+library(np)
+library(boot)
+
+##########
+#CREATE SINGLE EXAMPLE DATA (CALLED "s1") SET FROM SIMULATION SURFACE
+##########
+set.seed(7)
+n1 <- 200
+n2<- 50
+s1 <- data.frame(s2.indicator = c(rep(1, times=n2), rep(0, times=n1-n2)), x=2*runif(n1), y=3*runif(n1))
+s1$xx <- s1$x^2
+s1$yy <- s1$y^2
+s1$response <- ifelse(s1$s2.indicator==1, 30 + 13*s1$x - 6*s1$y - 4*s1$x^2 + 3*s1$x*s1$y + 2*s1$y^2 + 6*cos(pi*s1$x)*sin(2*pi*s1$y), NA)
+head(s1, 60)
+
+
+
+##########
+#CREATE TRAINING SET
+##########
+#      - if true external model is used we need to select independent training set from s1
+training.set <- data.frame(x=2*runif(n2), y=3*runif(n2))
+training.set$xx <- training.set$x^2
+training.set$yy <- training.set$y^2
+training.set$response <- 30 + 13*training.set$x - 6*training.set$y - 4*training.set$x^2 + 3*training.set$x*training.set$y + 2*training.set$y^2 +
+                         6*cos(pi*training.set$x)*sin(2*pi*training.set$y)
+training.set <- training.set[training.set$s2.indicator==1,]
+
+#      - if internal model is used... comment out for true external model from indep. training set chosen above
+training.set <- s1[s1$s2.indicator==1,]
+
+
+
+########################
+##   DEFINE FUNCTIONS ##
+########################
+## CREATE GENERAL TWO-PHASE R-FUNCTION FOR DIFFERENCE ESTIMATOR
+#     - ground.truth.s2 and residuals.s2 are length n2 (without missing values)
+#     - predictions.s1 is length n1 (without missing values)
+twophase_est <- function(ground.truth.s2, predictions.s1, residuals.s2){
+  n1<- length(predictions.s1)
+  n2<- length(residuals.s2)
+  Est<- mean(predictions.s1) + mean(residuals.s2)
+  Var<- (1/n1)*var(ground.truth.s2) + (1-(n2/n1))*(1/n2)*var(residuals.s2)
+  Err<- sqrt(Var)
+
+  out<- list(Est=Est, Err=Err)
+  return(out)
+}
+
+#special leave-one-out-cross validation function for npreg(2) bandwidth selection
+cv_bws_npreg <- function(x, y, bandwidths=c(1,2,4,6,10,15,20,30,40,50)) {
+  n <- length(x)
+  fold_MSEs <- matrix(0, nrow=n, ncol=length(bandwidths))
+  colnames(fold_MSEs) = bandwidths
+  case.folds <- 1:n
+  for (loo in 1:n) {
+    x.train = x[-loo]
+    y.train = y[-loo]
+    x.test = x[loo]
+    y.test = y[loo]
+    x.df <- as.data.frame(x.test)
+    names(x.df) <- "x.train"
+    reg <- lm(y ~ x)
+    pred <- reg$fitted.values
+    res <- reg$residuals
+    hat <- pred + npreg(res ~ pred, regtype = "lc", bws = 1)$mean
+    reg <- lm(y.train ~ x.train)
+    pred.train <- reg$fitted.values
+    pred.test <- predict(object = reg, newdata = x.df)
+    pred.test.df <- as.data.frame(pred.test)
+    names(pred.test.df) <- "pred.train"
+    resid <- y.train - pred.train
+    for (bw in bandwidths) {
+      fit <- pred.test + npreg(resid ~ pred.train, regtype = "lc", newdata = pred.test.df, bws = bw)$mean
+      fold_MSEs[loo,paste(bw)] <- (y.test - fit)^2
+    }
+  }
+  CV_MSEs = colMeans(fold_MSEs)
+  best.bw = bandwidths[which.min(CV_MSEs)]
+  return(best.bw)
+}
+
+##########
+#CHOOSE DESIRED MODEL
+##########
+model.formula <- response ~ y + yy + xx  # a.k.a "the working model"
+
+
+##########
+#FIT LINEAR MODEL AND ADD REGRESSION PREDICTIONS TO s1
+##########
+model <- lm(model.formula, data=training.set, y=TRUE) #note: the training set is used here
+summary(model)
+s1$lm.predictions <- predict(object=model, newdata=s1)
+s1 <- s1[sort.list(s1$lm.predictions),]  # SOME PROCEDURES REQUIRE SORTING
+s1$lm.residuals <- s1$response - s1$lm.predictions
+
+
+##########
+# MAKE PREDICTIONS FOR GLKERNS(1), NPREG(1), GLKERNS(2), NPREG(2), KNN(multidim), and KNN(pred)
+##########
+
+glkerns1 <- glkerns(x=s1[s1$s2.indicator==1, "lm.predictions"], y=s1[s1$s2.indicator==1, "response"],
+                    x.out=s1[, "lm.predictions"])
+glkerns1_band <- glkerns1$bandwidth  #save bandwidth
+s1$glkerns1 <- glkerns1$est
+
+###
+
+npreg1 <- npreg(response ~ lm.predictions, data=s1[s1$s2.indicator==1,],
+                newdata=s1, bwmethod="cv.ls")
+npreg1_band <- npreg1$bw  #note: npreg's internally produced bandwidths have different scaling than cv_bws_npreg()
+s1$npreg1 <- npreg1$mean
+
+###
+
+glkerns2 <- glkerns(x=s1[s1$s2.indicator==1, "lm.predictions"], y=s1[s1$s2.indicator==1, "lm.residuals"],
+                    x.out=s1[, "lm.predictions"])
+glkerns2_band <- glkerns2$bandwidth  #save bandwidth
+s1$glkerns2 <- glkerns2$est + s1$lm.predictions
+
+###
+
+npreg2_band <- cv_bws_npreg(x=s1$lm.predictions[s1$s2.indicator==1], y=s1$response[s1$s2.indicator==1], bandwidths=seq(0.5, 10, 0.5))  # 2
+s1$npreg2 <- npreg(lm.residuals ~ lm.predictions, data=s1[s1$s2.indicator==1,], newdata=s1, bws=npreg2_band)$mean + s1$lm.predictions
+
+###
+
+# leave one out cross validation to choose optimal k (k=3 in this run of the code)
+knn_multi_band <- train.kknn(model.formula, data = s1[s1$s2.indicator==1,], kmax=15, kernel = c("gaussian"))$best.parameters$k
+knn_multi <- kknn(formula=model.formula, train=s1[s1$s2.indicator==1,], test=s1, kernel="gaussian", k=knn_multi_band)
+s1$knn_multi <- knn_multi$fitted.values
+
+###
+
+# leave one out cross validation to choose optimal k (k=12 in this run of the code)
+knn_pred_band <- train.kknn(response ~ lm.predictions, data = s1[s1$s2.indicator==1,], kmax=15, kernel = c("gaussian"))$best.parameters$k
+knn_pred <- kknn(formula=response ~ lm.predictions, train=s1[s1$s2.indicator==1,], test=s1, kernel="gaussian", k=knn_pred_band)
+s1$knn_pred <- knn_pred$fitted.values
+
+
+
+######################################################
+##  Use difference estimator on above predictions   ##
+######################################################
+# CALCULATE SAMPLE MEAN AND ITS STANDARD ERROR
+mean(s1$response, na.rm=TRUE)         # 40.52217
+sqrt(var(s1$response, na.rm=TRUE)/n2) # 1.130878
+
+
+# CALCULATE REG ESTIMATOR
+REG <- twophase_est(ground.truth.s2 = s1[s1$s2.indicator==1, "response"],
+             predictions.s1 = s1[, "lm.predictions"],
+             residuals.s2 = s1[s1$s2.indicator==1, "lm.residuals"])
+
+REG$Est  # 39.75979
+REG$Err  # 0.7247854
+
+
+# CALCULATE GLKERN1 ESTIMATOR
+GLKERN1 <- twophase_est(ground.truth.s2 = s1[s1$s2.indicator==1, "response"],
+                    predictions.s1 = s1[, "glkerns1"],
+                    residuals.s2 = s1[s1$s2.indicator==1, "response"]- s1[s1$s2.indicator==1, "glkerns1"])
+
+GLKERN1$Est  # 39.43728
+GLKERN1$Err  # 0.6943061
+
+
+# CALCULATE NPREG1 ESTIMATOR
+NPREG1 <- twophase_est(ground.truth.s2 = s1[s1$s2.indicator==1, "response"],
+                        predictions.s1 = s1[, "npreg1"],
+                        residuals.s2 = s1[s1$s2.indicator==1, "response"]- s1[s1$s2.indicator==1, "npreg1"])
+
+NPREG1$Est  # 39.55139
+NPREG1$Err  # 0.7038791
+
+
+# CALCULATE GLKERN2 ESTIMATOR
+GLKERN2 <- twophase_est(ground.truth.s2 = s1[s1$s2.indicator==1, "response"],
+                       predictions.s1 = s1[, "glkerns2"],
+                       residuals.s2 = s1[s1$s2.indicator==1, "response"]- s1[s1$s2.indicator==1, "glkerns2"])
+
+GLKERN2$Est  # 39.43422
+GLKERN2$Err  # 0.6943259
+
+
+# CALCULATE NPREG2 ESTIMATOR
+NPREG2 <- twophase_est(ground.truth.s2 = s1[s1$s2.indicator==1, "response"],
+                       predictions.s1 = s1[, "npreg2"],
+                       residuals.s2 = s1[s1$s2.indicator==1, "response"]- s1[s1$s2.indicator==1, "npreg2"])
+
+NPREG2$Est  # 39.56989
+NPREG2$Err  # 0.7031609
+
+
+# CALCULATE KNN(multidim) ESTIMATOR
+KNN_multidim <- twophase_est(ground.truth.s2 = s1[s1$s2.indicator==1, "response"],
+                       predictions.s1 = s1[, "knn_multi"],
+                       residuals.s2 = s1[s1$s2.indicator==1, "response"]- s1[s1$s2.indicator==1, "knn_multi"])
+
+KNN_multidim$Est  # 39.60094
+KNN_multidim$Err  # 0.6325992
+#Note: when expect this to be underestimation because we treated an internal model as external
+
+
+# CALCULATE NPREG2 ESTIMATOR
+KNN_pred <- twophase_est(ground.truth.s2 = s1[s1$s2.indicator==1, "response"],
+                       predictions.s1 = s1[, "knn_pred"],
+                       residuals.s2 = s1[s1$s2.indicator==1, "response"]- s1[s1$s2.indicator==1, "knn_pred"])
+
+KNN_pred$Est  # 39.63425
+KNN_pred$Err  # 0.698619
+
+
+
+
+########################
+##  BOOTSTRAP ROUTINE ##
+########################
+
+#EXAMPLE OF BOOTSTRAP ROUTINE
+
+# Define function that inputs a data.frame with index vector and outputs estimates for above estimators.
+# When bandwidths are allowed to be reoptimized within the following routine instability can result.
+# All bandwidths obtained from the original sample are thus fixed throughout the routine.
+# One must also pass the desired model formula to this function
+
+
+boot.vector <- function(data, i, glkerns1_band=glkerns1_band, glkerns2_band=glkerns2_band,
+                                 npreg1_band=npreg1_band, npreg2_band=npreg2_band,
+                                 knn_multi_band=knn_multi_band, knn_pred_band=knn_pred_band,
+                                 model.formula=model.formula){
+  df=data[i,]
+  training.set <- df[df$s2.indicator==1,]  #you change this for true external model approach (not done here)
+
+  model <- lm(model.formula, data=training.set, y=TRUE) #note: the internal training set is used here
+  df$lm.predictions <- predict(object=model, newdata=df)
+  df <- df[sort.list(df$lm.predictions),]  # SOME PROCEDURES REQUIRE SORTING
+  df$lm.residuals <- df$response - df$lm.predictions
+  #----#
+  MEAN <- mean(df$response, na.rm=TRUE)
+  #----#
+  REG <- twophase_est(ground.truth.s2 = df[df$s2.indicator==1, "response"],
+                      predictions.s1 = df[, "lm.predictions"],
+                      residuals.s2 = df[df$s2.indicator==1, "lm.residuals"])$Est
+  #----#
+  df$glkerns1 <- glkerns(x=df[df$s2.indicator==1, "lm.predictions"], y=df[df$s2.indicator==1, "response"],
+                      x.out=df[, "lm.predictions"], bandwidth=glkerns1_band)$est
+  GLKERN1 <- twophase_est(ground.truth.s2 = df[df$s2.indicator==1, "response"],
+               predictions.s1 = df[, "glkerns1"],
+               residuals.s2 = df[df$s2.indicator==1, "response"]- df[df$s2.indicator==1, "glkerns1"])$Est
+  #----#
+  df$npreg1 <- npreg(response ~ lm.predictions, data=df[df$s2.indicator==1,],
+                  newdata=df, bws=npreg1_band)$mean
+  NPREG1 <- twophase_est(ground.truth.s2 = df[df$s2.indicator==1, "response"],
+                         predictions.s1 = df[, "npreg1"],
+                         residuals.s2 = df[df$s2.indicator==1, "response"]- df[df$s2.indicator==1, "npreg1"])$Est
+  #----#
+  glkerns2 <- glkerns(x=df[df$s2.indicator==1, "lm.predictions"], y=df[df$s2.indicator==1, "lm.residuals"],
+                      x.out=df[, "lm.predictions"], bandwidth=glkerns2_band)
+  df$glkerns2 <- glkerns2$est + df$lm.predictions
+  GLKERN2 <- twophase_est(ground.truth.s2 = df[df$s2.indicator==1, "response"],
+                          predictions.s1 = df[, "glkerns2"],
+                          residuals.s2 = df[df$s2.indicator==1, "response"]- df[df$s2.indicator==1, "glkerns2"])$Est
+  #----#
+  df$npreg2 <- npreg(lm.residuals ~ lm.predictions, data=df[df$s2.indicator==1,], newdata=df, bws=npreg2_band)$mean + df$lm.predictions
+  NPREG2 <- twophase_est(ground.truth.s2 = df[s1$s2.indicator==1, "response"],
+                         predictions.s1 = df[, "npreg2"],
+                         residuals.s2 = df[df$s2.indicator==1, "response"]- df[df$s2.indicator==1, "npreg2"])$Est
+  #----#
+  df$knn_multi <- kknn(formula=model.formula, train=df[df$s2.indicator==1,], test=df, kernel="gaussian", k=knn_multi_band)$fitted.values
+  KNN_multidim <- twophase_est(ground.truth.s2 = df[df$s2.indicator==1, "response"],
+                               predictions.s1 = df[, "knn_multi"],
+                               residuals.s2 = df[df$s2.indicator==1, "response"]- df[df$s2.indicator==1, "knn_multi"])$Est
+  #----#
+  df$knn_pred <- kknn(formula=response ~ lm.predictions, train=df[df$s2.indicator==1,], test=df, kernel="gaussian", k=knn_pred_band)$fitted.values
+  KNN_pred <- twophase_est(ground.truth.s2 = df[df$s2.indicator==1, "response"],
+                           predictions.s1 = df[, "knn_pred"],
+                           residuals.s2 = df[df$s2.indicator==1, "response"]- df[df$s2.indicator==1, "knn_pred"])$Est
+
+  return(c(MEAN, REG, GLKERN1, NPREG1, GLKERN2, NPREG2, KNN_multidim, KNN_pred))
+}
+
+
+
+#Call bootstrap (uncomment "parallel="multicore", ncpus=4" if parallel processing on linux or Mac OSx)
+bootvec <- boot(s1, boot.vector, R = 10000,
+                #parallel="multicore", ncpus=4,  # uncomment for multicore processing on linus or Mac OSx
+                glkerns1_band=glkerns1_band, glkerns2_band=glkerns2_band,
+                npreg1_band=npreg1_band, npreg2_band=npreg2_band,
+                knn_multi_band=knn_multi_band, knn_pred_band=knn_pred_band,
+                model.formula=model.formula)
+
+bootvec
+
+#Note: These bootstrap results (based on 10000 replicates) may differ from simulation results because the
+#      original sample here is a SINGLE sample, not the mean and variance of 10000 samples.  That type of
+#      simulation is possible because it is an artificial example where we know the truth.
+
+\end{verbatim}
+}
+\end{appendix}
+\end{document}
+
+
+
+
+

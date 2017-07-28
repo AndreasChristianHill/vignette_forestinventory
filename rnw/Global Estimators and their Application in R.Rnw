@@ -1,0 +1,172 @@
+% !Rnw root = JStatSoft_forestinventory_master.Rnw
+
+\section[Global Estimators and their Application in R]{Global Estimators and their Application}
+\label{sec:globest_and_appl}
+
+
+% ---------------------------------------------------------------------------- %
+\subsection{Double Sampling (Two-Phase) Estimators}
+
+% Note: As the mathematical form of estimators is still quite simple and short, we can here
+%       focus on presenting and explaining important 'components' of the estimators, such as Z, C, ...)
+% 
+% \subsection{Mathematical Background}
+% 
+% Here, we give the \textbf{mathematical background} of:
+% \begin{itemize}
+%   \item the classical two-phase estimator, including:
+%     \item the external and g-weight variance. Explain the differences and pros for using the g-weight version
+%     \item the auxiliary components (Z) and covvar(Z) as well as their use in the point and variance estimator
+%   \item the boundary weight adjustment (mathematically: weighted means of Z) --> our extension to the already published stuff
+%   \item ...
+% \end{itemize}
+% 
+% 
+% 
+% \subsubsection{Application}
+% 
+% Here, we give the \textbf{application} examples:
+% \begin{itemize}
+%   \item example for non-exhaustive case: use grison dataset
+%     \item with boundary adjustments, just mention that this is optional and can be left out, in which case the simple means of Z are used
+%   \item example for exhaustive case: use cluster set
+% \end{itemize}
+
+\subsubsection{Mathematical Background}
+
+The double sampling estimators use inventory information from \textbf{two} nested samples (\textit{phases}). The first phase $s_1$ comprises $n_1$ sample locations that provide a set of explanatory variables described by the column vector $\pmb{Z}(x)\in{\Re^{p}}$ at each point $x \in s_1$. These explanatory variables have been derived from auxiliary information, often remote sensing data, that is available in high quantity within the forest area $F$. The second phase $s_2$ constitutes the terrestrial inventory conducted at $n_2$ subsamples of the large phase $s_1$ and provides the value of the target variable, i.e. the local density $Y(x)$ such as the timber volume density per hectare. The set of explanatory variables at each sample location $x \in s_1$ is now transformed into a prediction $\hat{Y}(x)$ of $Y(x)$ by the application of an oridinary least square (OLS) regression model.The regression coefficients of the OLS regression model are found by solving the sample-based normal equation. In case of \textbf{simple sampling}, the vector of regression coefficients are derived as
+
+\begin{equation}\label{normequ_simple}
+  \hat{\pmb{\beta}}_{s_2}&=& \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}(x)\pmb{Z}^t(x) \Big)^{-1} \Big(\frac{1}{n_2}\sum_{x\in{s_2}}Y(x)\pmb{Z}(x)\Big)
+\end{equation}
+
+In the special case of \textbf{cluster sampling}, we have
+
+\begin{equation}\label{normequ_cluster}
+  \hat{\pmb{\beta}}_{c,s_2}&=&
+  \Big(\frac{1}{n_2}\sum_{x\in{s_2}}M(x)\pmb{Z}_c(x)\pmb{Z}_c^t(x)\Big)^{-1}\Big(\frac{1}{n_2}\sum_{x\in{s_2}}M(x)Y_c(x)\pmb{Z}_c(x)\Big)
+\end{equation}
+
+
+with $M(x)$ being the number of samples per cluster that can vary due to forest/non-forest decision on the plot level, and $\pmb{Z}_c(x)$ containing the weighted mean of each explanatory variable on the cluster level. Note that in the case of cluster sampling, $n_2$ denotes the number of clusters.
+
+In order to calculate the point estimate and its estimated variance, we further have to calulate the design-based variance-covariance matrix of the regression coefficients, defined as
+
+\begin{eqnarray}\label{eq:estvarmatrix}
+  \hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}:=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}(x)\pmb{Z}^t(x) \Big)^{-1}
+  \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}^2(x)\pmb{Z}(x)\pmb{Z}(x)^t\Big)
+  \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}(x)\pmb{Z}^t(x) \Big)^{-1} \\
+  \hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{c,s_2}}:=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}_c(x)\pmb{Z}_c^t(x) \Big)^{-1}
+  \Big(\frac{1}{n^2_2}\sum_{x\in{s_2}}M^2(x)\hat{R}^2_c(x)
+  \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}_c(x)\pmb{Z}_c^t(x) \Big)^{-1}
+\end{eqnarray}
+
+as well as the empirical residuals, i.e. the regression model residuals, available at all sample location $x \in s_2$ as
+\begin{eqnarray}\label{eq:resids}
+  \hat{R}(x)=Y(x)-\hat{Y}(x) \\
+  \hat{R}_c(x)=Y_c(x)-\hat{Y}_c(x)
+\end{eqnarray}
+
+
+We can subsequently calculate the \textbf{point estimate} for simpe sampling according to equation \ref{eq:pointest_simple}. Note that this form result under the prerequisite that the regression coefficients are derived using the data from the current inventory, i.e. the regression model is \textbf{internal}. 
+
+\begin{equation}\label{eq:pointest_simple}
+\hat{Y}_{reg}=\hat{\bar{\pmb{Z}}}^t\hat{\pmb{\beta}}_{s_2}
+\end{equation}
+
+We can specify the estimation precision of the point estimate by calcualting the estimated \textbf{design-based variance} as given in equation \ref{eq:gw_var_simple}. Note that this is mathematically identical to the \textbf{g-weight} formulation of the design-based variance given in \citep{mandallaz2016}. The package \pkg{forestinventory} additonally provides the \textbf{external} variance (equation \ref{eq:varexternalsimple}).
+
+\begin{equation}\label{eq:gw_var_simple}
+\hat{\var}(\hat{Y}_{G,synth})=\bar{\pmb{Z}}_G^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}\bar{\pmb{Z}}_G
+\end{equation}
+
+
+\begin{equation}\label{eq:varexternalsimple}
+\hat{\var}(\hat{Y}_{reg})=
+\frac{1}{n_1}\frac{1}{n_2-1}\sum_{x\in{s_2}}(Y(x)-\bar{Y}_2)^2+
+(1-\frac{n_2}{n_1})\frac{1}{n_2}\frac{1}{n_2-1}\sum_{x\in{s_2}}(R(x)-\bar{R})^2
+\end{equation}
+
+
+
+
+\subsubsection{Application}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Triple Sampling (Three-Phase) Estimators}
+
+
+\subsubsection{Mathematical Background}
+
+\subsubsection{Application}
+
+
+
+% The psynth estimator:
+% 
+% \begin{equation}\label{pseudosynth1}
+% \hat{Y}_{G,psynth}=\hat{\bar{\pmb{Z}}}_{1,G}^t\hat{\pmb{\beta}}_{s_2}
+% =\frac{1}{n_{1,G}}\sum_{x\in{s_{1,G}}}\hat{Y}(x)
+% \end{equation}
+% 
+% \begin{equation}\label{estvarpseudosynth1}
+% \hat{\var}(\hat{Y}_{G,psynth}): =
+% \hat{\bar{\pmb{Z}}}_{1,G}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}\hat{\bar{\pmb{Z}}}_{1,G}
+% + \hat{\pmb{\beta}}_{s_2}^t\hat{\Sigma}_{\hat{\bar{\pmb{Z}}}_{1,G}}\hat{\pmb{\beta}}_{s_2}
+% \end{equation}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

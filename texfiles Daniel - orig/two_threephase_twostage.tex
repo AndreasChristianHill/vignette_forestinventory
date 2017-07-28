@@ -1,0 +1,708 @@
+\documentclass[a4paper,12pt,leqno, titlepage]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{a4}
+\usepackage{graphicx}
+\usepackage{flafter}
+\usepackage{bm}
+\usepackage{setspace}
+\usepackage{lineno}
+\usepackage{natbib}
+\bibliographystyle{mystyle2}
+\newcommand{\LF}{\ensuremath{\lambda(F)}}
+\newcommand{\LFC}{\ensuremath{\lambda^2(F)}}
+\newcommand{\EX}{\mathbb{E}}
+\newcommand{\PR}{\mathbb{P}}
+\newcommand{\VAR}{\mathbb{V}}
+\newcommand{\COV}{\mathbb{COV}}
+\newcommand{\MAV}{\mathbb{MAV}}
+\newcommand{\MRAV}{\mathbb{MRAV}}
+\newcommand{\POP}{\mathcal{P}}
+\newcommand{\SAMP}{\mathcal{S}}
+\newcommand{\RE}{\mathbb{R}}
+\newcommand{\PLAN}{\Re^2}
+\newcommand{\SUR}{\mathbb{S}}
+\newcommand{\ING}{\mathbb{I}}
+\newcommand{\DEP}{\mathbb{D}}
+\setlength{\topmargin}{0cm}
+\setlength{\headheight}{3mm}
+\setlength{\headsep}{1cm}
+\setlength{\topskip}{0cm}
+\setlength{\textwidth}{16cm}
+\setlength{\textheight}{22cm}
+\setlength{\oddsidemargin}{0cm}
+\makeatletter
+\def\tagform@#1{\maketag@@@{[\ignorespaces#1\unskip\@@italiccorr]}}
+\makeatother
+
+
+
+
+\begin{document}
+\doublespacing
+\pagestyle{plain}
+\pagenumbering{arabic}
+
+\title{Mathematical details of two-phase/two-stage and three-phase/two-stage regression estimators in forest inventories: design-based Monte Carlo approach}
+\author{Daniel Mandallaz \thanks{Tel. ++41(0)44 6323186 e-mail
+    daniel.mandallaz@env.ethz.ch} \\Department of Environmental Systems Science\\
+    Chair of Land Use Engineering\\ETH Zurich\\CH 8092 Zurich, Switzerland \\}
+\date{Mai 2015}
+
+\maketitle
+\newpage
+\nolinenumbers
+\begin{center}
+\section*{Foreword}\label{foreword}
+\end{center}
+This technical report discusses some mathematical details of regression estimators under two or three-phase sampling with two-stage sampling of trees at the plot level. Discussions with colleagues and graduate students convinced me that the mathematical derivations presented (and often simply sketched) in previous work deserved clarification. This is particularly true, because of space restriction, for the papers \cite{mandallaz3}, \cite{mandallaz4}, \cite{mandallaz5} and to a lesser degree for the the book \cite{mandallaz} and the technical reports (\cite{mandallazreport1}, \cite{mandallazreport2}, \cite{mandallazreport3}). The great physicist and Nobel prize laureate Richard Feynman once said, after a life-time frequentation of mathematicians, that he finally understood what the word obvious really means, namely proved. Of course, the level he was referring to is stratospheric in comparison with the down-to-earth properties of regression estimators in forest inventory. Nevertheless, I thought it would not be harmful, a few months before my retirement, to clarify some theoretical issues in survey sampling, in particular the differences between design-based model-assisted versus model-dependent inference, which are not always well understood by practitioners, as I can now judge after 25 years experience as a reviewer and author. It turns out that all the previously published results are indeed correct, at least asymptotically. The main point is that one can use mutatis mutandis the two-phase/three-phase one-stage formulae also with two-stage sampling at the plot level. The second-stage variance resulting from Poisson sampling at the plot level is so to speak automatically taken into account. This holds in particular for the easy to use so-called external variances. In contrast to previous work the notation is more pedantic, which is the price to pay to be as clear and accurate as possible.
+\newpage
+\section{Introduction}\label{intro}
+In the forested area $F$ we consider a well-defined population $ \mathcal{P}$ of $N$ trees with response variable $Y_i,\;i=1,2 \ldots$, e.g. the timber volume.  \textbf{The objective is to estimate the overall spatial mean}  $\bar{Y}=\frac{1}{\lambda(F)}\sum_{i=1}^NY_i$, where $\lambda(\cdot)$ denotes the surface area (usually in ha) and \textbf{the spatial mean over F} is defined as
+ \begin{equation}\label{small1}
+ \bar{Y}_F=\frac{1}{\lambda(F)}\sum_{i=1}^N Y_i=:\frac{1}{\lambda(F)}\sum_{i\in{F}}Y_i
+ \end{equation}
+Let us first recall the definitions of local density and generalized local density.
+For a random point $x$  uniformly distributed in $F$ trees are selected at $x$ from the population $\mathcal{P}$ for instance with concentric circles or angle count techniques. Each tree has its associated inclusion circle $K_i$ centered on the tree. The
+set of trees selected at point $x$ is denoted by $s_{2}(x)$. The first-stage inclusion probabilities are $\pi_i=\frac{\lambda(K_i\cap F}{\lambda(F)}$. For each of the
+selected trees $i\in{s_{2}(x)}$ one determines $Y_i$. The indicator variable $I_i$ is defined as
+\begin{equation}\label{1stage}
+ I_i(x)=\begin{cases}&1 \text{ if $i\in s_{2}(x)$}\\
+                      &0 \text{ if $i\not\in s_{2}(x)$}
+         \end{cases}
+\end{equation}
+At each point  the
+terrestrial inventory provides the \textbf{local density} $Y(x)$
+\begin{equation}\label{truelocaldensity}
+ Y(x) =\frac{1}{\lambda(F)}\sum_{i=1}^N \frac{I_i(x)Y_i}{\pi_i}=\frac{1}{\lambda(F)}\sum_{i\in{s}_2(x)} \frac{Y_i}{\pi_i}
+ \end{equation}
+ The term $\frac{1}{\lambda(F)\pi_i}$ is the tree extrapolation factor $f_i$ with dimension $ha^{-1}$. One must include possible boundary adjustments at the forest edge: $\lambda(F)\pi_i=\lambda(F \cap K_i)$. In the infinite population approach (now better known as Monte Carlo approach) one samples the function $Y(x)$ (\cite{mandallaz}) for which the following important relation holds:
+ \begin{equation}\label{montecarlo}
+ \EX_{x} (Y(x))=\frac{1}{\lambda(F)}\int_{F} Y(x)dx=\frac{1}{\lambda(F)}\sum_{i=1}^NY_i=\bar{Y}_F
+ \end{equation}
+ Where $\EX_x$ denotes the expectation with respect to a random point $x$ uniformly distributed in $F$. This establishes the link between the infinite population (continuum) $\{x\in{F} \mid Y(x)\}$ and the finite population of trees $\{i=1,2 \ldots N \mid Y_i\}$. The infinite populations and super-populations models were introduced in my PhD thesis (\cite{dmphd}) to solve the obvious contradiction that a domain of the plane cannot be viewed (i.e. partitioned) as a finite population of single or concentric circles (even infinitely many with the angle count). Furthermore, the local density $Y(x)$ as defined above is a regionalized variable in the sense of Matheron (\cite{matheron1}), who developed the purely model-dependent geostatistical Kriging techniques with primarily the estimation of mining or oil resources in mind (where one has to estimate 3-dimensional integrals). The application of geostatistical methods in forest inventory was therefore quite natural in the Monte Carlo approach and led in particular to the model-dependent Double Kriging procedure discussed in my habilitation thesis (\cite{dmhabil}).\\
+ Readers totally unfamiliar with concepts such as Monte Carlo approach, design-based versus model-dependent inference (unfortunately sometimes also called model-based inference) should maybe consult for a first perusal the paper of \cite{gregoire3} on general survey sampling and the text book of \cite{mandallaz} (chapter 4, 6 and 7) in the context of Monte Carlo approach to forest inventory. \\[0.5cm]
+ In many applications costs to measure the response variable $Y_i$ are high. For instance,
+a good determination of the volume may require that one records
+$DBH$, as well as the diameter $D_7$  at $7m$ above ground and total height $H$
+in order to utilize a three-way volume function. However, one could rely
+on a coarser, but cheaper, approximation of the volume based only on
+$DBH$ and species alone. Nonetheless, it may be most sensible to assess those three
+parameters only on a sub-sample of trees. We now briefly formalize this
+simple idea, which is used in the Swiss National Forest Inventory. The reader is referred to (\cite{mandallaz}, section 4.4, 4.5, 5.4 and 9.5) for details. \\
+From each of the selected trees $i\in{s_{2}(x)}$ one
+determines coarse approximation $\hat{Y}_i$ (e.g. based on species and $DBH$) of the pseudo exact value $Y_i$ (pseudo exact in the sense that is is a better approximation of the unknown true bole volume based on e.g. species, $DBH$, $D_7$ and $H$). From the
+finite set $s_{2}(x)$ one draws a sub-sample
+$s_{3}(x)\subset{s_{2}(x)}$ of trees by Poisson sampling. For each tree $i\in{s_{3}(x)}$
+one then determines the (pseudo) exact variable $Y_i$. The second stage indicator variable is
+\begin{equation}
+ J_i(x)=\begin{cases}&1 \text{ if $i\in s_{3}(x)$}\\
+                      &0 \text{ if $i\not\in s_{3}(x)$}
+         \end{cases}
+\end{equation}
+
+ The residual s at the tree level is denoted by $R_i=Y_i-\hat{Y}_i$ which is known only for trees
+ $i\in{s_{3}(x)}$. The \textbf{generalized local density} $Y^*(x)$ is defined
+ according to
+ \begin{eqnarray}\label{gdens}
+ Y^*(x)&=&\frac{1}{\LF}\left( \sum_{i=1}^N \frac{I_{i}(x)\hat{Y}_i}{\pi_i} +
+ \sum_{i=1}^N \frac{I_{i}(x)J_{i}(x)R_i}{\pi_{i}p_i}\right)\nonumber \\
+ &=&\frac{1}{\LF}\left( \sum_{i\in{s_{2}(x)}} \frac{\hat{Y}_i}{\pi_i}
+ +\sum_{i\in{s_{3}(x)}} \frac{R_i}{\pi_{i}p_i}\right)
+ \end{eqnarray}
+ where the $p_i$ are the conditional inclusion probabilities for the the second stage sampling, i.e. $p_i=\PR(J_i(x)=1 \mid I_i(x)=1)$. The second term is an Horwitz-Thomson estimator and the generalized local density can be viewed as a difference estimator (\cite{sarndal}, section 6.3). The expected value and the variance under Poisson sampling at point $x$ are easily found to be
+ \begin{eqnarray}\label{poisson_atx}
+  \EX_{Poisson}(Y^*(x)) &=& Y(x) \nonumber \\
+  \VAR_{Poisson}(Y^*(x))&=&\frac{1}{\LFC}\big(\sum_{i\in{s_{2}(x)}} \frac{R_i^2(1-p_i)}{\pi_i^{2}p_i} \big)=:V(x)
+ \end{eqnarray}
+If necessary $V(x)$ can be estimated unbiasedly by
+\begin{equation}\label{estvarvofx}
+\hat{V}(x)=\frac{1}{\LFC}\big(\sum_{i\in{s_{3}(x)}} \frac{R_i^2(1-p_i)}{\pi^2_ip^2_i}\big)
+\end{equation}
+\clearpage \newpage
+
+\section{Two-phase sampling}\label{twophase}
+ The \textbf{first phase} draws a large sample $s_1$ of $n_1$ points that are independently and uniformly distributed within the forest area $F$. At each point $x\in{s}_1$ auxiliary
+information is collected and denoted by $\mathbf{Z}(x)\in{\RE ^{p}}$. The \textbf{second phase} draws a small sample $s_2\subset{s_1}$ of
+$n_2$ points from $s_1$ according to \textbf{equal probability
+sampling without replacement, or simple random sampling SRS}.
+ The first phase randomization procedure will be indicated by the subscript $1$, the second phase by the subscripts $2$ or $x$ and the second-stage procedure at a given point $x$ by the subscript $3$. Note that the points $x\in{s_2}$ inherit from $s_1$ the property of being i.i.d. uniformly distributed in $F$. One has directly from the definition of Poisson sampling and the decomposition rule
+ $$\VAR_{2,3}Y^*(x)=\VAR_2 \EX_{3 \mid 2}Y^*(x) + \EX_2 \VAR_{3 \mid 2}(Y^*(x))$$
+ the following properties
+ \begin{eqnarray}\label{twostage}
+ \EX_{3\mid 2} Y^*(x)&=& Y(x)\nonumber \nonumber \\
+ \EX_{2,3}Y^*(x)&=&\EX_x(Y(x))=\bar{Y}_F \nonumber \\
+ \VAR_{2,3}(Y^*(x))&=&\VAR_x(Y(x)) + \EX_x(V(x)) \nonumber \\
+ &=&\VAR_x(Y(x))+\frac{1}{\LFC}\Big(\sum_{i=1}^N\frac{(R_i^2(1-p_i)}{\pi_ip_i}\Big)
+ \end{eqnarray}
+
+
+ \subsection{The model}
+ In the \textbf{design-based approach} we set
+ \begin{equation}\label{linearmodel1}
+ Y(x)=\pmb{Z}^t(x)\pmb{\beta}+ R_{\pmb{\beta}}(x)=:\hat{Y}_{\pmb{\beta}}(x)+R_{\pmb{\beta}}(x)
+ \end{equation}
+ the quantities $Y(x), \pmb{Z}(x), R_{\pmb{\beta}}(x)$ are random because the point $x$ is random and uniformly distributed in $F$. Equation [\ref{linearmodel1}] can be viewed, for any fixed given $\pmb{\beta}$, as simply defining the residual term $R_{\pmb{\beta}}(x)$. \textbf{The true regression coefficient} $\pmb{\beta}_0$ \textbf{is by definition the theoretical least squares estimate}
+ \begin{equation}\label{lstheoretical}
+ \pmb{\beta}_0=\arg \min_{\pmb{\beta}}\int_F (Y(x)-\pmb{Z}^t(x)\pmb{\beta})^2dx
+ \end{equation}
+ It satisfies the normal equation
+ \begin{equation}\label{normaleq1}
+ \Big(\int_F\pmb{Z}(x)\pmb{Z}^t(x)dx\Big)\pmb{\beta}_0=\int_F Y(x)\pmb{Z}(x)dx
+ \end{equation}
+ and the orthogonality relationship
+ \begin{equation}\label{linearmodel2}
+ \int_F R_0(x)\pmb{Z}(x)dx=\pmb{0}
+ \end{equation}
+ where $R_0(x)=R_{\pmb{\beta}_0}=Y(x)-\pmb{Z}^t(x)\pmb{\beta}_0=:Y(x)-\hat{Y}_0(x)$.
+  We shall assume that $\pmb{Z}(x)$ contains the intercept term $1$, or, more generally, that the intercept can be expressed as a linear combination of the component of $\pmb{Z}(x)$, which then insures the following properties
+  \begin{equation}\label{truerespred}
+  \frac{1}{\lambda(F)}\int_F R_0(x)dx=0\; \text{and}\;\frac{1}{\lambda(F)}\int_{F}\hat{Y}_0(x)=\frac{1}{\lambda(F)}\int_{F}Y(x)dx=\bar{Y}
+  \end{equation}
+In the \textbf{model-dependent approach} one postulates a model
+ \begin{equation}\label{linearmodel1mod_dep}
+ Y(x)=\pmb{Z}^t(x)\pmb{\beta}+ R(x)
+ \end{equation}
+ \noindent
+ where \textbf{for a fixed point $x$} the quantities $Y(x)$ and $R(x)$ are viewed random variables, $\pmb{R}(x)$ with zero mean and a given covariance structure. The vector of auxiliary $\pmb{Z}(x)$ can have for a given $x$ non-random or random components. We emphasize the fact that in the design-based model-assisted approach the model [\ref{linearmodel1}] is not viewed as the true complex stochastic process generating the $Y(x)$, but, more pragmatically, \textbf{simply as a tool to get better estimators of $\bar{Y}$ than the ordinary sample mean (which corresponds to the model $\pmb{Z}(x)$ containing only the intercept and therefore no auxiliary information at all}. Of course, ideally, the model should capture qualitatively the main features of the underlying natural phenomenon. Hence, one could say that in the design-based approach the forest under investigation is a \textbf{fixed entity observed at random points}, whereas in the model-dependent set-up the actual forest is viewed as \textbf{the realization of a complex stochastic process observed at given fixed points}. That these two totally different approaches yield usually (but not always, particularly for small area estimation) similar results in practice is in some sense a miracle.\\
+ To simplify the notation we set
+ set $\pmb{A}=\EX_x\pmb{Z}(x)\pmb{Z}^t(x)$, $\pmb{U}(x)=Y(x)\pmb{Z}(x)$.
+ The normal equation then reads
+ $$\pmb{A}\pmb{\beta}_0=\EX_x\pmb{U}(x):=\pmb{U}$$
+ Of course, only a sample-based normal equation is available, i.e.
+ $$\pmb{A}_{s_2}\hat{\pmb{\beta}}_{s_2}=\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{U}(x)=\pmb{U}_{s_2}$$
+ where we have set
+ $$\pmb{A}_{s_2}=\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}(x)\pmb{Z}^t(x)$$ and
+ $$\pmb{U}_{s_2}=\frac{1}{n_2}\sum_{x\in{s_2}}Y(x)\pmb{Z}(x)$$
+ The theoretical and empirical regression vector parameters are
+ \begin{eqnarray}\label{linearmodel3}
+ \pmb{\beta}_0&=&\pmb{A}^{-1}\pmb{U} \nonumber \\
+ \hat{\pmb{\beta}}_{s_2}&=&\pmb{A}_{s_2}^{-1}\pmb{U}_{s_2}
+ \end{eqnarray}
+$\hat{\pmb{\beta}}_{s_2}$ is asymptotically design-unbiased for
+$\pmb{\beta}_0$.
+It can be shown that the asymptotic design-base variance-covariance matric of $\hat{\pmb{\beta}}_{s_2}$ is given by
+\begin{equation}\label{varmatrix}
+\pmb{\Sigma}_{\hat{\pmb{\beta}}_{s_2}}=
+\pmb{A}^{-1}\Big(\frac{1}{n_2}\EX_xR_0^2(x)\pmb{Z}(x)\pmb{Z}(x)^t\Big)\pmb{A}^{-1}
+\end{equation}
+which can be estimated by replacing the theoretical residuals $R_0(x)=Y(x)-\pmb{Z}^t(x)\pmb{\beta}_0$
+with their empirical counterparts
+$\hat{R}_{s_2}(x)=Y(x)-\hat{Y}_{s_2}(x)$, with $\hat{Y}_{s_2}(x)=\pmb{Z}^t(x)\hat{\pmb{\beta}}_{s_2}$, and $\pmb{A}$ with $\pmb{A}_{s_2}$. We then get the \textbf{estimated design-based
+variance-covariance matrix} as
+\begin{equation}\label{estvarmatrix}
+\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}:=\pmb{A}_{s_2}^{-1}
+\Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}_{s_2}^2(x)\pmb{Z}(x)\pmb{Z}(x)^t\Big)\pmb{A}_{s_2}^{-1}
+\end{equation}
+Interestingly this is precisely the \textbf{robust estimate of the model-dependent covariance matrix} proposed by \cite{huber1} and also discussed by \cite{gregoire2} in a forestry context (see also \cite{mandallaz}, pp. 123-125 for a proof).\\
+With two-stage sampling one replaces the true local density $Y(x)$ by its estimate $Y^*(x)$ and considers
+\begin{equation}\label{beta2star}
+\hat{\pmb{\beta}}^*_{s_2}=\pmb{A}_{s_2}^{-1}\pmb{U}^*_{s_2}
+\end{equation}
+where we have set $\pmb{U}^*_{s_2}=\frac{1}{n_2}\sum_{x\in{s_2}}Y^*(x)\pmb{Z}(x)$. One has $\EX_{3\mid 2}(\hat{\pmb{\beta}}^*_{s_2})=\hat{\pmb{\beta}}_{s_2}$.\\
+ \noindent
+We can now derive the design-based variance covariance matrix of $\hat{\pmb{\beta}}^*_{s_2}$. One has
+\begin{eqnarray*}
+\pmb{\Sigma}_{\hat{\pmb{\beta}}^*_{s_2}} &=& \EX_{2,3}\big((\hat{\pmb{\beta}}^*_{s_2}-\hat{\pmb{\beta}}_{s_2})(\hat{\pmb{\beta}}^*_{s_2}-\hat{\pmb{\beta}}_{s_2})^t\big)
++ \EX_{2,3}(\hat{\pmb{\beta}}_{s_2}-\pmb{\beta}_0)(\hat{\pmb{\beta}}_{s_2}-\pmb{\beta}_0)^t\\
+&+& \EX_{2,3}\big(\hat{\pmb{\beta}}^*_{s_2}-\hat{\pmb{\beta}}_{s_2})(\hat{\pmb{\beta}}_{s_2}-\pmb{\beta}_0)
++ \EX_{2,3}\big(\hat{\pmb{\beta}}_{s_2}-\pmb{\beta}_0)(\hat{\pmb{\beta}}^*_{s_2}-\hat{\pmb{\beta}}_{s_2}) \\
+&=&\EX_2\VAR_{3\mid 2}(\hat{\pmb{\beta}}^*_{s_2}-\hat{\pmb{\beta}}_{s_2})+ \pmb{\Sigma}_{\pmb{\beta}_{s_2}} + 0 +0 \\
+&=& \pmb{\Sigma}_{\pmb{\beta}_{s_2}} + \EX_2 \pmb{A}_2^{-1}(\frac{1}{n_2^2}\sum_{x\in{s_2}}V(x)\pmb{Z}(x)\pmb{Z}^t(x))\pmb{A}_2^{-1}\\
+&\approx & \pmb{\Sigma}_{\pmb{\beta}_{s_2}} + \pmb{A}^{-1}(\frac{1}{n_2}\EX_xV(x)\pmb{Z}(x)\pmb{Z}^t(x))\pmb{A}^{-1}\\
+&=&\pmb{A}^{-1}\Big(\frac{1}{n_2}\EX_x\big((V(x)+R^2(x))\big)\pmb{Z}(x)\pmb{Z}(x)\big)^t\Big)\pmb{A}^{-1}
+\end{eqnarray*}
+where we have use the independence of Poisson sampling at different points, equations [\ref{varmatrix}] and the identity
+$$\hat{\pmb{\beta}}^*_{s_2}-\pmb{\beta}_0=\hat{\pmb{\beta}}^*_{s_2}-\hat{\pmb{\beta}}_{s_2}
++\hat{\pmb{\beta}}_{s_2}- \pmb{\beta}_0$$
+Hence, we have
+\begin{equation}\label{twostagedbcovmatrix}
+\pmb{\Sigma}_{\hat{\pmb{\beta}}^*_{s_2}}=
+\pmb{A}^{-1}\Big(\frac{1}{n_2}\EX_x\big((V(x)+R^2(x))\big)\pmb{Z}(x)\pmb{Z}(x)\big)^t\Big)\pmb{A}^{-1}
+\end{equation}
+The main point is that the variance of $\hat{\pmb{\beta}}^*_{s_2}$ decrease as $n_2^{-1}$, like the variance of $\hat{\pmb{\beta}}_{s_2}$, so that $\hat{\pmb{\beta}}^*_{s_2}$  is also an asymptotically unbiased and consistent estimator of $\pmb{\beta}_0$. The true prediction $\hat{Y}_0=\pmb{Z}(x)^t\pmb{\beta}_0$ is of course not available and we have the following possibilities
+\begin{eqnarray}\label{predictions}
+\hat{Y}_{\pmb{\beta}}(x)&=&\pmb{Z}^t(x)\pmb{\beta} \\ \nonumber
+\hat{Y}_{s_2}(x)&=&\pmb{Z}^t(x)\hat{\pmb{\beta}}_{s_2}=\hat{Y}_0(x) +
+O_p\big(\frac{1}{\sqrt{n_2}}\big) \\ \nonumber
+\hat{Y}_{s_2}^*(x)&=&\pmb{Z}^t(x)\hat{\pmb{\beta}}^*_{s_2}=\hat{Y}_0(x) +
+O_p\big(\frac{1}{\sqrt{n_2}}\big)
+\end{eqnarray}
+\noindent
+where we have set $\hat{Y}_0(x)=\pmb{Z}^t(x)\pmb{\beta}_0$.\\
+Therefore, we can treat all the above predictions asymptotically as if they were depending on $\pmb{Z}(x)$ only and not on the sample, which is precisely the definition of the external variance assumption.\\
+Setting now $\hat{R}_{s_2}^*(x)=Y^*(x)-\hat{Y}_{s_2}^*(x)\approx Y^*(x)-\hat{Y}_0(x)$ we get first $\EX_{3 \mid x}\hat{R}_{s_2}^*(x)=\hat{R}_{s_2}(x)$, $\VAR_{3 \mid 2}\hat{R}_{s_2}^*(x)=\VAR_{3 \mid 2}Y^*(x)=V(x)$ and finally $\EX_{3 \mid x}(R_{s_2}^*(x))^2=\hat{R}_{s_2}^2(x)+V(x)$. From this we have the following consistent estimator of the design-based variance covariance matrix of $\hat{\pmb{\beta}}^*_{s_2}$
+\begin{equation}\label{dbvariancetwostage}
+\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}^*_{s_2}} =\pmb{A}_{s_2}^{-1}
+\Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}(\hat{R}_{s_2}^*(x))^2\pmb{Z}(x)\pmb{Z}(x)^t\Big)\pmb{A}_{s_2}^{-1}
+\end{equation}
+
+
+\subsection{The two-phase one-stage regression estimators}\label{twophaseonestagereg}
+
+If the prediction model is \textbf{external}, i.e. not fitted with the inventory data at hand, the regression estimate is defined as
+\begin{equation}\label{external1}
+\hat{Y}_{reg}=\frac{1}{n_1}\sum_{x\in{s_1}}\hat{Y}_{\pmb{\beta}}(x)+ \frac{1}{n_2}\sum_{x\in{s_2}}R_{\pmb{\beta}}(x)
+\end{equation}
+with the predictions $\hat{Y}_{\pmb{\beta}}(x)=\pmb{Z}^t(x)\pmb{\beta}$ and the residuals $R_{\pmb{\beta}}(x)=Y(x)-\hat{Y}_{\pmb{\beta}}(x)$, where $\pmb{\beta}$ is the given external regression coefficient, ideally obtained from another similar inventory. Note that in this case the mean residual will not necessarily be zero.
+To calculate the variance one uses the decomposition
+\begin{equation}\label{external2}
+\VAR_{1,2}(\hat{Y}_{reg})=\VAR_1\EX_{2\mid 1}(\hat{Y}_{reg})+\EX_1\VAR_{2 \mid 1}(\hat{Y}_{reg})
+\end{equation} to obtain
+\begin{equation}\label{external3}
+\VAR(\hat{Y}_{reg})=\frac{1}{n_1}\VAR(Y(x))+(1-\frac{n_2}{n_1})\frac{1}{n_2}\VAR(R_{\pmb{\beta}}(x))
+ \end{equation}
+ which can be unbiasedly estimated with
+\begin{equation}\label{varexternalsimple}
+\hat{\VAR}(\hat{Y}_{reg})=\frac{1}{n_1}\frac{1}{n_2-1}\sum_{x\in{s_2}}(Y(x)-\bar{Y}_2)^2+
+(1-\frac{n_2}{n_1})\frac{1}{n_2}\frac{1}{n_2-1}\sum_{x\in{s_2}}(R_{\pmb{\beta}}(x)-\bar{R}_{\pmb{\beta},2})^2
+\end{equation}
+where $\bar{Y}_2=\frac{1}{n_2}\sum_{x\in{s_2}}Y(x)$ and  $\bar{R}_{\pmb{\beta},2}=\frac{1}{n_2}\sum_{x\in{s_2}}R_{\pmb{\beta}}(x)$.\\
+If the model is \textbf{internal} the regression coefficients are estimated with the inventory data at hand to obtain first $\hat{\pmb{\beta}}_{s_2}$, second the predictions $\hat{Y}_{s_2}(x)=\pmb{Z}^t(x)\hat{\pmb{\beta}}_{s_2}$
+and residuals $\hat{R}_{s_2}(x)=Y(x)-\hat{Y}_{s_2}(x)$ and finally the two-phase one-stage regression estimator
+
+\begin{equation}\label{internal1}
+\hat{Y}_{reg}=\frac{1}{n_1}\sum_{x\in{s_1}}\hat{Y}_{s_2}(x)+ \frac{1}{n_2}\sum_{x\in{s_2}}\hat{R}_{s_2}(x)
+\end{equation}
+It can be shown (\cite{mandallaz3} and \cite{mandallazreport1} for details) that asymptotically ($n_2 \to \infty$) that one can treat an internal model as an external one, so that we have the consistent variance estimate
+\begin{equation}\label{estvarinternal1}
+\hat{\VAR}(\hat{Y}_{reg})=\frac{1}{n_1}\frac{1}{n_2-1}\sum_{x\in{s_2}}(Y(x)-\bar{Y}_{s_2})^2+
+(1-\frac{n_2}{n_1})\frac{1}{n_2}\frac{1}{n_2-1}\sum_{x\in{s_2}}(\hat{R}_{s_2}(x)-\bar{\hat{R}}_{s_2})^2
+\end{equation}
+where we have set $\bar{Y}_{s_2}=\frac{1}{n_2}\sum_{x\in{s_2}}Y(x)$ and $\bar{\hat{R}}_{s_2}=\frac{1}{n_2}\sum_{x\in{s_2}}\hat{R}_{s_2}(x)$.
+Because predictions and residuals are orthogonal by construction we also have
+\begin{equation}\label{estvarinternal3}
+ \hat{\VAR}(\hat{Y}_{reg})=\frac{1}{n_1}\frac{1}{n_2-1}\sum_{x\in{s_2}}(\hat{Y}_{s_2}(x)-\bar{\hat{Y}}_{s_2})^2+
+\frac{1}{n_2}\frac{1}{n_2-1}\sum_{x\in{s_2}}(\hat{R}_{s_2}(x)-\bar{\hat{R}}_{s_2})^2
+\end{equation}
+where =$\bar{\hat{Y}}_{s_2}=\frac{1}{n_2}\sum_{x\in{s_2}}\hat{Y}_{s_2}(x)$. The first term contains the empirical variance of the predictions in the small sample $s_2$, which could be replace by the empirical variance in the large sample $s_1$. Furthermore, by construction the mean of the residuals in the second term is zero by construction so that one can also use
+\begin{equation}\label{estvarinternal4}
+ \hat{\VAR}(\hat{Y}_{reg})=\frac{1}{n_1}\frac{1}{n_1-1}\sum_{x\in{s_1}}(\hat{Y}_{s_2}(x)-\bar{\hat{Y}}_{s_1})^2+
+\frac{1}{n^2_2}\sum_{x\in{s_2}}\hat{R}^2_{s_2}(x)
+\end{equation}
+where $\bar{\hat{Y}}_{s_1}=\frac{1}{n_1}\sum_{x\in{s_1}}\hat{Y}_{s_2}(x)$. This version is more in line with the variance obtained via the design-based covariance matrix derived in (\cite{mandallazreport1} eqn. [28]) and which reads
+\begin{equation}\label{varyreggweight}
+\VAR(\hat{Y}_{reg})=
+\bar{\pmb{Z}}^t\pmb{\Sigma}_{\hat{\pmb{\beta}}_{s_2}}\bar{\pmb{Z}}
++ \pmb{\beta}^t\Sigma_{\hat{\bar{\pmb{Z}}}_1}\pmb{\beta}
+\end{equation}
+which yields the asymptotically consistent estimate of the variance
+\begin{equation}\label{estvaryreggweight}
+\hat{\VAR}(\hat{Y}_{reg}) =
+\hat{\bar{\pmb{Z}}}_{1}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}\hat{\bar{\pmb{Z}}}_{1}
++ \hat{\pmb{\beta}}_{s_2}^t\hat{\Sigma}_{\hat{\bar{\pmb{Z}}}_{1}}\hat{\pmb{\beta}}_{s_2}
+\end{equation}
+with the estimated variance-covariance matrix of the $\pmb{Z}(x)$ given by
+\begin{equation}\label{estvarcovaux}
+\hat{\Sigma}_{\hat{\bar{\pmb{Z}}}_{1}}=
+\frac{1}{n_{1}(n_{1}-1)}\sum_{x\in{s_{1}}}
+(\pmb{Z}(x)-\hat{\bar{\pmb{Z}}}_{1})(\pmb{Z}(x)-\hat{\bar{\pmb{Z}}}_{1})^t
+\end{equation}
+with $\hat{\bar{\pmb{Z}}}_1=\frac{1}{n_1}\sum_{x\in{s_1}}\pmb{Z}(x)$ .\\
+The \textbf{g-weights} are defined as
+\begin{equation}\label{gweight1}
+g_{2}(x)=\hat{\bar{\pmb{Z}}}^t_{1}\pmb{A}^{-1}_{s_2}\pmb{Z}(x)
+\end{equation}
+They satisfy the \textbf{calibration properties}
+\begin{equation}\label{gweight2}
+\frac{1}{n_2}\sum_{x\in{s_2}}g_2(x)\pmb{Z}(x)=\hat{\bar{\pmb{Z}}}_{1}
+\end{equation}
+\noindent In particular $\frac{1}{n_2}\sum_{x\in{s_2}}g_2(x)=1$. The regression estimator can be rewritten, because of the zero mean residuals (i.e. $\frac{1}{n_2}\sum_{x\in{s_2}}\hat{R}_{s_2}(x)=0$) as the weighted mean
+\begin{equation}\label{gweight3}
+\hat{Y}_{reg}=\frac{1}{n_2}\sum_{x\in{s_2}}g_{2}(x)Y(x)
+\end{equation}
+and also as
+\begin{equation}\label{gweight3bis}
+\hat{Y}_{reg}=\frac{1}{n_2}\sum_{x\in{s_2}}\tilde{g}_{2}(x)Y(x)
+\end{equation}
+with the g-weights
+\begin{equation}\label{gweight3bis}
+\tilde{g}_{2}(x)=1+(\hat{\bar{\pmb{Z}}}_{1}-\hat{\bar{\pmb{Z}}}_{2})^t\pmb{A}^{-1}_{s_2}\pmb{Z}(x)
+\end{equation}
+Hence, for all $Y(x)$, we have
+$$\frac{1}{n_2}\sum_{x\in{s_2}}g_{2}(x)Y(x)=\frac{1}{n_2}\sum_{x\in{s_2}}\tilde{g}_{2}(x)Y(x)$$
+Since the g-weights depend only on $\pmb{Z}(x)$ and not $Y(x)$ we must have
+\begin{equation}\label{equalityofgweights}
+g_2(x)=\tilde{g}_{2}(x)
+\end{equation}
+Because $\hat{\bar{\pmb{Z}}}_{1}-\hat{\bar{\pmb{Z}}}_{2}$ tends to zero almost surely and in quadratic mean, we see that $\tilde{g}_{2}(x)=g_2(x)=1+O_p(\frac{1}{\sqrt{n_2}})$. We have thus proved the \textbf{fundamental property that the g-weights are asymptotically equal to $1$}.\\
+Furthermore the estimated variance can be expressed as
+\begin{eqnarray}\label{gweight4}
+\hat{\VAR}(\hat{Y}_{reg})&=&\frac{1}{n^2_2}\sum_{x\in{s_2}}g^2_{2}(x)\hat{R}_{s_2}^2(x) + \hat{\pmb{\beta}}_{s_2}^t\hat{\Sigma}_{\hat{\bar{\pmb{Z}}}_{1}}\hat{\pmb{\beta}}_{s_2}  \nonumber \\
+&=& \frac{1}{n^2_2}\sum_{x\in{s_2}}g^2_{2}(x)\hat{R}_{s_2}^2(x)+ \frac{1}{n_{1}(n_{1}-1)}
+\sum_{x\in{s_{1}}}(\hat{Y}_{s_2}(x)-\bar{\hat{Y}}_{1})^2
+\end{eqnarray}
+with $\bar{\hat{Y}}_{1}=\frac{1}{n_1}\sum_{x\in{s_1}}\hat{Y}_{s_2}(x)$
+ The second term in the last equation is the variance of the predictions over $F$. Since the g-weights tend to $1$ asymptotically  [\ref{estvarinternal4}] and [\ref{gweight4}] are asymptotically equivalent. \\
+ \noindent \textbf{Remarks:}
+ \begin{itemize}
+ \item
+ The notation $g_2(x)$ for g-weights can be misleading in the sense that they do not depent solely on $x$, and consequently $\pmb{Z}(x)$ but also on the sample $s_1$ (because of $\pmb{A}_2$ and $s_1$ (because of $\hat{\bar{\pmb{Z}}}_{1}$. Hence, a better notation would be $g_{s_1,s_2}(x)$, which is cumbersome to use in complicated formulae.
+ \item
+ If the first phase is exhaustive, i.e. $n_1=\infty$, we have $g_{2}(x)=\bar{\pmb{Z}}^t\pmb{A}^{-1}_{s_2}\pmb{Z}(x)$. With $Y(x)=\pmb{Z}^t(x)\pmb{\beta}_0+R_0(x)$ and $\bar{Y}_F=\frac{1}{\lambda(F)}\int_F \hat{Y}_0(x)dx=\bar{\pmb{Z}}^t\pmb{\beta}_0$ we get, using
+ [\ref{gweight2}]
+ \begin{eqnarray*}
+ \hat{Y}_{reg}-\bar{Y}_F &=&\frac{1}{n_2}\sum_{x\in{s_2}}g_2(x)Y(x)-\bar{\pmb{Z}}^t\pmb{\beta}_0  \\
+ &=&\frac{1}{n_2}\sum_{x\in{s_2}}g_2(x)(\pmb{Z}^t(x)\pmb{\beta}_0+R_0(x))-\bar{\pmb{Z}}^t(x)\pmb{\beta}_0\\
+ &=& \bar{\pmb{Z}}^t\pmb{\beta}_0+\frac{1}{n_2}\sum_{x\in{s_2}}g_2(x)R_0(x)-\bar{\pmb{Z}}^t\pmb{\beta}_0\\
+ &=& \sum_{x\in{s_2}}g_2(x)R_0(x)
+ \end{eqnarray*}
+ We also have $\EX_x g_2(x)R_0(x)\approx \bar{\pmb{Z}}^t\pmb{A}^{-1}\EX_x \pmb{Z}(x)R_0(x)=0$
+ because of the orthogonality relationship. Comparing with [\ref{gweight4}] we see that for calculating the variance we can consider the $g_2(x)R_0(x)$ and then the $g_{2}(x)\hat{R}(x)$ as i.i.d with zero mean.
+ \end{itemize}
+ \subsection{The two-phase two-stage regression estimator}\label{twpphasetwostagereg}
+ We will now show that treating an internal model as if it were external is also asymptotically correct in the two-phase two-stage procedures. This was up to certain point taken for granted in \cite{mandallaz},section 5.2, and subsequent work, where the predictions were considered to depend only on $\pmb{Z}(x)$, which is only asymptotically correct.\\
+ The predictions are now calculated according to $\hat{Y}_{s_2}^*(x)=\pmb{Z}^t(x)\hat{\pmb{\beta}}^*_{s_2}$
+ and the two-phase two-stage regression estimator reads now
+ \begin{eqnarray}\label{twophasetwostagereg}
+ \hat{Y}^*_{reg}&=&\frac{1}{n_1}\sum_{x\in{s_1}}\hat{Y}_{s_2}^*(x)+\frac{1}{n_2}\sum_{x\in{s_2}}\hat{R}_{s_2}^*(x) \nonumber \\
+ &=&\hat{\bar{\pmb{Z}}}_1\hat{\pmb{\beta}}^*_{s_2}
+ \end{eqnarray}
+ with $\hat{R}_{s_2}^*(x)=Y_{s_2}^*(x)-\hat{Y}_{s_2}^*(x)$. Obviously one has
+ $\EX_{3 \mid 2,1}\hat{Y}^*_{reg}=\hat{Y}_{reg}$. Using the variance decomposition
+ \begin{equation}\label{vardecomposition1}
+ \VAR_{1,2,3}(\hat{Y}^*_{reg})=\VAR_{1,2}\EX_{3 \mid 2,1}(\hat{Y}^*_{reg})+\EX_{1,2}\VAR_{3 \mid 2,1}(\hat{Y}^*_{reg})
+ \end{equation}
+ we get
+ \begin{equation}\label{vardecomposition2}
+ \VAR_{1,2,3}(\hat{Y}^*_{reg})=\VAR_{1,2}(\hat{Y}_{reg})+\EX_{1,2}\VAR_{3 \mid 2,1}(\hat{\bar{\pmb{Z}}}_1\hat{\pmb{\beta}}^*_{s_2})
+ \end{equation}
+ The first term is given by [\ref{varyreggweight}] and for the third we need the conditional variance-covariance matrix $\Sigma_{\hat{\pmb{\beta}}^*_{s_2}\mid{2,1}}$, which is defined as
+ \begin{equation*}
+ \Sigma_{\hat{\pmb{\beta}}^*_{s_2}\mid{2,1}}=\EX_{3 \mid 2,1}(\hat{\pmb{\beta}}^*_{s_2}-\hat{\pmb{\beta}}_{s_2})(\hat{\pmb{\beta}}^*_{s_2}-\hat{\pmb{\beta}}_{s_2})^t
+ \end{equation*}
+ Because Poisson sampling is performed independently at points $x\in{s_2}$ we have with [\ref{beta2star}] and [\ref{poisson_atx}] $\VAR_{3\mid 2,1}\sum_{x\in{s_2}}Y^*(x)=\sum_{x\in{s_2}}V(x)$
+ \begin{equation*}
+ \VAR_{3\mid 2,1}\Big(\sum_{x\in{s_2}}Y^*(x)\Big) =\sum_{x\in{s_2}}V(x)
+ \end{equation*}
+ This gives after some algebra
+ \begin{equation}\label{conditioncovariancematrix1}
+ \Sigma_{\hat{\pmb{\beta}}^*_{s_2}\mid 2,1}=\pmb{A}^{-1}_{s_2}\Big(
+ \frac{1}{n^2_2}\sum_{x\in{s_2}}V(x)\pmb{Z}(x)\pmb{Z}^t(x)\Big)\pmb{A}^{-1}_{s_2}
+ \end{equation}
+ Using [\ref{vardecomposition2}], [\ref{varyreggweight}], [\ref{varmatrix}] and collecting the pieces we obtain obtain the asymptotic variance
+
+ \begin{eqnarray}\label{vartwophasetwostageyreg1}
+ \VAR_{1,2,3}(\hat{Y}^*_{reg})&=&\frac{1}{n_1}\VAR(\hat{Y}_0(x))+
+  \bar{\pmb{Z}}^t\pmb{A}^{-1}\Big(
+ \frac{1}{n_2}\EX_x( R_0^2(x)+V(x))\pmb{Z}(x)\pmb{Z}^t(x)\Big)\pmb{A}^{-1}\bar{\pmb{Z}} \nonumber \\
+ &=&\frac{1}{n_1}\VAR(\hat{Y}_0(x))+\bar{\pmb{Z}}^t\pmb{\Sigma}_{\pmb{\beta}^*_{s_2}}\bar{\pmb{Z}}
+  \end{eqnarray}
+ and consequently the following consistent estimate of the variance
+ \begin{eqnarray}\label{esttwophasetwostageasymptvar}
+ \hat{\VAR}(\hat{Y}^*_{reg})&=&\hat{\pmb{\beta}^*}_{s_2}^t\hat{\Sigma}_{\hat{\bar{\pmb{Z}}}_{1}}\hat{\pmb{\beta}^*}_{s_2}
+ +\hat{\bar{Z}}_1^t\pmb{A}_{s_2}^{-1}\big(\frac{1}{n^2_2}\sum_{x\in{s_2}}(\hat{R}^*(x))^2\pmb{Z}(x)\pmb{Z}^t(x)\big) \pmb{A}_{s_2}^{-1}\hat{\bar{\pmb{Z}}}_1 \nonumber \\
+ &=&\frac{1}{n_1}\frac{1}{n_1-1}\sum_{x\in{s_2}}(\hat{Y}^*(x)-\bar{\hat{Y}}^*_1)^2 +
+ \frac{1}{n^2_2}\sum_{x\in{s_2}}g^2_{2}(x)(\hat{R}^*(x))^2
+ \end{eqnarray}
+ which is algebraically the same as [\ref{gweight2}] except for the $*$. Since the $g^2_{2}(x)$ tend to $1$ we have proved that the external variance estimate is also equivalent to the consistent g-weight variance in two-phase two-stage sampling.\\
+ In the model-dependent geostatistical set-up the situation is more complicated, even in simple one-phase inventory, and one has to use Kriging with measurement error instead (see section 7.3 in \cite{mandallaz}). \\
+ For timber volume assessment in the the Swiss National Inventory the second stage variance is remarkably small (around $3\%$ in comparison to the overall variance ( i.e.
+ $\frac{\EX V(x)}{\VAR(Y^*(x))}\approx 0.03$. However,the slight increase in variance is more than counterbalanced by drastic savings in measurement costs (\cite{mandallazmassey1} and \cite{massey} for details).\\
+ \noindent
+ \textbf{Remarks:}\label{remarkstwophase}
+ \begin{enumerate}
+ \item
+ One-phase two-stage sampling is the special case with $\pmb{Z}(x)$ consisting only of the intercept, which leads to the results given in (\cite{mandallaz}, pp.70-71)
+ \begin{eqnarray*}
+ \hat{Y}^*&=&\frac{1}{n_2}\sum_{x\in{s_2}}Y^*(x) \\
+ \VAR(\hat{Y}^*)&=&\frac{1}{n_2}\VAR_x(Y(x))+\frac{1}{n_2}\EX_x V(x) \\
+ \hat{\VAR}(\hat{Y}^*)&=&\frac{1}{n_2(n_2-1)}\sum_{x\in{s_2}}(Y^*(x)-\hat{Y}^*)^2 \\
+ \EX_{2,3}(\hat{\VAR}(\hat{Y}^*)&=& \VAR(\hat{Y}^*)
+ \end{eqnarray*}
+ These results are exact and not only asymptotically correct in contrast to the general case.
+ \item
+ From a theoretical point of view the g-weights variance estimates have better statistical properties. The simple post-stratification example is particularly instructive in this respect: the external variance estimate does not use the strata weights estimated from the large sample and the variance is not inversely proportional to the number of $s_2$-points in the strata, in contrast to the g-weight variance estimate (see \cite{mandallaz}, pp. 84-86). Also, it is closer, under regularity conditions, to the model-dependent variance if the model is correct (see \cite{mandallaz}, pp. 114-116).
+ \item
+ In practice one uses primarily systematic grids, for which no design-based variance estimate exists. In this case the only mathematically absolutely correct approach is to use the geostatistical Kriging procedures: treating systematic grids as random samples will usually overestimate the variance, particularly in one-phase sampling and for small-area estimation. The situation is better in two-phase sampling because the variance of the residuals is generally the dominating term,  with a much shorter range of the spatial correlation than the range of the observations $Y(x)$. For global estimation the two-phase regression estimator and its geostatistical counterpart, the Double-Kriging estimator, seem to give very similar results (both for point and variance estimates). With two-stage sampling one has to use Kriging with measurement errors (see \cite{mandallaz}, chapter 7, for an introduction to geostatistical methods in forest inventory and \cite{dmhabil} for a detailed mathematical treatment). It is fair to say that geostatistical techniques are far more difficult to implement than the design-based procedures and, in my opinion, they are not suitable for routine work in forest inventory. They are undoubtedly very successful in oil and mining resource assessment, where the financial stakes are completely different. However, the increasing demand for small-area estimation and the availability of free geostatistical software packages within the R-project (20 years ago the software packages, essentially used in the mining and oil industry, were extremely costly) with good interfaces to GIS software will certainly promote geostatistical techniques in forest inventories.
+ \end{enumerate}
+
+ \clearpage \newpage
+\section{Three-phase sampling}\label{threephase}
+\subsection{Background}\label{background}
+The \textbf{null phase} draws a very large sample $s_0$ of $n_0$ points
+$x_{i}\in{s_0}$ ($i=1,2\ldots n_0$) that are independently and uniformly distributed
+within the forest area $F$. At each of those points auxiliary
+information is collected, very often coding information of qualitative nature
+(e.g. following the  interpretation of aerial photographs) or quantitative (e.g. timber volume estimates  based on LiDAR measurements). We shall assume that the auxiliary information at point $x$
+is described by the column vector $\pmb{Z}^{(1)}(x)\in{\Re^p}$. The case $n_0=\infty$, i.e. $\pmb{Z}^{(1)}(x)$ is  \textbf{exhaustive}, has been investigated in \cite{mandallaz4}. The \textbf{first phase} draws a large sample $s_1 \subset s_0$ of $n_1 <<n_0$ points by simple random sampling in $s_0$. Note that the points $x\in{s_1}$ are also uniformly independently distributed in $F$. For each point in the first phase a further component $\pmb{Z}^{(2)}(x)\in{\Re^q}$ of the auxiliary information is available and hence also the vector $\pmb{Z}^t(x)=(\pmb{Z}^{(1)t}(x),\pmb{Z}^{(2)t}(x))\in{\Re^{p+q}}$ (the upper index $t$ denotes the transposition operator). The \textbf{second phase} draws a small sample $s_2\subset{s_1}$ of
+$n_2$ points from $s_1$ by simple random sampling and consists of the terrestrial inventory. Note that we have used the terms null, first and second phases instead of first, second and third phases simply to ensure compatibility with the terminology used in previous work, in which the null-phase was exhaustive.\\
+To set the stage the component $\pmb{Z}^{(1)}(x)\in{\Re^p}$ can be based on the interpretation of aerial photographs or on simple characteristics of the canopy height obtained from LiDAR data (such as mean canopy height and eventually quantiles thereof), whereas $\pmb{Z}^{(2)}(x)\in{\Re^p}$ is based on other computationally intensive characteristics of the canopy requiring individual tree detection (e.g. tree species ortree volume prediction based on tree height).
+The reason for introducing the null-phase sample $s_0$ is that the component $\pmb{Z}^{(1)}(x)$ can be computationally  prohibitive to calculate exhaustively in extensive forest inventories (see \cite{mandallaz3} for a case study with LiDAR data).
+\subsection{The models}\label{models3phase}
+ We shall work with the following linear models
+ \begin{enumerate}
+ \item
+ The large model $M$
+ \begin{equation}\label{largemodel}
+ Y(x)=\pmb{Z}^t(x)\pmb{\beta}+ R_{\pmb{\beta}}(x)=\pmb{Z}^{(1)t}(x)\pmb{\beta}^{(1)}
+ +\pmb{Z}^{(2)t}(x)\pmb{\beta}^{(2)}+ R_{\pmb{\beta}}(x)=:\hat{Y}_{\pmb{\beta}}(x)+R_{\pmb{\beta}}(x)
+ \end{equation}
+ \noindent with $\pmb{\beta}^t=({\pmb{\beta}^{(1)t}}, {\pmb{\beta}^{(2)t}})$ and the predictions
+ $\hat{Y}_{\pmb{\beta}}(x)=\pmb{Z}^t(x)\pmb{\beta}$ and residuals $R_{\pmb{\beta}}=Y(x)-\hat{Y}_{\pmb{\beta}}(x)$.\\
+ The intercept term is contained in $\pmb{Z}^{(1)}(x)$ or a linear combination of the components of $\pmb{Z}^{(1)}(x)$ is constant equal to $1$.\\
+ The theoretical regression parameter $\pmb{\beta}_0$ minimizes
+ $\int_F (Y(x)-\pmb{Z}^t(x)\pmb{\beta})^2dx$. It satisfies the normal equation
+ $\big(\int_F\pmb{Z}(x)\pmb{Z}^t(x)dx\big)\pmb{\beta}_0=\int_F Y(x)\pmb{Z}(x)dx$ and the orthogonality relationship
+ $\int_F R_{\pmb{\beta}_0}(x)\pmb{Z}(x)dx=\pmb{0}$, in particular the zero mean residual property
+ $\frac{1}{\lambda(F)}\int_F R_{\pmb{\beta}_0}(x)dx=0$.
+ \item
+ The reduced model $M_1$
+ \begin{equation}\label{reducedmodel}
+ Y(x)=\pmb{Z}^{(1)t}(x)\pmb{\alpha} + R_{1,\pmb{\alpha}}(x)=:\hat{Y}_{1,\pmb{\alpha}}(x)+ R_{1,\pmb{\alpha}}(x)
+ \end{equation}
+ The theoretical regression parameter $\pmb{\alpha}_0$ minimizes
+ $\int_F (Y(x)-\pmb{Z}^{(1)t}(x)\pmb{\alpha})^2dx$. It satisfies the normal equation
+ $\big(\int_F \pmb{Z}^{(1)}(x)\pmb{Z}^{(1)t}(x)dx\big)\pmb{\alpha}_0=\int_FY(x)\pmb{Z}^{(1)}(x)dx$ and the orthogonality relationship
+ $\int_F R_{1,\pmb{\alpha}_0}(x)\pmb{Z}^{(1)}(x)dx=\pmb{0}$, in particular the zero mean residual property $ \frac{1}{\lambda(F)}\int_F R_{1,\pmb{\alpha}_0}(x)dx=0$.
+\end{enumerate}
+\subsection{The three-phase one-stage generalized regression estimator}\label{threephaseregest}
+We consider the following design-based least squares estimators of the regression coefficients of the reduced model, which are solutions of sample copies of the normal equations
+\begin{eqnarray}\label{coeff1}
+\hat{\pmb{\alpha}}_{s_k} &=& \Big(\frac{1}{n_k}\sum_{x\in{s}_k}\pmb{Z}^{(1)}(x)\pmb{Z}^{(1)t}(x)
+\Big)^{-1}\frac{1}{n_k}\sum_{x\in{s}_k}Y(x)\pmb{Z}^{(1)}(x)\nonumber\\
+&:=&(\pmb{A}^{(1)}_k)^{-1}
+\frac{1}{n_k}\sum_{x\in{s}_k}Y(x)\pmb{Z}^{(1)}(x)=:(\pmb{A}^{(1)}_k)^{-1}\pmb{U}^{(1)}_k,\quad  k=0,1,2
+\end{eqnarray}
+Likewise for the large large model we set
+\begin{eqnarray}\label{coeff2}
+\hat{\pmb{\beta}}_{s_k}&=&\Big(\frac{1}{n_k}\sum_{x\in{s}_k}\pmb{Z}(x)\pmb{Z}^t(x)
+\Big)^{-1}\frac{1}{n_k}\sum_{x\in{s}_k}Y(x)\pmb{Z}(x)\nonumber \\
+&=&\pmb{A}^{-1}_k\frac{1}{n_k}\sum_{x\in{s}_k}Y(x)\pmb{Z}(x)=:\pmb{A}^{-1}_k\pmb{U}_k,\quad k=0,1,2
+\end{eqnarray}
+ Note that only $\hat{\pmb{\alpha}}_{s_2}$ and $\hat{\pmb{\beta}}_{s_2}$ are observable, because $Y(x)$ is only available at $x\in{s_2}$, and that in general the vector consisting of the first $p$ components of $\hat{\pmb{\beta}}_{s_2}$ is not equal to $\hat{\pmb{\alpha}}_{s_2}$.\\
+The empirical predictions and residuals are defined, in a slightly simplified notation, as
+\begin{eqnarray*}
+\hat{Y}(x)&=&\pmb{Z}^t(x)\hat{\pmb{\beta}}_{s_2} \\ \hat{Y}_1(x)&=&\pmb{Z}^{(1)t}(x)\hat{\pmb{\alpha}}_{s_2}\\
+\hat{R}(x)&=&Y(x)-\hat{Y}(x)\\
+\hat{R}_1(x)&=&Y(x)-\hat{Y}_1(x)
+\end{eqnarray*}
+Consistent estimates of the design-based covariance matrices are given by
+\begin{eqnarray}\label{robustvar}
+\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}&=&\pmb{A}_2^{-1}
+\Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}^2(x)\pmb{Z}(x)\pmb{Z}^t(x)\Big)\pmb{A}_2^{-1}\nonumber \\
+\hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}_{s_2}}&=&(\pmb{A}^{(1)}_1)^{-1}
+\Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}_1^2(x)\pmb{Z}^{(1)}(x)\pmb{Z}^{(1)t}(x)\Big)(\pmb{A}^{(1)}_1)^{-1}
+\end{eqnarray}
+Note that the  matrix $\pmb{A}^{(1)}_1$ is used for $\hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}_{s_2}}$ instead of $\pmb{A}^{(1)}_2$, both being asymptotically equivalent. This is necessary in order to have compatibility with the g-weight version of the estimated variance of the regression estimators discussed below. We need the following notation for the various means of the auxiliary vectors
+\begin{eqnarray}\label{meanvalues}
+\bar{\pmb{Z}}^{(1)} &=& \frac{1}{\lambda(F)}\int_F \pmb{Z}^{(1)}(x)dx \nonumber \\
+\hat{\bar{\pmb{Z}}}^{(1)}_0 &=& \frac{1}{n_0}\sum_{x\in{s_0}}\pmb{Z}^{(1)}(x) \nonumber \\
+\hat{\bar{\pmb{Z}}}^{(1)}_1 &=& \frac{1}{n_1}\sum_{x\in{s}_1}\pmb{Z}^{(1)}(x)  \nonumber \\
+\hat{\bar{\pmb{Z}}}_k &=& \frac{1}{n_k}\sum_{x\in{s}_k}\pmb{Z}(x),\;k=1,2
+\end{eqnarray}
+The g-weights are defined as
+\begin{eqnarray}\label{gweight5}
+g^{(1)}_1(x)&=&\hat{\bar{\pmb{Z}}}_0^{t(1)}(\pmb{A}^{(1)}_1)^{-1}\pmb{Z}^{(1)}(x)\nonumber \\
+g_2(x) &=& \hat{\bar{\pmb{Z}}}^t_{1}\pmb{A}^{-1}_{2}\pmb{Z}(x)
+\end{eqnarray}
+Note that $\pmb{A}^{(1)}_1$ instead of $\pmb{A}^{(1)}_2$ is used in the definition of $g^{(1)}_1(x)$.
+ The g-weights satisfy the calibration properties
+\begin{eqnarray}\label{gweight6}
+\frac{1}{n_1}\sum_{x\in{s_1}}g^{(1)}_1(x)\pmb{Z}^{(1)}(x)&=&\hat{\bar{\pmb{Z}}}^{(1)}_0 \nonumber \\
+\frac{1}{n_2}\sum_{x\in{s_2}}g_2(x)\pmb{Z}(x)&=&\hat{\bar{\pmb{Z}}}_{1}
+\end{eqnarray}
+The mean of the g-weights over $s_1$ and $s_2$ are equal to $1$. We have already proved that the $g_2(x)$ tend to $1$. With an obvious modification of the proof it can be shown that this also holds for $g^{(1)}_1(x)$.\\
+The \textbf{generalized regression estimate} discussed by \cite{mandallaz4} is defined as
+\begin{eqnarray}\label{ygreg1}
+\hat{Y}_{greg} &=& \frac{1}{\lambda(F)}\int_F \hat{Y}_1(x)dx
++\frac{1}{n_1}\sum_{x\in{s}_1}(\hat{Y}(x)-\hat{Y}_1(x))
++ \frac{1}{n_2}\sum_{x\in{s}_2}(Y(x)-\hat{Y}(x)) \nonumber \\
+&=& (\bar{\pmb{Z}}^{(1)}-\hat{\bar{\pmb{Z}}}^{(1)}_1)^t\hat{\pmb{\alpha}}_{s_2} +
+\hat{\bar{\pmb{Z}}}^t_1\hat{\pmb{\beta}}_{s_2}
+\end{eqnarray}
+Here, $\pmb{Z}^{(1)}(x)$ is exhaustive, i.e. known at all $x\in{F}$, though in practice it suffices to know the true mean $\bar{\pmb{Z}}^{(1)}$. \\
+Using the results given in \cite{mandallaz4} (see \cite{mandallazreport3} for the proofs) one has under the \textbf{external model assumption} the variance estimate
+\begin{equation}\label{estexternalvarYgreg}
+\hat{\VAR}(\hat{Y}_{greg})=\frac{1}{n_1}\frac{1}{n_2}\sum_{x\in{s_2}}\hat{R}_{1}^2(x))
++ (1-\frac{n_2}{n_1})\frac{1}{n^2_2}\sum_{x\in{s_2}}\hat{R}^2(x)
+\end{equation}
+Using the estimated design-based variance-covariance matrices one obtains alternatively the consistent estimate
+\begin{equation}\label{estvarygreggweight1}
+\hat{\VAR}(\hat{Y}_{greg})=\frac{n_2}{n_1}\bar{\pmb{Z}}^{(1)t}\hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}_{s_2}}
+\bar{\pmb{Z}}^{(1)}+(1-\frac{n_2}{n_1})\hat{\bar{\pmb{Z}}}_1^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}
+\hat{\bar{\pmb{Z}}}_1
+\end{equation}
+which can be rewritten in the g-weight form
+\begin{equation}\label{estvarygreggweight2}
+\hat{\VAR}(\hat{Y}_{greg})=\frac{1}{n_1n_2}\sum_{x\in{s_2}}(g_1^{(1)}(x))^2\hat{R}_{1}^2(x))
++ (1-\frac{n_2}{n_1})\frac{1}{n^2_2}\sum_{x\in{s_2}}g_2^2(x)\hat{R}^2(x)
+\end{equation}
+Because the g-weights tend to $1$ the variance estimates [\ref{estexternalvarYgreg}] and [\ref{estvarygreggweight2}] are asymptotically equivalent.\\
+If $\pmb{Z}^{(1)}(x)$ is no longer exhaustive we replace the first term in [\ref{ygreg1}] by its sample mean in the null phase sample and we define the new three-phase estimator as
+\begin{eqnarray}\label{yg3reg}
+\hat{Y}_{g3reg} &=& \frac{1}{n_0} \sum_{x\in{s_0}} \hat{Y}_1(x)
++\frac{1}{n_1}\sum_{x\in{s}_1}(\hat{Y}(x)-\hat{Y}_1(x))
++ \frac{1}{n_2}\sum_{x\in{s}_2}(Y(x)-\hat{Y}(x)) \nonumber \\
+&=& (\hat{\bar{\pmb{Z}}}^{(1)}_0-\hat{\bar{\pmb{Z}}}^{(1)}_1)^t\hat{\pmb{\alpha}}_{s_2} +
+\hat{\bar{\pmb{Z}}}^t_1\hat{\pmb{\beta}}_{s_2}
+\end{eqnarray}
+where $\hat{\bar{\pmb{Z}}}^{(1)}_0=\frac{1}{n_0}\sum_{x\in{s_0}}\pmb{Z}^{(1)}(x)$.\\
+Note that the third terms in [\ref{ygreg1}] and [\ref{yg3reg}] vanish for internal models because by assumption the intercept term is contained in $\pmb{Z}^{(1)}$ (or it can be expressed as a linear combination of its components) so that the residuals sum up to zero over $s_2$.\\
+By using the properties of conditional expectations and variances  we see that
+$\hat{Y}_{F,g3reg}$ is asymptotically design unbiased and that under the external model assumption
+one has
+\begin{eqnarray}\label{extvaryg3reg1}
+\VAR_{0,1,2}(\hat{Y}_{g3reg})&=&\EX_0 \EX_{1 \mid 0}\VAR_{2 \mid 0,1}(\hat{Y}_{F,g3reg})+
+\EX_0 \VAR_{1 \mid 0}\EX_{2 \mid 0,1}(\hat{Y}_{F,g3reg})
++\VAR_0 \EX_{1 \mid 0}\EX_{2 \mid 0,1}(\hat{Y}_{F,g3reg})\nonumber \\
+&=& \frac{1}{n_0}\VAR_{x}(Y(x))+(1-\frac{n_1}{n_0})\frac{1}{n_1}\VAR_x(R_1(x))+
+(1-\frac{n_2}{n_1})\frac{1}{n_2}\VAR_x(R(x))
+\end{eqnarray}
+The above equation holds for any fixed given $\pmb{\alpha}$ and $\pmb{\beta}$. At the true  value $\pmb{\alpha}_0$ the predictions $\hat{Y}_1(x)$ and the residuals $R_1(x)$ are orthogonal in the design-based sense, which implies $\VAR_x(Y(x))=\VAR_x(\hat{Y}_1(x))+\VAR_x(R_1(x))$ and the following external variance
+\begin{equation}\label{theoreticalexternalvaryg3reg}
+\VAR_{0,1,2}(\hat{Y}_{g3reg})=\frac{1}{n_0}\VAR_{x}(\hat{Y}_1(x))+\frac{1}{n_1}\VAR_x(R_1(x))+
+(1-\frac{n_2}{n_1})\frac{1}{n_2}\VAR(R(x))
+\end{equation}
+As the empirical residuals based on $\hat{\pmb{\alpha}}_{s_2}$ and $\hat{\pmb{\beta}}_{s_2}$ have zero mean we get the external variance estimate
+\begin{equation}\label{estimatedexternalvaryg3reg}
+\hat{\VAR}_{ext}(\hat{Y}_{g3reg})=\frac{1}{n_0}\frac{\sum_{x\in{s_0}}(\hat{Y}_1(x)-\hat{\bar{Y}}_1)^2}{n_0-1}
++ \frac{1}{n_1}\frac{1}{n_2}\sum_{x\in{s}_2}\hat{R}^2_1(x)+
+(1-\frac{n_2}{n_1})\frac{1}{n^2_2}\sum_{x\in{s}_2}\hat{R}^2(x)
+\end{equation}
+One can also derive the asymptotic theoretical variance via the design-based covariance matrices, which gives
+\begin{equation}\label{theoreticalgweightvaryg3reg}
+\VAR_{0,1,2}(\hat{Y}_{g3reg})= \frac{1}{n_0}\VAR(\hat{Y}_{1,\pmb{\alpha}}(x))
++\frac{n_2}{n_1}\bar{\pmb{Z}}^{(1)t}
+\pmb{\Sigma}_{\hat{\pmb{\alpha}}_{s_2}}\bar{\pmb{Z}}^{(1)} + (1-\frac{n_2}{n_1})\bar{\pmb{Z}}^{t}\pmb{\Sigma}_{\hat{\pmb{\beta}}_{s_2}}\bar{\pmb{Z}}^{t}
+\end{equation}
+which can be consistently estimated by
+\begin{equation}\label{estgweightvaryg3reg}
+\hat{\VAR}_{0,1,2}(\hat{Y}_{g3reg})=\hat{\pmb{\alpha}}_{s_2}^t\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{Z}}}^{(1)}_0}\hat{\pmb{\alpha}}_{s_2}
++\frac{n_2}{n_1}\hat{\bar{\pmb{Z}}}^{(1)t}_0
+\hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}_{s_2}}\hat{\bar{\pmb{Z}}}^{(1)}_0 + (1-\frac{n_2}{n_1})\hat{\bar{\pmb{Z}}}^{t}_1\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}\hat{\bar{\pmb{Z}}}^{t}_1
+\end{equation}
+with the design-based covariance matrix of the first component
+\begin{equation}\label{estcovarz}
+\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{Z}}}^{(1)}_{0}}=
+\frac{1}{n_{0}}\frac{\sum_{x\in{s_{0}}}(\pmb{Z}^{(1)}(x)-
+\hat{\bar{\pmb{Z}}}^{(1)}_{0})(\pmb{Z}(x)-\hat{\bar{\pmb{Z}}}^{(1)}_{0})^t}{n_0-1}
+\end{equation}
+The proof of [\ref{theoreticalgweightvaryg3reg}] is rather intricate and given in \cite{mandallazreport3}.
+One can rewrite [\ref{estgweightvaryg3reg}] as
+\begin{eqnarray}\label{estgweightvaryg3regfinal}
+\hat{\VAR}(\hat{Y}_{g3reg})&=&\frac{1}{n_0}\frac{\sum_{x\in{s_0}}(\hat{Y}_1(x)-\hat{\bar{Y}}_1)^2}{n_0-1}
+\nonumber\\
+&+&\frac{1}{n_1}\frac{1}{n_2}\sum_{x\in{s}_2}(g_1^{(1)}(x))^2\hat{R}^2_1(x)+
+(1-\frac{n_2}{n_1})\frac{1}{n^2_2}\sum_{x\in{s}_2}g_2^2(x)\hat{R}^2(x)
+\end{eqnarray}
+\noindent where $\hat{\bar{Y}}_1=\frac{1}{n_0}\sum_{x\in{s_0}}\hat{Y}_1(x)$. \\
+Because the g-weights tend to $1$ [\ref{estgweightvaryg3regfinal}] is asymptotically equivalent to the external variance estimate given in [\ref{estimatedexternalvaryg3reg}].
+\subsection{The three-phase two-stage generalized regression estimator}\label{threephasetwostageregest}
+For the point estimate one simply replaces $Y(x)$ by $Y^*(x)$ in [\ref{coeff2}] to obtain $\hat{\pmb{\alpha}}_{s_2}^*$, $\hat{\pmb{\beta}}_{s_2}^*$. The predictions and residuals are defined as
+\begin{eqnarray*}
+\hat{Y}^*(x)&=&\pmb{Z}^t(x)\hat{\pmb{\beta}}^*_{s_2} \\ \hat{Y}^*_1(x)&=&\pmb{Z}^{(1)t}(x)\hat{\pmb{\alpha}}^*_{s_2}\\
+\hat{R}^*(x)&=&Y^*(x)-\hat{Y}^*(x) \\
+\hat{R}_1^*(x)&=&Y^*(x)-\hat{Y}_1^*(x)
+\end{eqnarray*}
+The tree-phase two-stage regression estimator reads
+\begin{eqnarray}\label{yg3regtwostage}
+\hat{Y}^*_{g3reg} &=& \frac{1}{n_0} \sum_{x\in{s_0}} \hat{Y}^*_1(x)
++\frac{1}{n_1}\sum_{x\in{s}_1}(\hat{Y}^*(x)-\hat{Y}^*_1(x))
++ \frac{1}{n_2}\sum_{x\in{s}_2}(Y^*(x)-\hat{Y}^*(x)) \nonumber \\
+&=& (\hat{\bar{\pmb{Z}}}^{(1)}_0-\hat{\bar{\pmb{Z}}}^{(1)}_1)^t\hat{\pmb{\alpha}}^*_{s_2} +
+\hat{\bar{\pmb{Z}}}^t_1\hat{\pmb{\beta}}^*_{s_2}
+\end{eqnarray}
+Since $\hat{\pmb{\alpha}}^*_{s_2}=\pmb{\alpha}_0 + O_p(\frac{1}{n_2})$ and $\hat{\pmb{\alpha}}^*_{s_2}=\pmb{\beta }_0 + O_p(\frac{1}{n_2})$ the external variance assumption is asymptotically valid. To calculate the overall variance we use the standard decomposition and [\ref{extvaryg3reg1}]
+\begin{eqnarray}\label{extvary3regtwostage}
+\VAR_{0,1,2,3}(\hat{Y}^*_{g3reg})&=&\VAR_{0,1,2}\EX_{3 \mid 0,1,2}(\hat{Y}^*_{g3reg})+\EX_{0,1,2}\VAR_{3 \mid 0,1,2}(\hat{Y}^*_{g3reg}) \nonumber \\
+&=&\VAR_{0,1,2}(\hat{Y}_{g3reg})+\frac{1}{n_2}\EX_x (V(x))\nonumber \\
+&=&\frac{1}{n_0}\VAR_{x}(\hat{Y}_1(x))+\frac{1}{n_1}\VAR_x(R_1(x))+
+(1-\frac{n_2}{n_1})\frac{1}{n_2}\VAR(R(x))+ \frac{1}{n_2}\EX_x (V(x))
+\end{eqnarray}
+To obtain an estimate of the external variance we adapt [\ref{estimatedexternalvaryg3reg}]
+\begin{eqnarray}\label{estexternvaryg3reg}
+\hat{\VAR}_{ext}(\hat{Y}^*_{g3reg})&=&\frac{1}{n_0}\frac{\sum_{x\in{s_0}}(\hat{Y}^*_1(x)-\hat{\bar{Y}}^*_1)^2}{n_0-1}
+\nonumber\\
+&+&\frac{1}{n_1}\frac{1}{n_2}\sum_{x\in{s}_2}(\hat{R}^*_1(x))^2+
+(1-\frac{n_2}{n_1})\frac{1}{n^2_2}\sum_{x\in{s}_2}(\hat{R}^*(x))^2
+\end{eqnarray}
+As in two-phase sampling we use the asymptotically valid relations
+\begin{eqnarray}\label{residualsquaredtwostage}
+\EX_{3 \mid 0,1,2}(\hat{R}^*(x))^2 &=& R^2(x)+V(x) \nonumber \\
+\EX_{3 \mid 0,1,2}(\hat{R}_1^*(x))^2&=&R^2_1(x)+V(x)
+ \end{eqnarray}
+Hence, we get for the expected value of the external variance estimate
+\begin{eqnarray}\label{estexternvaryg3regproof}
+\EX_{0,1,2,3}\hat{\VAR}_{ext}(\hat{Y}^*_{g3reg})&=&
+\frac{1}{n_0}\VAR(\hat{Y}_1(x)) + \frac{1}{n_1}\VAR(R_1(x))+
+(1-\frac{n_2}{n_1})\frac{1}{n_2}\VAR(R(x)) \nonumber \\
+&+ &\frac{1}{n_1}\EX_x V(x) + (1-\frac{n_2}{n_1})\frac{1}{n_2}\EX_x V(x)\nonumber \\
+&=& \frac{1}{n_0}\VAR(\hat{Y}_1(x)) + \frac{1}{n_1}\VAR(R_1(x))+
+(1-\frac{n_2}{n_1})\frac{1}{n_2}\VAR(R(x)) +\frac{1}{n_2}\EX_x V(x)\nonumber \\
+&=& \VAR_{ext}(\hat{Y}_{g3reg})+\frac{1}{n_2}\EX_x V(x)
+\end{eqnarray}
+which is precisely [\ref{extvary3regtwostage}]. Hence, the external variance estimate [\label{estexternvaryg3reg}] is asymptotically unbiased.\\
+We can also derive a g-weight version of the variance of $\hat{Y}^*_{g3reg}$ by using
+\begin{eqnarray*}\label{theoreticgweightvarthreephasetwostage}
+\VAR(\hat{Y}^*_{g3reg})&=&\VAR_{0,1,2}\EX_{3 \mid 0,1,2}(\hat{Y}^*_{g3reg})+ \EX_{0,1,2}\VAR_{3 \mid 0,1,2}(\hat{Y}^*_{g3reg}) \nonumber \\
+&=& \VAR_{0,1,2}(\hat{Y}_{g3reg})+\EX_{0,1,2}\VAR_{3 \mid 0,1,2}(\hat{Y}^*_{g3reg}) \nonumber \\
+&=& \frac{1}{n_0}\VAR(\hat{Y}_{1,\pmb{\alpha}_2 }(x))
++\frac{n_2}{n_1}\bar{\pmb{Z}}^{(1)t}
+\pmb{\Sigma}_{\hat{\pmb{\alpha}}_{s_2}}\bar{\pmb{Z}}^{(1)} + (1-\frac{n_2}{n_1})\bar{\pmb{Z}}^{t}\pmb{\Sigma}_{\hat{\pmb{\beta}}_{s_2}}\bar{\pmb{Z}}^{t} + \EX_{0,1,2}\VAR_{3 \mid 0,1,2}(\hat{Y}^*_{g3reg})
+\end{eqnarray*}
+The increase in variance due to two-stage sampling is therefore $\EX_{0,1,2}\VAR_{3 \mid 0,1,2}(\hat{Y}^*_{g3reg})$. Recalling that the Poisson sampling schemes at different points are independent we get for the extra term
+\begin{eqnarray*}\label{extraterm}
+\VAR_{3 \mid 0,1,2}(\hat{Y}^*_{g3reg})&=&\EX_{3 \mid 0,1,2}\Big(
+(\hat{\bar{\pmb{Z}}}^{(1)}_0-\hat{\bar{\pmb{Z}}}^{(1)}_1)^t(\hat{\pmb{\alpha}}^*_{s_2}-\hat{\pmb{\alpha}}_{s_2})
++\hat{\bar{\pmb{Z}}}^{(1)}_1(\hat{\pmb{\beta}}^*_{s_2}-\hat{\pmb{\beta}}_{s_2})\Big)^2 \\
+&=& (\hat{\bar{\pmb{Z}}}^{(1)}_0-\hat{\bar{\pmb{Z}}}^{(1)}_1)^t(\pmb{A}_2^{(1)})^{-1}\big(\frac{1}{n^2_2}
+\sum_{x\in{s_2}}V(x)\pmb{Z}^{(1)}(x)\pmb{Z}^{(1)}(x)\big)(\pmb{A}_2^{(1)})^{-1}
+(\hat{\bar{\pmb{Z}}}^{(1)}_0-\hat{\bar{\pmb{Z}}}^{(1)}_1) \\
+&+& 2(\hat{\bar{\pmb{Z}}}^{(1)}_0-\hat{\bar{\pmb{Z}}}^{(1)}_1)^t(\pmb{A}_2^{(1)})^{-1}\big(\frac{1}{n_2^2}
+\sum_{x\in{s_2}}V(x)\pmb{Z}^{(1)}(x)\pmb{Z}(x)\big)\pmb{A}_2^{-1}\hat{\bar{\pmb{Z}}}_1 \\
+&+ & \hat{\bar{\pmb{Z}}}_1\pmb{A}_2^{-1}\big(\frac{1}{n^2_2}\sum_{x\in{s_2}}V(x)\pmb{Z}(x)\pmb{Z}^t(x)\big)
+\pmb{A}_2^{-1}\hat{\bar{\pmb{Z}}}_1
+\end{eqnarray*}
+Taking the expectation $\EX_{0,1,2}\VAR_{3 \mid 0,1,2}(\hat{Y}^*_{g3reg})$ we see that the first and second term are of smaller order than the third, so that we get asymptotically for the increase in variance
+\begin{equation}\label{extratermasymptotic}
+\EX_{0,1,2}\VAR_{3 \mid 0,1,2}(\hat{Y}^*_{g3reg})=
+ \bar{\pmb{Z}}^t\pmb{A}^{-1}\big(\frac{1}{n_2}\EX_x (V(x)\pmb{Z}(x)\pmb{Z}^t(x))\big)\pmb{A}^{-1}\bar{\pmb{Z}}
+ \end{equation}
+ Writing its estimate with the g-weight $g(x)$ tending to 1 we see that the extra term is asymptotically equal to $\frac{1}{n_2}\EX_x V(x)$, which is the same as the value obtained with the external variance in [\ref{estexternvaryg3regproof}].\\
+ Intuitively it is  appealing to use [\ref{theoreticalgweightvaryg3reg}] with the matrices $\pmb{\Sigma}_{\pmb{\alpha}^*_2}$ and $\pmb{\Sigma}_{\pmb{\beta}^*_2}$
+ to get the variance estimate
+ \begin{eqnarray}\label{estimatedthreephasetwostagevariance}
+\hat{\VAR}_{0,1,2,3}(\hat{Y}^*_{g3reg})&=&\hat{\pmb{\alpha}}^{*t}_2\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{Z}}}^{(1)}_0}\hat{\pmb{\alpha}}^*_{s_2}
++\frac{n_2}{n_1}\hat{\bar{\pmb{Z}}}^{(1)t}_0
+\hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}^*_{s_2}}\hat{\bar{\pmb{Z}}}^{(1)}_0 + (1-\frac{n_2}{n_1})\hat{\bar{\pmb{Z}}}^{t}_1\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}^*_{s_2}}\hat{\bar{\pmb{Z}}}^{t}_1 \nonumber \\
+&=&\frac{1}{n_0}\frac{\sum_{x\in{s_0}}(\hat{Y}^*_1(x)-\hat{\bar{Y}}^*_1)^2}{n_0-1}
+\nonumber\\
+&+&\frac{1}{n_1}\frac{1}{n_2}\sum_{x\in{s}_2}(g_1^{(1)}(x))^2(\hat{R}^*_1(x))^2+
+(1-\frac{n_2}{n_1})\frac{1}{n^2_2}\sum_{x\in{s}_2}g_2^2(x)(\hat{R}^*(x))^2
+\end{eqnarray}
+
+Using [\ref{residualsquaredtwostage}] we get
+\begin{eqnarray}\label{threetwogweightvar1}
+\EX_{1,2,3}\big(\hat{\VAR}(\hat{Y}^*_{g3reg})\big)&=& \frac{1}{n_0}\VAR(\hat{Y}_1(x)) \nonumber \\
+&+&\EX_{1,2}\Big(\frac{1}{n_1n_2}\sum_{x\in{s}_2}(g_1^{(1)}(x))^2(R_1^2(x)+V(x))\Big) \nonumber \\
+&+&\EX_{1,2}\Big(\frac{1}{n^2_2}\sum_{x\in{s_2}}g_2^2(x)(R^2(x)+V(x))\Big) \nonumber \\
+&-&\EX_{1,2}\Big(\frac{1}{n_1n_2}\sum_{x\in{s_2}}g_2^2(x)(R^2(x)+V(x))\Big)
+\end{eqnarray}
+Grouping the terms and since the g-weights tend to $1$ we get
+\begin{eqnarray}\label{threetwogweightvar}
+\EX_{1,2,3}\big(\hat{\VAR}(\hat{Y}^*_{g3reg})\big)&=& \frac{1}{n_0}\VAR(\hat{Y}_1(x))  \nonumber \\
+&+& \EX_{1,2}\frac{1}{n_1n_2}\sum_{x\in{s}_2}((g_1^{(1)}(x))^2-g_2^2(x))V(x) \nonumber \\
+&+&\frac{n_2}{n_1}\bar{\pmb{Z}}^{(1)t}
+\pmb{\Sigma}_{\hat{\pmb{\alpha}}_{s_2}}\bar{\pmb{Z}}^{(1)} + (1-\frac{n_2}{n_1})\bar{\pmb{Z}}^{t}\pmb{\Sigma}_{\hat{\pmb{\beta}}_{s_2}}\bar{\pmb{Z}}^{t} \nonumber \\
+&+& \frac{1}{n_2}\EX_x(V(x)) \nonumber \\
+&=& \VAR(\hat{Y}_{g3reg})+ \frac{1}{n_2}\EX_x(V(x))
+\end{eqnarray}
+We have proved that in three-phase two-stage sampling the external variance estimate [\ref{estexternvaryg3reg}] and the g-weight variance estimate [\ref{estimatedthreephasetwostagevariance}] are asymptotically consistent and equivalent. \\
+\textbf{One can obtain the results for two-phase two-stage and three-phase two-stage sampling by replacing in all formulae the local density $Y(x)$ by the general local density $Y^*(x)$ in all the corresponding formulae valid for two-phase one-stage and three-phase one-stage sampling schemes.}\\
+The remarks on two-phase systematic sampling remain a fortiori valid for three-phase systematic sampling: the impact of the long range spatial correlation of the $Y(x)$ or $\hat{Y}(x)$ being smaller than under two-phase sampling ($\frac{1}{n_0}<<\frac{1}{n_1}$), and because the residuals $R(x)$, $R_1(x)$ have a spatial correlation usually very small in comparison to $F$, likewise for the better statistical properties of the g-weight variance estimates (see \cite{mandallazreport3} pp. 24-29 for a stratification example with exhaustive first-phase).
+
+
+\section{Concluding remarks}
+It is clear that the same results will apply to the estimation of a small area $G\subset F$: for the external variance this is trivially achieved by restricting the samples to the small area, whereas in the g-weight approach one extends the reduced model by the indicator variable of $G$ (thus ensuring zero mean residuals over $G$) and replaces the empirical means of the auxiliary variables over $F$ by their means over $G\subset F$. The resulting g-weights $g^{(1)}(x)$, respectively $g_2(x)$, tend to $0$ for $x\not\in{G}$ and to $\frac{n_1}{n_{1,G}}$, respectively $\frac{n_2}{n_{2,G}}$, for $x\in{G}$.\\
+The results extend trivially to cluster sampling if the number of plots per cluster is constant. The ideas are the same but the algebra is slightly more cumbersome if this not the case (see \cite{mandallaz} section 4.5 to get the flavor of the required modifications). Formal proof for two/three phase one-stage sampling schemes are given in the technical reports \cite{mandallazreport1}, \cite{mandallazreport2} and \cite{mandallazreport3} and it should be clear from the arguments given in this technical report that the same results will also hold in two/three phase two-stage cluster sampling: details are left as an exercise for the reader. Interestingly, Feynman did not comment this lame excuse, also over-used in mathematical books or papers!\\
+Current work is devoted to the development of geostatistical Kriging versions of the three-phase design-based estimators.
+
+\newpage
+\bibliography{biblio1}
+\end{document}
+
+
+
+
+

@@ -1,0 +1,69 @@
+% !Rnw root = JStatSoft_forestinventory_master.Rnw
+
+%\section{Structure of the Package}
+\section{Methods and Structure of the Package}
+\label{sec:str_and_mod}
+
+
+%Here comes the general structure of the package, or at least of the two and three-phase functions
+
+\subsection{Two-Phase Sampling}
+
+The two-phase or double-sampling estimators use inventory information from \textbf{two} nested samples which are commonly reffered to as \textit{phases} (figure \ref{fig:concmphase_and_sae_a}). The first phase $s_1$ comprises $n_1$ sample locations that provide a set of explanatory variables described by the column vector $\pmb{Z}(x)\in{\Re^{p}}$ at each point $x \in s_1$. These explanatory variables are derived from auxiliary information that is available in high quantity within the forest area $F$. The second phase $s_2$ constitutes the terrestrial inventory conducted at $n_2$ subsamples of the large phase $s_1$ and provides the value of the target variable, i.e. the local density $Y(x)$ such as the timber volume density per hectare. The set of explanatory variables at each sample location $x \in s_1$ is now transformed into a prediction $\hat{Y}(x)$ of $Y(x)$ by the application of an oridinary least square (OLS) regression model. In the \proglang{R} package \pkg{forestinventory}, estimators for two-phase sampling can be applied by the \code{twophase}-function. Their implementation and application is described in detail in section \ref{sec:globest_and_appl} and \ref{sec:saeest_and_appl}.
+
+
+\subsection{Three-Phase Sampling}
+
+The three-phase or triple-sampling estimators extend the principle of two-phase sampling and use inventory information from \textbf{three} nested samples (\textit{phases}). The basic assumption is that auxiliary information is available in two different frequencies, i.e. sample sizes. The phase $s_0$ provides
+
+
+
+
+A first phase of auxiliary information (e.g. taken from remote sensing data) is used to generate model predictions based on multiple linear regression using the method of ordinary least squares. A subsample of the first phase comprises a second phase which contains further auxiliary information that produces another set of model predictions. A further subsample produces a third final phase based on terrestrial observations (i.e. the local densities of the ground truth) and is used to correct for bias in the design-based sense. The estimation method is available for simple and cluster sampling and includes the special case where the first phase is based on an exhaustive sample (i.e. a census). Small-area applications are supported for synthetic estimation as well as two varieties of bias-corrected estimators: the traditional small-area estimator and an asymptotically equivalent version derived under Mandallaz's extended model approach.
+
+
+Explain three phase sampling, giving refrences to existing literature and studies
+
+
+\begin{figure}[htb]
+	\begin{subfigure}[t]{0.5\textwidth} 
+		\centering
+    \resizebox{1.1\hsize}{!}{\includegraphics{fig/multiphase_graphic.eps}}%
+		\caption{} \label{fig:concmphase_and_sae_a}
+		\end{subfigure}
+	\begin{subfigure}[t]{0.5\textwidth} 
+		\centering
+   \resizebox{0.85\hsize}{!}{\includegraphics{fig/sae_graphic.eps}}%
+		\caption{} \label{fig:concmphase_and_sae_b}
+	\end{subfigure}
+\caption{\textbf{(a)} Concept of multiphase sampling. The square represents the forest area for which an inventory is being conducted. The points denote the sample locations $x$. Filled points indicate \textit{available} information. \textbf{(b)} Illustration of the Small Area Estimation problem}
+\label{fig:concmphase_and_sae}
+\end{figure}
+
+
+
+
+
+% Note that while the auxiliary information is most often provided by remote sensing data, that does not necessarily have to be the case. The auxiliary information can be any information that exhibits a correlation to the local density, i.e. target variable, $Y(x)$.
+% 
+% e.g. past inventory data \citep{massey2014a}
+
+
+
+\subsection{Small Area Estimation}
+
+Explain:
+\begin{itemize}
+  \item What is the difference between \textit{global} and \textit{small area} estimation?
+  \item explain the structure of the package (graphic) and state that we will only concentrate on specific cases ...
+\end{itemize}
+
+
+\begin{figure}[htb]
+\centering
+\resizebox{1\hsize}{!}{\includegraphics{fig/Package_structure.eps}}
+\caption{Structure of the multiphase estimators in the \proglang{R} package \pkg{forestinventory}}
+\label{fig:struct_package}
+\end{figure}
+
+
