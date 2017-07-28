@@ -15,6 +15,14 @@
 *.fot
 *.cb
 *.cb2
+*.bak
+
+
+## latex style files:
+*.bst
+*.cls
+*.dtx
+
 
 ## Build tool auxiliary files:
 *.fdb_latexmk
@@ -27,3 +35,12 @@
 
 ## pdf files:
 *.pdf
+
+## OS generated files:
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
