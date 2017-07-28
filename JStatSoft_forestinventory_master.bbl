@@ -1,0 +1,184 @@
+\begin{thebibliography}{21}
+\newcommand{\enquote}[1]{``#1''}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+\providecommand{\eprint}[2][]{\url{#2}}
+
+\bibitem[{Battese \emph{et~al.}(1988)Battese, Harter, and Fuller}]{battese1988}
+Battese GE, Harter RM, Fuller WA (1988).
+\newblock \enquote{An error-components model for prediction of county crop
+  areas using survey and satellite data.}
+\newblock \emph{Journal of the American Statistical Association},
+  \textbf{83}(401), 28--36.
+\newblock \doi{10.1080/01621459.1988.10478561}.
+
+\bibitem[{Breidenbach(2015)}]{josae2015}
+Breidenbach J (2015).
+\newblock \emph{JoSAE: Functions for some Unit-Level Small Area Estimators and
+  their Variances}.
+\newblock R package version 0.2.3,
+  \urlprefix\url{https://CRAN.R-project.org/package=JoSAE}.
+
+\bibitem[{Breidenbach and Astrup(2012)}]{breidenbach2012}
+Breidenbach J, Astrup R (2012).
+\newblock \enquote{Small area estimation of forest attributes in the Norwegian
+  National Forest Inventory.}
+\newblock \emph{European Journal of Forest Research}, \textbf{131}(4),
+  1255--1267.
+\newblock \doi{10.1007/s10342-012-0596-7}.
+
+\bibitem[{Gregoire and Valentine(2007)}]{gregoire2007}
+Gregoire TG, Valentine HT (2007).
+\newblock \emph{Sampling strategies for natural resources and the environment}.
+\newblock CRC Press.
+
+\bibitem[{Hill \emph{et~al.}(2017)Hill, Mandallaz, Buddenbaum, Stoffels, and
+  Langshausen}]{hill2017a}
+Hill A, Mandallaz D, Buddenbaum H, Stoffels J, Langshausen J (2017).
+\newblock \enquote{Implementation of design-based small area estimations on
+  forest district level in {R}hineland-{P}alatinate by combining remote sensing
+  data with data of the {T}hird {N}ational {G}erman {I}nventory.}
+\newblock {T}hird {I}nternational {W}orkshop on {F}orest {I}nventory
+  {S}tatistics, {F}reiburg.
+
+\bibitem[{K{\"o}hl \emph{et~al.}(2006)K{\"o}hl, Magnussen, and
+  Marchetti}]{kohl2006}
+K{\"o}hl M, Magnussen SS, Marchetti M (2006).
+\newblock \emph{Sampling methods, remote sensing and GIS multiresource forest
+  inventory}.
+\newblock Springer Science \& Business Media.
+
+\bibitem[{Magnussen \emph{et~al.}(2014)Magnussen, Mandallaz, Breidenbach, Lanz,
+  and Ginzler}]{magnussen2014}
+Magnussen S, Mandallaz D, Breidenbach J, Lanz A, Ginzler C (2014).
+\newblock \enquote{National forest inventories in the service of small area
+  estimation of stem volume.}
+\newblock \emph{Canadian Journal of Forest Research}, \textbf{44}(9),
+  1079--1090.
+\newblock \doi{10.1139/cjfr-2013-0448}.
+\newblock \urlprefix\url{https://doi.org/10.1139/cjfr-2013-0448}.
+
+\bibitem[{Mandallaz(2008)}]{mandallaz2008}
+Mandallaz D (2008).
+\newblock \emph{Sampling techniques for forest inventories}.
+\newblock CRC Press.
+\newblock \doi{10.1201/9781584889779}.
+\newblock \urlprefix\url{https://doi.org/10.1201/9781584889779}.
+
+\bibitem[{Mandallaz(2013{\natexlab{a}})}]{mandallaz2013a}
+Mandallaz D (2013{\natexlab{a}}).
+\newblock \enquote{Design-based properties of some small-area estimators in
+  forest inventory with two-phase sampling.}
+\newblock \emph{Canadian Journal of Forest Research}, \textbf{43}(5), 441--449.
+\newblock \doi{10.1139/cjfr-2012-0381}.
+\newblock \urlprefix\url{https://doi.org/10.1139/cjfr-2012-0381}.
+
+\bibitem[{Mandallaz(2013{\natexlab{b}})}]{mandallaz2013c}
+Mandallaz D (2013{\natexlab{b}}).
+\newblock \enquote{A three-phase sampling extension of the generalized
+  regression estimator with partially exhaustive information.}
+\newblock \emph{Canadian Journal of Forest Research}, \textbf{44}(4), 383--388.
+\newblock \doi{10.1139/cjfr-2013-0449}.
+\newblock \urlprefix\url{https://doi.org/10.1139/cjfr-2013-0449}.
+
+\bibitem[{Mandallaz \emph{et~al.}(2013)Mandallaz, Breschan, and
+  Hill}]{mandallaz2013b}
+Mandallaz D, Breschan J, Hill A (2013).
+\newblock \enquote{New regression estimators in forest inventories with
+  two-phase sampling and partially exhaustive information: a design-based monte
+  carlo approach with applications to small-area estimation.}
+\newblock \emph{Canadian Journal of Forest Research}, \textbf{43}(11),
+  1023--1031.
+\newblock \doi{10.1139/cjfr-2013-0181}.
+\newblock \urlprefix\url{https://doi.org/10.1139/cjfr-2013-0181}.
+
+\bibitem[{Mandallaz \emph{et~al.}(2016)Mandallaz, Hill, and
+  Massey}]{mandallaz2016}
+Mandallaz D, Hill A, Massey A (2016).
+\newblock \enquote{Design-based properties of some small-area estimators in
+  forest inventory with two-phase sampling - revised version.}
+\newblock \emph{Technical report}, Department of Environmental Systems Science,
+  ETH Zurich.
+\newblock \doi{10.3929/ethz-a-010579388}.
+\newblock \urlprefix\url{https://doi.org/10.3929/ethz-a-010579388}.
+
+\bibitem[{Massey and Mandallaz(2015)}]{massey2015b}
+Massey A, Mandallaz D (2015).
+\newblock \enquote{Design-based regression estimation of net change for forest
+  inventories.}
+\newblock \emph{Canadian Journal of Forest Research}, \textbf{45}(12),
+  1775--1784.
+\newblock \doi{10.1139/cjfr-2015-0266}.
+\newblock \eprint{https://doi.org/10.1139/cjfr-2015-0266},
+  \urlprefix\url{https://doi.org/10.1139/cjfr-2015-0266}.
+
+\bibitem[{Massey \emph{et~al.}(2014)Massey, Mandallaz, and Lanz}]{massey2014a}
+Massey A, Mandallaz D, Lanz A (2014).
+\newblock \enquote{Integrating remote sensing and past inventory data under the
+  new annual design of the Swiss National Forest Inventory using three-phase
+  design-based regression estimation.}
+\newblock \emph{Canadian Journal of Forest Research}, \textbf{44}(10),
+  1177--1186.
+\newblock \doi{10.1139/cjfr-2014-0152}.
+\newblock \urlprefix\url{https://doi.org/10.1139/cjfr-2014-0152}.
+
+\bibitem[{Massey(2015)}]{massey2015}
+Massey AF (2015).
+\newblock \emph{Multiphase estimation procedures for forest inventories under
+  the design-based Monte Carlo approach}.
+\newblock Ph.D. thesis, ETH Zurich.
+\newblock \doi{10.3929/ethz-a-010536381}.
+\newblock \urlprefix\url{https://doi.org/10.3929/ethz-a-010536381}.
+
+\bibitem[{Saborowski \emph{et~al.}(2010)Saborowski, Marx, Nagel, and
+  B{\"o}ckmann}]{saborowski2010}
+Saborowski J, Marx A, Nagel J, B{\"o}ckmann T (2010).
+\newblock \enquote{Double sampling for stratification in periodic
+  inventories—Infinite population approach.}
+\newblock \emph{Forest ecology and management}, \textbf{260}(10), 1886--1895.
+\newblock \doi{10.1016/j.foreco.2010.08.035}.
+\newblock \urlprefix\url{https://doi.org/10.1016/j.foreco.2010.08.035}.
+
+\bibitem[{S{\"a}rndal \emph{et~al.}(2003)S{\"a}rndal, Swensson, and
+  Wretman}]{sarndal2003}
+S{\"a}rndal CE, Swensson B, Wretman J (2003).
+\newblock \emph{Model assisted survey sampling}.
+\newblock Springer Science \& Business Media.
+
+\bibitem[{Schreuder \emph{et~al.}(1993)Schreuder, Gregoire, and
+  Wood}]{schreuder1993}
+Schreuder HT, Gregoire TG, Wood GB (1993).
+\newblock \emph{Sampling methods for multiresource forest inventory}.
+\newblock John Wiley \& Sons.
+
+\bibitem[{von L{\"u}pke(2013)}]{vonluepke2013}
+von L{\"u}pke N (2013).
+\newblock \emph{Approaches for the optimisation of double sampling for
+  stratification in repeated forest inventories}.
+\newblock Ph.D. thesis, University of G{\"o}ttingen.
+
+\bibitem[{von L{\"u}pke \emph{et~al.}(2012)von L{\"u}pke, Hansen, and
+  Saborowski}]{vonLüpke2012}
+von L{\"u}pke N, Hansen J, Saborowski J (2012).
+\newblock \enquote{A three-phase sampling procedure for continuous forest
+  inventory with partial re-measurement and updating of terrestrial sample
+  plots.}
+\newblock \emph{European Journal of Forest Research}, \textbf{131}(6),
+  1979--1990.
+\newblock ISSN 1612-4677.
+\newblock \doi{10.1007/s10342-012-0648-z}.
+
+\bibitem[{von L{\"u}pke and Saborowski(2014)}]{vonLuebke2014}
+von L{\"u}pke N, Saborowski J (2014).
+\newblock \enquote{Combining double sampling for stratification and cluster
+  sampling to a three-level sampling design for continuous forest inventories.}
+\newblock \emph{European journal of forest research}, \textbf{133}(1), 89--100.
+\newblock \doi{10.1007/s10342-013-0743-9}.
+\newblock \urlprefix\url{http://dx.doi.org/10.1007/s10342-013-0743-9}.
+
+\end{thebibliography}
