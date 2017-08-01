@@ -1,3 +1,5 @@
+
+## local R-project files:
 .Rproj.user
 .Rhistory
 .RData
@@ -16,7 +18,9 @@
 *.cb
 *.cb2
 *.bak
-
+*.bbl
+*.blg
+JStatSoft_forestinventory_master.tex
 
 ## latex style files:
 *.bst
@@ -31,7 +35,6 @@
 *.synctex.gz
 *.synctex.gz(busy)
 *.pdfsync
-
 
 ## pdf files:
 *.pdf
