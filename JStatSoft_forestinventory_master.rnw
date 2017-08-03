@@ -123,6 +123,10 @@ Forest inventories provide reliable and evidence-based information to assess the
 options(prompt = "R> ", continue = " + ")
 @
 
+% execute everything that goes without echo:
+<<echo=FALSE>>=
+library(forestinventory)
+@
 
 %------------------------------------------------------------------------------------------------%
 % ---------------------------------- Introduction ---------------------------------------------- %
