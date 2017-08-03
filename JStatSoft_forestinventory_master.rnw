@@ -6,8 +6,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% almost as usual
-\author{Andreas Hill \\ETH Z\"urich \And 
-        Alexander Massey}
+\author{Andreas Hill \And Alexander Massey}
 \title{The \proglang{R} Package \pkg{forestinventory}: Design-Based Global and Small Area Estimations for Multiphase Forest Inventories}
 
 %% for pretty printing and a nice hypersummary also set:
@@ -181,9 +180,9 @@ options(prompt = "R> ", continue = " + ")
 
 %\SweaveInput{rnw/One-Phase Estimators and their Application.Rnw}
 
-\SweaveInput{rnw/Global Estimators and their Application in R (2).Rnw}
+\SweaveInput{rnw/Global Estimators and their Application(2).Rnw} 
 
-\SweaveInput{rnw/SAE Estimators and their Application in R.Rnw}
+\SweaveInput{rnw/SAE Estimators and their Application.Rnw}
 
 % NOTES:
 % 1st subsection: Global 2 and 3-phase estimators for simple and cluster sampling
@@ -197,7 +196,7 @@ options(prompt = "R> ", continue = " + ")
 
 
 % NOTES:
-% - Error handling and adjustments: Sampling designs not nested
+% - Error handling and adjustments: Sampling designs not nested (always give background and then illustrate handling in package)
 % - Error warning: unbalanced designs and singularities due to missing factor levels in s2-sample (2-phase)
 %                   or s2 or/and s1 sample in 3-phase case
 % - Error warning: cluster not completely within one small area (--> g-weight variance estimator) +  recommendation

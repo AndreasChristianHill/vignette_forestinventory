@@ -21,6 +21,7 @@
 *.bbl
 *.blg
 JStatSoft_forestinventory_master.tex
+JStatSoft_forestinventory_master.Rproj
 
 ## latex style files:
 *.bst
