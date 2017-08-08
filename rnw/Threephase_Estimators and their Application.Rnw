@@ -1,11 +1,11 @@
 % !Rnw root = JStatSoft_forestinventory_master.Rnw
 
-\section[Small Area Estimators and their Application in R]{Small Area Estimators and their Application}
-\label{sec:saeest_and_appl}
+\section{Threephase Estimators and their Application}
+\label{sec:threephase_and_appl}
 
 
 % ---------------------------------------------------------------------------- %
-\subsection{Double Sampling (Two-Phase) Estimators}
+\subsection{Global Estimators}
 
 % - Merge Mathematical Background and Application
 % - Quite Likely, we cannot go through all estimators ...
@@ -28,7 +28,7 @@
 %
 
 
-\subsection{Triple Sampling (Three-Phase) Estimators}
+\subsection{Small Area Estimators}
 
 
 

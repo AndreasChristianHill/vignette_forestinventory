@@ -1,0 +1,18 @@
+\begin{subequations}\label{eq:pointest_2p_small_psmall}
+\begin{align}
+  \hat{Y}_{G,small,2p} & =\bar{\pmb{Z}}_G^t\hat{\pmb{\beta}}_{s_2} + \frac{1}{n_{2,G}}\hat{R}(x)  \label{eq:pointest_2p_reg_small} \\
+  \hat{Y}_{G,psmall,2p} & =\hat{\bar{\pmb{Z}}}_G^t\hat{\pmb{\beta}}_{s_2} + \frac{1}{n_{2,G}}\hat{R}(x) \label{eq:pointest_2p_reg_psmall}
+\end{align}
+\end{subequations}
+
+
+\begin{subequations}\label{eq:gw_var_2p_reg}
+\begin{align}
+  \hat{\var}(\hat{Y}_{G,small,2p}) & := \bar{\pmb{Z}}_G^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}\bar{\pmb{Z}}_G 
+    + \frac{1}{n_{2,G}}\frac{1}{n_{2,G}-1}\sum_{x \in s_{2,G}} \Big(\bar{R}(x)-\hat{\bar{R}}_{2,G}\Big)^2  \label{eq:var_2p_reg_small} \\
+    
+  \hat{\var}(\hat{Y}_{G,psmall,2p}) & := \hat{\bar{\pmb{Z}}}_G^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}\hat{\bar{\pmb{Z}}}_G
+  + \hat{\pmb{\beta}}_{s_2}^t\hat{\Sigma}_{\hat{\bar{\pmb{Z}}}_G}\hat{\pmb{\beta}}_{s_2} 
+  + \frac{1}{n_{2,G}}\frac{1}{n_{2,G}-1}\sum_{x \in s_{2,G}} \Big(\bar{R}(x)-\hat{\bar{R}}_{2,G}\Big)^2  \label{eq:var_2p_reg_psmall}
+\end{align}
+\end{subequations}

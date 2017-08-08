@@ -184,9 +184,9 @@ library(forestinventory)
 
 %\SweaveInput{rnw/One-Phase Estimators and their Application.Rnw}
 
-\SweaveInput{rnw/Global Estimators and their Application(2).Rnw} 
+\SweaveInput{rnw/Twophase_Estimators and their Application.Rnw} 
 
-\SweaveInput{rnw/SAE Estimators and their Application.Rnw}
+\SweaveInput{rnw/Threephase_Estimators and their Application.Rnw}
 
 % NOTES:
 % 1st subsection: Global 2 and 3-phase estimators for simple and cluster sampling
