@@ -20,8 +20,10 @@
 *.bak
 *.bbl
 *.blg
+JStatSoft_forestinventory_master.pdf
 JStatSoft_forestinventory_master.tex
 JStatSoft_forestinventory_master.Rproj
+
 
 ## latex style files:
 *.bst
@@ -37,8 +39,6 @@ JStatSoft_forestinventory_master.Rproj
 *.synctex.gz(busy)
 *.pdfsync
 
-## pdf files:
-*.pdf
 
 ## OS generated files:
 .DS_Store
