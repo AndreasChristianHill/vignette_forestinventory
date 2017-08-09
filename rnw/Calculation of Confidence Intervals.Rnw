@@ -1,0 +1,14 @@
+% !Rnw root = JStatSoft_forestinventory_master.Rnw
+
+\section{Calculation of Confidence Intervals}
+\label{sec:confint_calc}
+
+
+
+
+
+
+
+
+
+\newpage

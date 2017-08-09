@@ -196,8 +196,19 @@ library(forestinventory)
 
 
 %------------------------------------------------------------------------------------------------%
+% ---------------------------------- Calculation of Confidence Intervals ----------------------- %
+
+\SweaveInput{rnw/Calculation of Confidence Intervals.Rnw}
+
+% NOTES:
+% - demonstrate calculation of confidence intervals (give the formulas)
+
+
+
+%------------------------------------------------------------------------------------------------%
 % ---------------------------------- Special Cases and Scenarios ------------------------------- %
 
+\SweaveInput{rnw/Special Cases and Scenarios.Rnw}
 
 % NOTES:
 % - Error handling and adjustments: Sampling designs not nested (always give background and then illustrate handling in package)
@@ -205,14 +216,6 @@ library(forestinventory)
 %                   or s2 or/and s1 sample in 3-phase case
 % - Error warning: cluster not completely within one small area (--> g-weight variance estimator) +  recommendation
 
-
-
-%------------------------------------------------------------------------------------------------%
-% ---------------------------------- Calculation of Confidence Intervals ----------------------- %
-
-
-% NOTES:
-% - demonstrate calculation of confidence intervals (give the formulas)
 
 
 

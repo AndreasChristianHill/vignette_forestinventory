@@ -139,7 +139,7 @@ reg2p_nex <- twophase(formula=tvol ~ mean + stddev + max + q75,
                    boundary_weights = "boundary_weights")
 @
 \end{small}
-The \code{twophase}-function creates an object of class \code{twophase}. A \textbf{summary of the estimation results} can be obtained by applying the \code{summary}-function to that object. It first provides a summary of the function call, the applied regression formula and the estimation method that was applied. The estimation results comprise the point estimate (\code{estimate}) as well as the design-based and external variance (\code{g_variance} and \code{ext_variance}). Further given are the sample sizes of the $s_1$ and $s_2$ sample (\code{n1}, \code{n2}) as well as the R$^2$ of the regression model.
+The \code{twophase}-function creates an \code{S3} object of class \code{"global" "twophase"}. A \textbf{summary of the estimation results} can be obtained by applying the \code{summary}-function to that object. It first provides a summary of the function call, the applied regression formula and the estimation method that was applied. The estimation results comprise the point estimate (\code{estimate}) as well as the design-based and external variance (\code{g_variance} and \code{ext_variance}). Further given are the sample sizes of the $s_1$ and $s_2$ sample (\code{n1}, \code{n2}) as well as the R$^2$ of the regression model.
 \begin{small}
 <<>>=
 summary(reg2p_nex)
@@ -267,7 +267,14 @@ The \textbf{\textit{extended}} \textbf{synthetic} and \textbf{\textit{extended}}
 %------------------------------------------------------------- %
 \subsubsection{Application}
 
-Small area estimations in the package \pkg{forestinventory} can be applied by \textit{additionally} specifying the optional argument \code{small_area}. The input dataset has therefore to be extended by an additional column that specifies for each each row (i.e. observation of a sample location) the respective small area in which it is located. The argument \code{small_area} requires a \code{list}-object that comprises 1) the name of the column specifiying the small area of each observation (\code{sa.col}), 2) a vector specifying the small area(s) for which estimations are desired (\code{areas}), and 3) the argument \code{unbiased} that controls which of the three available estimators should be applied. In addition to global estimation, the \code{summary} now also displays the sample sizes in the respective small area (\code{n1G} and \code{n2G}).
+Small area estimations in the package \pkg{forestinventory} can be applied by additionally specifying the optional argument \code{small_area}. The input dataset has therefore to be extended by an additional column that specifies for each each row (i.e. observation of a sample location) the respective small area in which it is located. The argument \code{small_area} requires a \code{list}-object that comprises
+
+\begin{itemize}
+  \itemsep0em
+  \item the name of the column specifiying the small area of each observation (\code{sa.col})
+  \item a vector specifying the small area(s) for which estimations are desired (\code{areas})
+  \item the argument \code{unbiased} that controls which of the three available estimators is applied
+\end{itemize}
 
 In order to apply the \textbf{pseudo small area estimator} (\textit{psmall}), we set \code{unbiased=TRUE} as well as the optional argument \code{psmall=TRUE}:
 \begin{small}
@@ -279,6 +286,13 @@ psmall_2p <- twophase(formula = tvol ~ mean + stddev + max + q75, data = grisons
                                         unbiased = TRUE),
                       psmall = TRUE)
 summary(psmall_2p)
+@
+\end{small}
+
+The small area functions all return an \code{S3} object of class \code{"smallarea" "twophase"}. In addition to global estimation, the \code{summary} output now also contains the sample sizes of each small area (\code{n1G} and \code{n2G}). Note that this information is also particularly provided in the \code{samplesizes} object returned by the function call.
+\begin{small}
+<<>>=
+psmall_2p$samplesizes
 @
 \end{small}
 
@@ -294,7 +308,7 @@ extpsynth_2p$estimation
 @
 \end{small}
 
-Note that the point estimates and the design-based and external variances of both estimators are very similiar. However, the R$^2$s (\code{r.squared}) under the \textbf{extended pseudo small area estimator} are changing with the small area, while they are identical under the \textbf{pseudo small area estimator}. This is because under the \textbf{extended pseudo small area estimator}, the regression model is recalculated for each small area estimation after adding the indicator variable for the respective small area in the globally derived design matrices. In case of the \textbf{pseudo small area estimator}, the regression model stays the same for each small area estimation. Although the results of both estimators should always be close to each other, we recommend applying both estimators and compare the results afterwards in order to reveal unsuspected patterns in the data, particularly in the case of cluster sampling.\par
+Note that the point estimates and the design-based and external variances of both estimators are very similiar. However, the R$^2$s (\code{r.squared}) under the \textit{extpsynth} estimator are changing with the small area, while they are identical under the \textit{psmall} estimator. This is because under the \textit{extpsynth} estimator, the regression model is recalculated for each small area estimation after adding the indicator variable for the respective small area in the globally derived design matrices. In case of the  \textit{psmall} estimator, the regression model stays the same for each small area estimation. Although the results of both estimators should always be close to each other, we recommend applying both estimators and compare the results afterwards in order to reveal unsuspected patterns in the data, particularly in the case of cluster sampling.\par
 
 Setting the argument \code{unbiased=FALSE} applies the \textbf{pseudo synthetic estimator} to the selected small areas. Note that in the \code{grisons} dataset, all small areas possess at least 2 terrestrial observations ($n_{2,G} \geq 2$) and hence design-unbiased estimations are possible. Applying the pseudo synthetic estimator equals treating those small areas as if $n_{2,G}=0$ by ignoring the terrestrial information.
 \begin{small}
@@ -308,52 +322,46 @@ psynth_2p$estimation
 @
 \end{small}
 
-In this case, the variance of the pseudo synthetic estimator is almost only half as high as under the \textit{psmall} and \textit{extended psynth} estimator. The reason for this is that the pseudo synthetic estimator neglects the uncertainty of the regression model predictions in terms of incorporating the residual variation (compare equation  \ref{eq:var_2p_reg_psynth} to \ref{eq:var_2p_reg_psmall} and XXX). Consequently, relying on the synthetic estimation would in this case lead to a severe overestimation of the estimation precision.
+In this case, the variance of the pseudo synthetic estimator is almost only half as high as under the \textit{psmall} and \textit{extended psynth} estimator. The reason for this is that the pseudo synthetic estimator neglects the uncertainty of the regression model predictions in terms of incorporating the residual variation (compare equation  \ref{eq:var_2p_reg_psynth} to \ref{eq:var_2p_reg_psmall} and XXX). Consequently, relying on the synthetic estimation would in this case lead to a severe overestimation of the estimation precision.\par
 
+The \textbf{exhaustive versions of the small area estimators} (equations \ref{eq:pointest_2p_reg_small},\ref{eq:var_2p_reg_small},\ref{eq:varext_2p_reg_small},\ref{eq:pointest_2p_reg_synth},\ref{eq:var_2p_reg_synth}) can again be applied by specifying the optional argument \code{exhaustive}. Its application requires that we know the exact means of all explanatory variables within the small area of interest. In contrast to the \textit{global} estimators, the exact means have now to be delivered in the form of a \code{dataframe}, where each row corresponds to a small area, and each column specifies the exact mean of the respective explanatory variable. Note that likewise the case of global estimation, the order of the explanatory variables in the dataframe has to match the order in which they appear in the design matrix defined by the \code{lm} function in \proglang{R}. In order to tell \proglang{R} which row describes which small area, the row names have to match the respective names of the small areas specified in the \code{areas} argument.
 
+For the \code{grisons} dataset, the exact means of the explanatory variables for the small areas used in \citet{mandallaz2013b} are thus defined by
+\begin{small}
+<<eval=FALSE>>=
+colnames(lm(formula = tvol ~ mean + stddev + max + q75, data = grisons, x = TRUE)$x)
+@
+\end{small}
+\begin{small}
+<<>>=
+true.means.Z.G <- data.frame(Intercept = rep(1, 4),
+                         mean = c(12.85, 12.21, 9.33, 10.45),
+                         stddev = c(9.31, 9.47, 7.90, 8.36),
+                         max = c(34.92, 35.36, 28.81, 30.22),
+                         q75 = c(19.77, 19.16, 15.40, 16.91))
+rownames(true.means.Z.G) <- c("A", "B", "C", "D")
+@
+\end{small}
+\begin{small}
+<<>>=
+true.means.Z.G
+@
+\end{small}
 
+For example, the \textbf{extended synthetic estimator} (\textit{extsynth}) can then be applied by 
+\begin{small}
+<<>>=
+extsynth_2p <- twophase(formula = tvol ~ mean + stddev + max + q75, data = grisons,
+                        phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
+                        small_area = list(sa.col ="smallarea", areas = c("A", "B"),
+                                          unbiased = TRUE),
+                        exhaustive = true.means.Z.G)
+extsynth_2p$estimation
+@
+\end{small}
 
-
-
-
-
-
-
-
-
-
-
-
-
+Comparing this result with the non-exhaustive counterpart \textit{extpsynth}, we see that the estimation uncertainty (defined by the variance) has again be significantly increased by substituting the estimated by the exact auxiliary means. In the function output, exhautive phases are indicated by a sample size of infinity \code{Inf}. Also note that the function extracts the required exact means for small area \code{"A"} and \code{"B"} from the complete set \code{true.means.Z.G}.
 
 
 \newpage
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
