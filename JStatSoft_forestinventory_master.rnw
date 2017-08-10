@@ -232,28 +232,9 @@ library(forestinventory)
 % ---------------------------------------- Literature ------------------------------------------ %
 
 
-\bibliography{bib/literature}\newpage\cleardoublepage
-
+\bibliography{bib/literature}\newpage
 
 % -------------------------------------------------------------------------- %
 \end{document}
-
-
-
-
-% Hallo. Here comes a first try:
-% 
-% <<>>=
-% library(forestinventory)
-% op <- onephase(formula = tvol~1 ,data = grisons,
-%               phase_id =list(phase.col = "phase_id_2p",terrgrid.id = 2))
-% summary(op)
-% @
-% 
-% This was the result
-% 
-% 
-% 
-
 
 
