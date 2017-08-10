@@ -251,7 +251,7 @@ The \textbf{synthetic} and \textbf{pseudo synthetic estimator} is applied if no 
 %------------------------------------------------------------- %
 % \textbf{Extended Synthetic and Extended Pseudo Synthetic Estimator}\par
 
-In the \textit{small} and \textit{psmall} estimator, the crucial zero mean residual property for the small area $G$ is forced by the bias adjustment terms (equation \ref{eq:pointest_2p_reg_small}, \ref{eq:pointest_2p_reg_psmall}). However, the equations would considerably simplify if we could mathematically insure that the prediction model residuals over the entire area $F$ and the small area $G$ are by definition both zero at the same time, i.e. $\int_F R(x)dx=\int_G R(x)dx=0$. This is idea is realized in the \textbf{\textit{extended}} \textbf{synthetic} and \textbf{\textit{extended}} \textbf{pseudo synthetic estimator} (\textit{extsynth} and \textit{extpsynth}) by extending the vector of auxiliary information $\pmb{Z}}(x)$ by a binary categorical indicator variable which has the value \code{1} if the observation lies inside the small area $G$ and otherwise set to \code{0}. The \textit{extended} auxiliary vector thus reads as $\pmb{\mathbb{Z}}^t(x)=(\pmb{Z}^t(x),I_G(x))\in{\mathbb{R}}^{(p+1)}$ and corresponds to the classical ANOVA case. Note that this adjusts the intercept of the regression model for all data points of small area $G$ and thus insures that the mean of the residuals $\frac{1}{n_{2,G}}\sum_{x\in{s_{2,G}}}\mathbb{R}(x)$ in $G$ are always zero by construction.\par
+In the \textit{small} and \textit{psmall} estimator, the crucial zero mean residual property for the small area $G$ is forced by the bias adjustment terms (equation \ref{eq:pointest_2p_reg_small}, \ref{eq:pointest_2p_reg_psmall}). However, the equations would considerably simplify if we could mathematically insure that the prediction model residuals over the entire area $F$ and the small area $G$ are by definition both zero at the same time, i.e. $\int_F R(x)dx=\int_G R(x)dx=0$. This is idea is realized in the \textbf{\textit{extended}} \textbf{synthetic} and \textbf{\textit{extended}} \textbf{pseudo synthetic estimator} (\textit{extsynth} and \textit{extpsynth}) by extending the vector of auxiliary information $\pmb{Z}}(x)$ by a binary categorical indicator variable which has the value \code{1} if the observation lies inside the small area $G$ and otherwise set to \code{0}. The \textit{extended} auxiliary vector thus reads as $\pmb{\mathbb{Z}}^t(x)=(\pmb{Z}^t(x),I_G(x))$ and corresponds to the classical ANOVA case. Note that this adjusts the intercept of the regression model for all data points of small area $G$ and thus insures that the mean of the residuals $\frac{1}{n_{2,G}}\sum_{x\in{s_{2,G}}}\mathbb{R}(x)$ in $G$ are always zero by construction.\par
 
 
 Under the extended auxiliary vector, the regression coefficient .. is calculated as
@@ -264,7 +264,7 @@ with its variance-covariance matrix
 
 \begin{equation}\label{eq:ext_estvarmatrix}
   \hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}:=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x) \Big)^{-1}
-  \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}^2(x)\pmb{\mathbb{Z}}(x)\pmb{Z}(x)^t\Big)
+  \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{\mathbb{R}}^2(x)\pmb{\mathbb{Z}}(x)\pmb{Z}(x)^t\Big)
   \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x) \Big)^{-1}
 \end{equation}
 
@@ -272,18 +272,45 @@ The point estimates are defined as
 
 \begin{subequations}\label{eq:pest_2p_extsynth_extpsynth}
 \begin{align}
-\hat{Y}_{G,extsynth}= \bar{\pmb{\mathbb{Z}}}^t_{G}\hat{\pmb{\theta}}_{s_2} \label{eq:pointest_2p_extsynth} \\
-\hat{Y}_{G,extpsynth}=\hat{\bar{\pmb{\mathbb{Z}}}}_{G}^t\hat{\pmb{\theta}}_{s_2} \label{eq:pointest_2p_extsynth}
+\hat{Y}_{G,extsynth,2p}= \bar{\pmb{\mathbb{Z}}}^t_{G}\hat{\pmb{\theta}}_{s_2} \label{eq:pointest_2p_extsynth} \\
+\hat{Y}_{G,extpsynth,2p}=\hat{\bar{\pmb{\mathbb{Z}}}}_{G}^t\hat{\pmb{\theta}}_{s_2} \label{eq:pointest_2p_extsynth}
 \end{align}
 \end{subequations}
 
 
+and the design-based variances are
 
+\begin{subequations}\label{eq:pest_2p_extsynth_extpsynth}
+\begin{align}
+\hat{\var}(\hat{Y}_{G,extsynth,2p})= \bar{\pmb{\mathbb{Z}}}^t_{G}\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}\bar{\pmb{\mathbb{Z}}}_{G} \label{eq:var_2p_extsynth} \\
+\hat{\var}(\hat{Y}_{G,extpsynth,2p})=
+\hat{\bar{\pmb{\mathbb{Z}}}}_{1,G}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}
+\hat{\bar{\pmb{\mathbb{Z}}}}_{1,G}
++ \hat{\pmb{\theta}}^t_{s_2}\hat{\Sigma}_{\hat{\bar{\pmb{\mathbb{Z}}}}_{1,G}}\hat{\pmb{\theta}}_{s_2} \label{eq:var_2p_extpsynth}
+\end{align}
+\end{subequations}
 
+with the variance-covariance matrix of the auxiliary vector $\hat{\bar{\pmb{\mathbb{Z}}}}_G$ estimated by
 
+\begin{equation}\label{ext_estvarcovaux_G}
+\hat{\Sigma}_{\hat{\bar{\pmb{\mathbb{Z}}}}_{1,G}}=
+\frac{1}{n_{1,G} (n_{1,G}-1)}\sum_{x\in{s_{1,G}}}
+(\pmb{\mathbb{Z}}(x)-\hat{\bar{\pmb{\mathbb{Z}}}}_{1,G})(\pmb{\mathbb{Z}}(x)-
+\hat{\bar{\pmb{\mathbb{Z}}}}_{1,G})^t
+\end{equation}
 
+The package also provides the external variance which is calculated as
 
-The estimators are called \textit{synthetic} since no residual term is present such as in the small and psmall estimator (equation ...) and thus look similar to the synthetic estimators (equation ...). Note that it can however be shown by a decomposition of $\hat{\theta}_{s2}$ that the residual correction is indeed included in the regression coefficient $\hat{\theta}_{s2}$ \citep{mandallaz2016}.
+\begin{subequations}\label{eq:ext_varexternal_2p_extsynth}
+\begin{align}
+  \hat{\var}_{ext}(\hat{Y}_{G,extsynth,2p}) & = \frac{1}{n_{2,G}} \frac{1}{n_{2,G}-1}\sum_{x\in{s_{2,G}}}(\mathbb{R}(x)-\bar{\mathbb{R}})^2 \label{eq:ext_varexternal_2p_extsynth} \\
+  \hat{\var}_{ext}(\hat{Y}_{G,extpsynth,2p}) & =
+ \frac{1}{n_{1,G}}\frac{1}{n_{2,G}-1}\sum_{x\in{s_{2,G}}}(Y(x)-\bar{Y}_{2,G})^2 \nonumber \\ 
+ &+ (1-\frac{n_{2,G}}{n_{1,G}})\frac{1}{n_{2,G}}\frac{1}{n_{2,G}-1}\sum_{x\in{s_{2,G}}}(\mathbb{R}(x)-\bar{\mathbb{R}})^2 \label{eq:ext_varexternal_2p_extpsynth}
+\end{align}
+\end{subequations}
+ 
+The estimators are called \textit{synthetic} since no residual term is present such as in the small and psmall estimator (equation \ref{eq:pointest_2p_reg_small} and \label{eq:pointest_2p_reg_psmall}) and thus look similar to the synthetic estimators (equation \ref{eq:pointest_2p_reg_synth}, \ref{eq:pointest_2p_reg_synth}, \ref{eq:var_2p_reg_synth}, \ref{eq:var_2p_reg_psynth}). Note that it can however be shown by a decomposition of $\hat{\theta}_{s2}$ that the residual correction is indeed included in the regression coefficient $\hat{\theta}_{s2}$ \citep{mandallaz2016}.
 
 
 
