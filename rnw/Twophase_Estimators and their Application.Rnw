@@ -57,13 +57,13 @@ The design-based variance-covariance matrix of the regression coefficients $\hat
 
 The \textbf{point estimates} and their \textbf{variances} can now be calculated for the case of \textbf{exhaustively} and \textbf{non-exhaustively} derived explanatory variables. Note that exhaustively available auxiliary information does not necessarily imply exhaustive calculation of the explanatory variables from that auxiliary information. Figure \ref{fig:exh_nexh_bw} illustrates the two scenarios. In both cases, a set $\pmb{Z}$ of $p$ explanatory variables $x_{1},...,x_{p}$ is calculated within a defined spatial extent (so called \textit{support}) around each sample location $x$. The model-assisted regression estimators proposed by \citet{mandallaz2013a, mandallaz2013b} require that the mean of each explanatory variable over the entire inventory area can theoretically be computed, which is only possible if the spatial arrangement of the supports can provide a perfect tesselation of the inventory area, as shown in figure \ref{fig:exh_nexh_bw}. In the \textit{exhaustive} estimator case, the explanatory variables are indeed calculated at \textit{every} sample location $x$ over the inventory area (figure \ref{fig:exh_nexh_and_boundweights_a}). This allows for calculating the \textit{exact} mean $\bar{\pmb{Z}}=\frac{1}{n_1}\sum_{x \in s_1}\pmb{Z}(x)$. In the \textit{non-exhaustive} estimator case, the explanatory variables are only computed at a subset of all theoretically possible sample locations (figure \ref{fig:exh_nexh_and_boundweights_b}). Consequently, the true mean $\bar{\pmb{Z}}$ has to be replaced by the \textit{estimated} mean $\hat{\bar{\pmb{Z}}}$, which adds another component of uncertainty to the estimators (compare equation \ref{eq:gw_var_2p_reg_nex} with \ref{eq:gw_var_2p_reg_ex}). As is obvious, a perfect tesselation by the supports strongly depends on the distance between the sample locations of $s_1$ as well as the support sizes and might not always be feasible in practice, in which case the assumption of tesselation must be relaxed.\par
 
-An extension to the so-far published estimators by Mandallaz is the consideration of a \textit{boundary adjustment} according to forest/non-forest decision on the support level, which can be optionally applied in the \code{twophase} and \code{theephase} function of the package. In forest inventories, the sample is often restricted to those sample locations located within the forest area. In case a consistent forest definition can be applied to both the $s_2$ and $s_1$ sample (e.g. by a ploygon forest mask layer), it might be desired to restrict the calculation of the explanatory variables to the forest area within the given support (figure \ref{fig:exh_nexh_bw}). This method was suggested by \citet{mandallaz2013b} and led to an improvement of the regression model accuracy. To  insure  an  unbiased  calculation  of  the mean of $\pmb{Z}$, the  respective mean have then to be calculated as the \textit{weighted} mean according to equation \ref{eq:wmeanZ}. The weight $w(x)$ is thereby equal to the percentage of forested area within the support of sample location $x$. 
+An extension to the so-far published estimators by Mandallaz is the consideration of a \textit{\textbf{boundary adjustment}} according to forest/non-forest decision on the support level, which can be optionally applied in the \code{twophase} and \code{theephase} function of the package. In forest inventories, the sample is often restricted to those sample locations located within the forest area. In case a consistent forest definition can be applied to both the $s_2$ and $s_1$ sample (e.g. by a ploygon forest mask layer), it might be desired to restrict the calculation of the explanatory variables to the forest area within the given support (figure \ref{fig:exh_nexh_bw}). This method was suggested by \citet{mandallaz2013b} and led to an improvement of the regression model accuracy. To  insure  an  unbiased  calculation  of  the mean of $\pmb{Z}$, the  respective mean have then to be calculated as the \textit{weighted} mean according to equation \ref{eq:wmeanZ}. The weight $w(x)$ is thereby equal to the percentage of forested area within the support of sample location $x$. 
 
 \begin{equation}\label{eq:wmeanZ}
   \hat{\bar{\pmb{Z}}}=\frac{\sum_{x\in{s_1}}w(x)\bmp{Z}(x)}{\sum_{x\in{s_1}}w(x)}
 \end{equation}
 
-The \textbf{point estimate} for exhaustive ($ex$) and non-exhaustive ($nex$) explanatory variables is then calculated according to equation \ref{eq:pointest_2p_reg_ex} and  \ref{eq:pointest_2p_reg_nex} respectively. Note that this form results under the particular case where the regression coefficients are derived using the data from the current inventory (i.e. \textbf{internal} model). In this case, the mean of the residuals $\frac{1}{n_2}\sum_{x\in{s_2}}R(x)$ is zero by construction and does not have to be added as is necessary for \textbf{external} models \citep{mandallaz2016}.
+The \textbf{point estimate} for exhaustive ($ex$) and non-exhaustive ($nex$) explanatory variables is then calculated according to equation \ref{eq:pointest_2p_reg_ex} and  \ref{eq:pointest_2p_reg_nex} respectively. Note that this form results under the particular case where the regression coefficients are derived using the data from the current inventory (i.e. \textbf{internal} model). In this case, the mean of the residuals $\frac{1}{n_2}\sum_{x\in{s_2}}\hat{R}(x)$ is zero by construction and does not have to be added as is necessary for \textbf{external} models \citep{mandallaz2016}.
 
 \begin{subequations}\label{eq:pointest_2p_reg}
 \begin{align}
@@ -97,7 +97,7 @@ The package \pkg{forestinventory} additionally provides the \textbf{external var
   \hat{\var}_{ext}(\hat{Y}_{reg2p,ex}) & = \frac{1}{n_2}\frac{1}{n_{2}-1}\sum_{x \in {s_2}}\Big(Y(x)-\bar{Y}\Big)^2 \label{eq:varexternal_2p_reg_ex} \\
   \hat{\var}_{ext}(\hat{Y}_{reg2p,nex}) & =
  \frac{1}{n_1}\frac{1}{n_2-1}\sum_{x\in{s_2}}(Y(x)-\bar{Y}_2)^2+
-(1-\frac{n_2}{n_1})\frac{1}{n_2}\frac{1}{n_2-1}\sum_{x\in{s_2}}(R(x)-\bar{R})^2 \label{eq:varexternal_2p_reg_nex}
+(1-\frac{n_2}{n_1})\frac{1}{n_2}\frac{1}{n_2-1}\sum_{x\in{s_2}}(\hat{R}(x)-\bar{\hat{R}})^2 \label{eq:varexternal_2p_reg_nex}
 \end{align}
 \end{subequations}
  
@@ -210,18 +210,18 @@ The package again provides the \textit{design-based} (equation \ref{eq:var_2p_re
 \begin{subequations}\label{eq:var_2p_small_psmall}
 \begin{align}
   \hat{\var}(\hat{Y}_{G,small,2p}) & := \bar{\pmb{Z}}_G^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}\bar{\pmb{Z}}_G 
-    + \frac{1}{n_{2,G}}\frac{1}{n_{2,G}-1}\sum_{x \in s_{2,G}} \Big(\hat{R}(x)-\hat{\bar{R}}_{2,G}\Big)^2  \label{eq:var_2p_reg_small} \\
+    + \frac{1}{n_{2,G}}\frac{1}{n_{2,G}-1}\sum_{x \in s_{2,G}} \Big(\hat{R}(x)-\bar{\hat{R}}_{2,G}\Big)^2  \label{eq:var_2p_reg_small} \\
   \hat{\var}(\hat{Y}_{G,psmall,2p}) & := \hat{\bar{\pmb{Z}}}_G^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}\hat{\bar{\pmb{Z}}}_G
   + \hat{\pmb{\beta}}_{s_2}^t\hat{\Sigma}_{\hat{\bar{\pmb{Z}}}_G}\hat{\pmb{\beta}}_{s_2} 
-  + \frac{1}{n_{2,G}}\frac{1}{n_{2,G}-1}\sum_{x \in s_{2,G}} \Big(\hat{R}(x)-\hat{\bar{R}}_{2,G}\Big)^2  \label{eq:var_2p_reg_psmall}
+  + \frac{1}{n_{2,G}}\frac{1}{n_{2,G}-1}\sum_{x \in s_{2,G}} \Big(\hat{R}(x)-\bar{\hat{R}}_{2,G}\Big)^2  \label{eq:var_2p_reg_psmall}
 \end{align}
 \end{subequations}
 
 \begin{subequations}\label{eq:varext_2p_small_psmall}
 \begin{align}
-  \hat{\var}_{ext}(\hat{Y}_{G,small,2p}) & := \frac{1}{n_{2,G}}\frac{1}{n_{2,G}-1}\sum_{x \in s_{2,G}} \Big(\hat{R}(x)-\hat{\bar{R}}_{2,G}\Big)^2  \label{eq:varext_2p_reg_small} \\
+  \hat{\var}_{ext}(\hat{Y}_{G,small,2p}) & := \frac{1}{n_{2,G}}\frac{1}{n_{2,G}-1}\sum_{x \in s_{2,G}} \Big(\hat{R}(x)-\bar{\hat{R}}_{2,G}\Big)^2  \label{eq:varext_2p_reg_small} \\
   \hat{\var}_{ext}(\hat{Y}_{G,psmall,2p}) & := \frac{1}{n_{2,G}}\frac{1}{n_{2,G}-1}\sum_{x \in s_{2,G}} \Big(Y(x)-\bar{Y}_{2,G}\Big)^2 \nonumber \\ 
- &+ \Big(1-\frac{n_{2,G}}{n_{1,G}}\Big)\frac{1}{n_{2,G}}\frac{1}{n_{2,G}-1}\sum_{x \in s_{2,G}} \Big(\hat{R}(x)-\hat{\bar{R}}_{2,G}\Big)^2 \label{eq:varext_2p_reg_psmall}
+ &+ \Big(1-\frac{n_{2,G}}{n_{1,G}}\Big)\frac{1}{n_{2,G}}\frac{1}{n_{2,G}-1}\sum_{x \in s_{2,G}} \Big(\hat{R}(x)-\bar{\hat{R}}_{2,G}\Big)^2 \label{eq:varext_2p_reg_psmall}
 \end{align}
 \end{subequations}
 
@@ -260,7 +260,7 @@ The \textbf{synthetic} and \textbf{pseudo synthetic estimator} is applied if no 
 %------------------------------------------------------------- %
 % \textbf{Extended Synthetic and Extended Pseudo Synthetic Estimator}\par
 
-In the \textit{small} and \textit{psmall} estimator, the crucial zero mean residual property for the small area $G$ is forced by the bias adjustment terms (equation \ref{eq:pointest_2p_small}, \ref{eq:pointest_2p_psmall}). However, the equations would considerably simplify if we could mathematically insure that the prediction model residuals over the entire area $F$ and the small area $G$ are by definition both zero at the same time, i.e. $\int_F R(x)dx=\int_G R(x)dx=0$. This idea is realized in the \textbf{\textit{extended}} \textbf{synthetic} and \textbf{\textit{extended}} \textbf{pseudo synthetic estimator} (\textit{extsynth} and \textit{extpsynth}) by extending the vector of auxiliary information $\pmb{Z}}(x)$ by a binary categorical indicator variable which has the value \code{1} if the observation lies inside the small area $G$ and is otherwise set to \code{0}. The \textit{extended} auxiliary vector thus reads as $\pmb{\mathbb{Z}}^t(x)=(\pmb{Z}^t(x),I_G(x))$ and corresponds to the classical ANOVA case. Note that this adjusts the intercept of the regression model for all data points of small area $G$ and thus insures that the mean of the residuals $\frac{1}{n_{2,G}}\sum_{x\in{s_{2,G}}}\mathbb{R}(x)$ in $G$ are always zero by construction.\par
+In the \textit{small} and \textit{psmall} estimator, the crucial zero mean residual property for the small area $G$ is forced by the bias adjustment terms (equation \ref{eq:pointest_2p_small}, \ref{eq:pointest_2p_psmall}). However, the equations would considerably simplify if we could mathematically insure that the prediction model residuals over the entire area $F$ and the small area $G$ are by definition both zero at the same time, i.e. $\int_F R(x)dx=\int_G R(x)dx=0$. This idea is realized in the \textbf{\textit{extended}} \textbf{synthetic} and \textbf{\textit{extended}} \textbf{pseudo synthetic estimator} (\textit{extsynth} and \textit{extpsynth}) by extending the vector of auxiliary information $\pmb{Z}}(x)$ by a binary categorical indicator variable $I_G(x)$ which takes the value \code{1} if the observation lies inside the small area $G$ and is otherwise set to \code{0}. The \textit{extended} auxiliary vector thus reads as $\pmb{\mathbb{Z}}^t(x)=(\pmb{Z}^t(x),I_G(x))$ and leads to a classical ANOVA regression model. Note that the intercept of the regression model is thus adjusted for all data points belonging to small area $G$ which insures that the mean of the residuals $\frac{1}{n_{2,G}}\sum_{x\in{s_{2,G}}}R(x)$ in $G$ are always zero by construction.\par
 
 
 Under the extended auxiliary vector, the regression coefficient is calculated as
@@ -273,7 +273,7 @@ with its variance-covariance matrix
 
 \begin{equation}\label{eq:ext_estvarmatrix}
   \hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}:=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x) \Big)^{-1}
-  \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{\mathbb{R}}^2(x)\pmb{\mathbb{Z}}(x)\pmb{Z}(x)^t\Big)
+  \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}^2(x)\pmb{\mathbb{Z}}(x)\pmb{Z}(x)^t\Big)
   \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x) \Big)^{-1}
 \end{equation}
 
@@ -312,10 +312,10 @@ The package also provides the external variance which is calculated as
 
 \begin{subequations}\label{eq:ext_varexternal_2p_extsynth}
 \begin{align}
-  \hat{\var}_{ext}(\hat{Y}_{G,extsynth,2p}) & = \frac{1}{n_{2,G}} \frac{1}{n_{2,G}-1}\sum_{x\in{s_{2,G}}}(\mathbb{R}(x)-\bar{\mathbb{R}})^2 \label{eq:ext_varexternal_2p_extsynth} \\
+  \hat{\var}_{ext}(\hat{Y}_{G,extsynth,2p}) & = \frac{1}{n_{2,G}} \frac{1}{n_{2,G}-1}\sum_{x\in{s_{2,G}}}(\hat{R}(x)-\bar{\hat{R}})^2 \label{eq:ext_varexternal_2p_extsynth} \\
   \hat{\var}_{ext}(\hat{Y}_{G,extpsynth,2p}) & =
  \frac{1}{n_{1,G}}\frac{1}{n_{2,G}-1}\sum_{x\in{s_{2,G}}}(Y(x)-\bar{Y}_{2,G})^2 \nonumber \\ 
- &+ (1-\frac{n_{2,G}}{n_{1,G}})\frac{1}{n_{2,G}}\frac{1}{n_{2,G}-1}\sum_{x\in{s_{2,G}}}(\mathbb{R}(x)-\bar{\mathbb{R}})^2 \label{eq:ext_varexternal_2p_extpsynth}
+ &+ (1-\frac{n_{2,G}}{n_{1,G}})\frac{1}{n_{2,G}}\frac{1}{n_{2,G}-1}\sum_{x\in{s_{2,G}}}(\hat{R}(x)-\bar{\hat{R}})^2 \label{eq:ext_varexternal_2p_extpsynth}
 \end{align}
 \end{subequations}
  
@@ -382,7 +382,7 @@ psynth_2p$estimation
 
 In this case, the variance of the pseudo synthetic estimator is almost only half as high as under the \textit{psmall} and \textit{extended psynth} estimator. The reason for this is that the pseudo synthetic estimator neglects the uncertainty of the regression model predictions in terms of incorporating the residual variation (compare equation \ref{eq:var_2p_reg_psynth} to \ref{eq:var_2p_reg_psmall} and \ref{eq:var_2p_extpsynth}). Consequently, relying on the synthetic estimation would in this case lead to a severe overestimation of the estimation precision.\par
 
-The \textbf{exhaustive versions of the small area estimators} (equations \ref{eq:pointest_2p_small},\ref{eq:var_2p_reg_small},\ref{eq:varext_2p_reg_small},\ref{eq:pointest_2p_reg_synth},\ref{eq:var_2p_reg_synth}) can again be applied by specifying the optional argument \code{exhaustive}. Its application requires that we know the exact means of all explanatory variables within the small area of interest. In contrast to the \textit{global} estimators, the exact means have now to be delivered in the form of a \code{data.frame}, where each row corresponds to a small area, and each column specifies the exact mean of the respective explanatory variable. Note that likewise the case of global estimation, the order of the explanatory variables in the data frame has to match the order in which they appear in the design matrix defined by the \code{lm} function in \proglang{R}. In order to tell \proglang{R} which row describes which small area, the row names have to match the respective names of the small areas specified in the \code{areas} argument.
+The \textbf{exhaustive versions} of the small area estimators (equations \ref{eq:pointest_2p_small},\ref{eq:var_2p_reg_small},\ref{eq:varext_2p_reg_small},\ref{eq:pointest_2p_reg_synth},\ref{eq:var_2p_reg_synth}) can again be applied by specifying the optional argument \code{exhaustive}. Its application requires that we know the exact means of all explanatory variables within the small area of interest. In contrast to the \textit{global} estimators, the exact means have now to be delivered in the form of a \code{data.frame}, where each row corresponds to a small area, and each column specifies the exact mean of the respective explanatory variable. Note that likewise the case of global estimation, the order of the explanatory variables in the data frame has to match the order in which they appear in the design matrix defined by the \code{lm} function in \proglang{R}. In order to tell \proglang{R} which row describes which small area, the row names have to match the respective names of the small areas specified in the \code{areas} argument.
 
 For the \code{grisons} dataset, the exact means of the explanatory variables for the small areas used in \citet{mandallaz2013b} are thus defined by
 \begin{small}
