@@ -50,12 +50,12 @@ Forest inventories provide reliable and evidence-based information to assess the
   Universit\"atstrasse 16\\
   8092 Z\"urich, Switzerland\\
   E-mail: \email{afmass@gmail.com}\\}
-}
+
 
 
 %% for those who use Sweave please include the following line (with % symbols):
 
-%% need no \usepackage{Sweave.sty}
+\usepackage{Sweave}
 
 %% end of declarations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -95,7 +95,7 @@ Forest inventories provide reliable and evidence-based information to assess the
 \newcommand{\EX}{\mathbb{E}}
 \newcommand{\PR}{\mathbb{P}}
 \newcommand{\var}{\mathbb{V}}
-\newcommand{\COV}{\mathbb{COV}}
+% \newcommand{\COV}{\mathbb{COV}}
 \newcommand{\MAV}{\mathbb{MAV}}
 \newcommand{\MRAV}{\mathbb{MRAV}}
 \newcommand{\POP}{\mathcal{P}}
@@ -112,6 +112,7 @@ Forest inventories provide reliable and evidence-based information to assess the
 % -------------------------------------- Main Document------------------------------------------ %
 
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 
 
 %------------------------------------------------------------------------------------------------%
@@ -182,9 +183,9 @@ library(forestinventory)
 %------------------------------------------------------------------------------------------------%
 % ---------------------------------- Estimators and their Application -------------------------- %
 
-%\SweaveInput{rnw/One-Phase Estimators and their Application.Rnw}
+% \SweaveInput{rnw/One-Phase Estimators and their Application.Rnw}
 
-\SweaveInput{rnw/Twophase_Estimators and their Application.Rnw} 
+\SweaveInput{rnw/Twophase_Estimators and their Application.Rnw}
 
 \SweaveInput{rnw/Threephase_Estimators and their Application.Rnw}
 

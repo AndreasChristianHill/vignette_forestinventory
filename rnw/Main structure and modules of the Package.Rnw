@@ -4,7 +4,7 @@
 \section{Methods and Structure of the Package}
 \label{sec:str_and_mod}
 
-% NOTE: 
+% NOTE:
 % The aim of this section is to build the basic understanding of two and threephase sampling, and the extention to small area estimation. We introduce the general terminology and show
 % how the package is structured to apply the methods
 
@@ -16,7 +16,7 @@ The two-phase or double-sampling estimators use inventory information from \text
 
 \subsection{Three-Phase Sampling}
 
-The three-phase or triple-sampling estimators extend the principle of two-phase sampling and use inventory information from \textbf{three} nested samples (\textit{phases}) (figure \ref{fig:concmphase_and_sae_a}). The basic assumption is that auxiliary information is available in two different frequencies, i.e. sample sizes. The phase $s_0$ provides a large number $n_0$ of auxiliary information, whereas the phase $s_1$ provides additional auxiliary information that is only available at $n_1$ subsamples of $s_0$. The terrestrial information is then collected at a subsample $s_2$ of $s_1$ and $s_0$. The basic idea of three-phase sampling is that the additional set of auxiliary information $\pmb{Z}^{(2)}(x)\in{\Re^q}$ adds considerable explanatory power to the set of auxiliary information $\pmb{Z}^{(1)}(x)\in{\Re^p}$ available at all sample locations $x \in s_0$. From that it follows that we can define \textit{two nested} regression models. The \textit{full} set of predictor variables $\pmb{Z}^t(x)=(\pmb{Z}^{(1)t}(x),\pmb{Z}^{(2)t}(x))\in{\Re^{p+q}}$ in the sample $s_1$ can be used to calculate predictions $\hat{Y}_{1}(x)$ of $Y(x)$. The regression model applicable to the $s_1$ phase is thus referred to as the \textit{full model}. Whereas we can only use the subset of auxiliary information $\pmb{Z}^{(2)}(x)}$ at the sample locations $s_0$, it allows for creating a much larger sample of less accurate predictions $\hat{Y}_{2}(x)$. If the gain in model precision from the reduced to the full model as well as the sampling fraction between $s_0$ and $s_1$ is sufficiently large, the three-phase estimator normally leads to a further increase in estimation precision compared to the two-phase estimator. In the \proglang{R} package \pkg{forestinventory}, estimators for three-phase sampling can be applied with the \code{threephase} function.
+The three-phase or triple-sampling estimators extend the principle of two-phase sampling and use inventory information from \textbf{three} nested samples (\textit{phases}) (figure \ref{fig:concmphase_and_sae_a}). The basic assumption is that auxiliary information is available in two different frequencies, i.e. sample sizes. The phase $s_0$ provides a large number $n_0$ of auxiliary information, whereas the phase $s_1$ provides additional auxiliary information that is only available at $n_1$ subsamples of $s_0$. The terrestrial information is then collected at a subsample $s_2$ of $s_1$ and $s_0$. The basic idea of three-phase sampling is that the additional set of auxiliary information $\pmb{Z}^{(2)}(x)\in{\Re^q}$ adds considerable explanatory power to the set of auxiliary information $\pmb{Z}^{(1)}(x)\in{\Re^p}$ available at all sample locations $x \in s_0$. From that it follows that we can define \textit{two nested} regression models. The \textit{full} set of predictor variables $\pmb{Z}^t(x)=(\pmb{Z}^{(1)t}(x),\pmb{Z}^{(2)t}(x))\in{\Re^{p+q}}$ in the sample $s_1$ can be used to calculate predictions $\hat{Y}_{1}(x)$ of $Y(x)$. The regression model applicable to the $s_1$ phase is thus referred to as the \textit{full model}. Whereas we can only use the subset of auxiliary information $\pmb{Z}^{(2)}(x)$ at the sample locations $s_0$, it allows for creating a much larger sample of less accurate predictions $\hat{Y}_{2}(x)$. If the gain in model precision from the reduced to the full model as well as the sampling fraction between $s_0$ and $s_1$ is sufficiently large, the three-phase estimator normally leads to a further increase in estimation precision compared to the two-phase estimator. In the \proglang{R} package \pkg{forestinventory}, estimators for three-phase sampling can be applied with the \code{threephase} function.
 
 
 % NOTE:
@@ -37,12 +37,12 @@ We enter the topic of small area estimation if we want to make an estimation for
 
 
 \begin{figure}[htb]
-	\begin{subfigure}[t]{0.5\textwidth} 
+	\begin{subfigure}[t]{0.5\textwidth}
 		\centering
     \resizebox{1.12\hsize}{!}{\includegraphics{fig/phases_graphic(2).eps}}%
 		\caption{} \label{fig:concmphase_and_sae_a}
 		\end{subfigure}
-	\begin{subfigure}[t]{0.5\textwidth} 
+	\begin{subfigure}[t]{0.5\textwidth}
 		\centering
    \resizebox{0.8\hsize}{!}{\includegraphics{fig/sae_graphic(2).eps}}%
 		\caption{} \label{fig:concmphase_and_sae_b}
@@ -55,12 +55,12 @@ We enter the topic of small area estimation if we want to make an estimation for
 \subsection{Design-based vs. model-dependent approach}
 
 The formulation of a suitable regression model constitutes an essential part in the application of multiphase inventories. However, the requirements on the regression model properties differ fundamentally between two major mathematical approaches \cite{mandallaz2008}: In the \textit{model-dependent} (also known as \textit{model-based}) framework, the sample locations \textit{x} are fixed and the observation $Y(x)$ taken at location $x$ is assumed to be a random variable as the realization of a stochastic process (i.e the forest). As a consequence, the regression model of a model-dependent regression estimator has to met the model assumptions in the classical statistical sense, i.e. the observation of the target variable \textit{Y}(\textit{x}) is assumed to be an identically distributed, independent random variable. Moreover, the unbiasedness of the model-dependent estimators substantially depends on the correct specification of the regression model, which means that extensive analyses and adjustments must be conducted to ensure that the model adequately describes the underlying stochastic process. In contrast to the model-dependent approach, the \textit{design-based} (also known as \textit{model-assisted}) approach rests upon the randomization of the sample locations $x$ (i.e. the $x$ are independently and uniformly distributed in the forest), while the forest itself is fixed and $not$ the result of a stochastic process. The observation \textit{Y}(\textit{x}) itself still remains a random variable, but solemnly due to the random sample mechanism. A consequence of this approach is that the regression models used in the design-based regression estimators do no longer have to satisfy any model assumptions in the classical statistical sense (e.g. identical distribution and independence of the observation $Y(x)$, or stationarity assumption in the geostatistical frame), as it is the case in the model-based framework \cite{mandallaz2008}.
-% NOTES: 
+% NOTES:
 % - we can still describe it a bit better, also with some citations of mcroberts and breidenbach (their md-description)
 
 
 % Note that while the auxiliary information is most often provided by remote sensing data, that does not necessarily have to be the case. The auxiliary information can be any information that exhibits a correlation to the local density, i.e. target variable, $Y(x)$.
-% 
+%
 % e.g. past inventory data \citep{massey2014a}
 
 
@@ -68,7 +68,7 @@ The formulation of a suitable regression model constitutes an essential part in 
 
 In the \proglang{R} package \pkg{forestinventory}, estimators for two-phase and three-phase sampling can be applied with the \code{twophase} and \code{theephase} function. From these two overall function calls, various estimators for specific inventory scenarios under the chosen sampling design can be applied (figure \ref{fig:struct_package}). The decision what estimator to use thereby follows a tree-like structure which can serve the user as a guideline. The first decision to make is whether an estimate and its variance should be computed for the entire inventory area (\textbf{global estimators}) or only for subregions of the entire inventory area (\textbf{small area estimators}). The next decision for both global and small area estimations is whether the explanatory variables were derived \textit{exhaustively} or \textit{non-exhaustively} over the inventory area. The first case allows for computing the exact mean $\bar{\pmb{Z}}$ of each explanatory variable over $s_1$ ($s_{1,G}$) and $s_0$ ($s_{0,G}$). In the second case, the mean of each explanatory variable over $s_1$ ($s_{1,G}$) and $s_0$ ($s_{0,G}$) can only be estimated by $\hat{\bar{\pmb{Z}}}$ which adds another component of uncertainty to the respective estimators. The package offers three small area estimators for both the exhaustive and non-exhaustive setup. The \textit{extended synthetic estimator} and the \textit{small area estimator} both apply a bias correction using the model residuals within small area $G$ and can only be applied if the terrestrial sample size $n_{2,G}$ within $G$ is $\geq 2$. The resulting point estimates and variances are asymptotically design-unbiased. If $n_{2,G}=0$, the bias correction can no longer be applied and the estimates of the repsective \textit{synthetic small area estimator} are potentially biased. The package also allows for calculating estimates solely based on the terrestrial sample $s_2$ (so called \textit{onephase estimation}) by the \code{onephase} function. All estimators are also available for \textit{cluster} sampling, in which case a sample unit conists of multiple, spatially agglomerated samples.
 
-% NOTES: 
+% NOTES:
 % - how is the package structured in general? --> likewise a decision tree
 % - for simple and cluster sampling (briefly describe cluster sampling and its specialties)
 % - for non-exhausitve and exhaustive auxiliary information
