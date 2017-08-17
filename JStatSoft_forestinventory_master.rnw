@@ -111,7 +111,7 @@ Forest inventories provide reliable and evidence-based information to assess the
 %------------------------------------------------------------------------------------------------%
 % -------------------------------------- Main Document------------------------------------------ %
 
-\begin{document}
+\begin{document}\sloppy
 \SweaveOpts{concordance=TRUE}
 
 
