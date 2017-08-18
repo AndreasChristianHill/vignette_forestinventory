@@ -68,7 +68,7 @@ psynth_3p<- threephase(formula.s0 = tvol ~ mean,
 @
 \end{small}
 
-We can then aggregate all estimation objects in a \code{list} and pass it to the \code{estTable}-function:
+We can then aggregate all estimation objects in a \code{list} and pass it to the \code{estTable()}-function:
 
 \begin{small}
 <<>>=
@@ -79,9 +79,9 @@ grisons.sae.table<- estTable(est.list = list(op, extpsynth_2p, psynth_2p,
 @
 \end{small}
 
-The function merges the estimation results and returns a \code{list} object with the subclasses \code{"esttable"  "smallarea"}. If one prefers the \code{data.frame} format for further analysis, this can easily be done using \code{as.data.frame(grisons.sae.table)}. Note however that the package \pkg{forestinventory} provides several \code{S3} generic functions that particularly respond to the class \code{"esttable"}. Note that the \code{vartypes} argument can be used to restrict the \code{estTable} output to certain types of variances.
+The function merges the estimation results and returns a \code{list} object with the subclasses \code{"esttable"  "smallarea"}. If one prefers the \code{data.frame} format for further analysis, this can easily be done using \code{as.data.frame(grisons.sae.table)}. Note however that the package \pkg{forestinventory} provides several \code{S3} generic functions that particularly respond to the class \code{"esttable"}. Note that the \code{vartypes} argument can be used to restrict the \code{estTable()} output to certain types of variances.
 
-The structure of an \code{esttable} object is very similar to the objects created by the small area estimation functions of the package. However, the point estimates and variances from all estimation objects passed to \code{estTable} have been stored in one single column (\code{estimate} and \code{variance}) and can be distinguished by the variables \code{method}, \code{estimator} and \code{vartype} which specify the estimation method (one, two or threephase), the estimator and the type of variance that was applied. 
+The structure of an \code{esttable} object is very similar to the objects created by the small area estimation functions of the package. However, the point estimates, variances from all estimation objects passed to \code{estTable()} have been stored in one single column (\code{estimate} and \code{variance}) and can be distinguished by the variables \code{method}, \code{estimator} and \code{vartype} which specify the estimation method (one, two or threephase), the estimator and the type of variance (\code{g_} for \textit{g-weight} and \code{ext_} for \textit{external} variance) that was applied. Note that per default, also the confidence intervals are added.
 
 \begin{small}
 <<eval=FALSE>>=
@@ -95,7 +95,7 @@ str(grisons.sae.table)
 @
 \end{footnotesize}
 
-Note that \code{estTable} also returns the \textbf{\textit{estimation error}} (\code{error}) that is defined as the \textit{standard error} devided by the \textit{point estimate}:
+Note that \code{estTable()} also returns the \textbf{\textit{estimation error}} (\code{error}) that is defined as the \textit{standard error} devided by the \textit{point estimate}:
 
 \begin{equation}\label{eq:esterror}
   error_{[\%]}=\frac{\sqrt{\hat{\var}(\hat{Y})}}{\hat{Y}}\cdot100
@@ -108,7 +108,7 @@ As mentioned in the introduction (section \ref{sec:intro}), the application of m
   \item \textit{\textbf{increasing}} the estimation precision at identical costs, i.e. without increasing the $s_2$ sample size
 \end{enumerate}
 
-The function \code{mphase.gain()} was particularly written to quantify the potential benefit of a multi-phase global or small area estimation compared to its respective one-phase estimation. The function takes an \code{esttable} object as input and returns a validation of which multi-phase method and estimator performed best in comparison to the onephase estimation (\textit{baseline}) in terms of estimation precision. If the \code{esttable} object contains more than one multi-phase estimation object, \code{mphase.gain} identifies the one with the smallest variance and compares it to the \code{onephase} estimation. The argument \code{pref.vartype} can be used to define what type of variance (\textit{g-weight} or \textit{external}) should be used for the comparison. Per default (\code{exclude.synth = TRUE}), synthetic estimations (\textit{synth} and \textit{psynth} estimator) are not considered for the comparison since they normally have a much smaller variance but to the cost of a potential bias.
+The function \code{mphase.gain()} was particularly written to quantify the potential benefit of a multi-phase global or small area estimation compared to its respective one-phase estimation. The function takes an \code{esttable} object as input and returns a validation of which multi-phase method and estimator performed best in comparison to the onephase estimation (\textit{baseline}) in terms of estimation precision. If the \code{esttable} object contains more than one multi-phase estimation object, \code{mphase.gain()} identifies the one with the smallest variance and compares it to the \code{onephase} estimation. The argument \code{pref.vartype} can be used to define what type of variance (\textit{g-weight} or \textit{external}) should be used for the comparison. Per default (\code{exclude.synth = TRUE}), synthetic estimations (\textit{synth} and \textit{psynth} estimator) are not considered for the comparison since they normally have a much smaller variance but to the cost of a potential bias.
 
 <<echo=FALSE>>=
 options(width=10000) 
@@ -116,59 +116,64 @@ options(width=10000)
 
 \begin{small}
 <<>>=
-mphase.gain(grisons.sae.table)
+mphase.gain(grisons.sae.table, pref.vartype = "g_variance")
 @
 \end{small}
 
+% Interpretation: (gain and rel.eff)
+The function call returns a data frame containing the one-phase variance (\code{var_onephase}) and the variance of the best performing multi-phase estimator (\code{var_multiphase}). The multi-phase estimation procedure is again specified in the \code{method} and \code{estimator} column. The last two columns then actually quantify the potential benefit of the multi-phase estimation. The \code{gain} is the reduction (if its value is positive) or possibly also the increase (if its value is negative) in variance when applying the multi-phase as alternative to the onephase estimation. For small area \code{"B"}, it can be read as "the \textit{twophase extended psynth} estimation procedure leads to a 67.9 \% reduction in variance compared to the onephase procedure". The column \code{rel.eff} specifies the \textbf{\textit{relative efficiency}} which is defined as the ratio between the one-phase variance and the multi-phase variance:
+
+\begin{equation}\label{eq:releff}
+  rel.eff_{[\%]}=\frac{\hat{\var}_{onephase}(\hat{Y})}{\hat{\var}_{multiphase}(\hat{Y})}\cdot100
+  \end{equation}
+
+The \textit{relative efficiency} can be interpreted as the relative sample size of the one-phase estimator needed to achieve the variance of the multi-phase estimator. For small area \code{"B"} we can thus see that we would have to increase the terrestrial sample size by factor 3 in order to get the same estimation precision with the one-phase approach as using the \textit{twophase extended psynth} estimator. If the average costs for a terrestrial sample plot survey are known, the relative efficiency can thus be a simple mean of quantifying the financial benefit of multi-phase forest inventories.
 
 
+\subsection{Visualization}
+
+The package \pkg{forestinventory} also provides a \code{S3} generic plotting function based on the \pkg{ggplot2} package \citep{ggplot2} to visualize the estimation results. Likewise \code{mphase.gain()}, also the plot method requires an \code{esttable} object created by the \code{estTable()}-function. The \code{plot()}-function allows for two kinds of visualization: \textbf{1)} the \textit{\textbf{point estimates}} with overlayed confidence intervals, and \textbf{2)} the \textit{\textbf{estimation errors}}.
+
+If a plot of the point estimates with overlayed confidence intervals is required, one has to make sure that the confidence intervals (\code{ci_lower}, \code{ci_upper}) are contained in the \code{esttable} object which is automatically the case for the default settings of \code{estTable()}:
+
+\begin{small}
+<<>>=
+grisons.sae.table<- estTable(est.list = list(op, extpsynth_2p, psynth_2p,
+                                             extpsynth_3p, psynth_3p),
+                             sae = TRUE, 
+                             vartypes = c("variance", "g_variance",  "ext_variance"))
+@
+\end{small}
+
+The graphic for the point estimates and confidence intervals is then produced by passing the \code{esstable} object to the \code{S3} generic plot function and setting the argument \code{yvar = "estimate"}:
+
+\begin{small}
+<<eval=FALSE>>=
+plot(grisons.sae.table, ncol = 2, yvar = "estimate") +
+  ylab("Timber Volume [m3/ha]")
+@
+\end{small}
+
+\begin{figure}[htb]
+\centering
+\resizebox{0.9\hsize}{!}{\includegraphics{fig/plot_est_ci.png}}
+\end{figure}
 
 
+If we want the estimation errors to be plotted, we simply leave the \code{yvar} argument to its default (\code{"error"}):
 
+\begin{small}
+<<eval=FALSE>>=
+plot(grisons.sae.table, ncol = 2)
+@
+\end{small}
 
-% quantify the potential benefit of the mphase compared to the onephase estimation method
-% - pronounce that "it is crucial to quantify the potential benefit of the mphase procedures
-%   compared to the onephase procedure --> allows to quantify the financial benefit --> rel.eff
+\begin{figure}[htb]
+\centering
+\resizebox{0.86\hsize}{!}{\includegraphics{fig/plot_error.png}}
+\end{figure}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Note that the \code{plot}-function call can arbitrarily be extended by additional \pkg{ggplot2} functions and specifications.
 
 
 

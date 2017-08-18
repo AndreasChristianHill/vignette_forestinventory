@@ -220,16 +220,18 @@ library(forestinventory)
 %------------------------------------------------------------------------------------------------%
 % ---------------------------------- Special Cases and Scenarios ------------------------------- %
 
-\SweaveInput{rnw/Analysis and Visualization.Rnw}
+% \SweaveInput{rnw/Analysis and Visualization.Rnw}
 
 
 %------------------------------------------------------------------------------------------------%
 % ----------------------------- Visualization and Analysis of Estimation Results --------------- %
 
-% NOTES:
-% - demonstrate visualization of errors and point-ests + CIs
-% - demonstrate a) releff-calculation and gain-analysis
+\SweaveInput{rnw/Analysis and Visualization.Rnw}
 
+
+%------------------------------------------------------------------------------------------------%
+
+\SweaveInput{rnw/Acknowledgements.Rnw}
 
 
 %------------------------------------------------------------------------------------------------%
