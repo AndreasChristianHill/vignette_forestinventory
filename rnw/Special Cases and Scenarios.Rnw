@@ -3,6 +3,13 @@
 \section{Special Cases and Scenarios}
 \label{sec:speccas_and_scen}
 
+% include:
+% - categorical variables (zberg) and interaction terms (not so clear to everyone)
+% - cluster sampling and differences between (p)small and extended (p)small if cluster is not copletely inside small area
+% - violation of nested sample design + error handling / data adjustments / printed warnings
+% - missing factor levels in s2-sample that occur in s1 / s0 sample + error warning
+%
+
 
 
 
