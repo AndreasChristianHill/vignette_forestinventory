@@ -201,7 +201,7 @@ We first introduce the \textbf{small area estimator} (\textit{small}), which use
 \begin{subequations}\label{eq:pest_2p_small_psmall}
 \begin{align}
   \hat{Y}_{G,small,2p} & =\bar{\pmb{Z}}_G^t\hat{\pmb{\beta}}_{s_2} + \frac{1}{n_{2,G}}\hat{R}(x)  \label{eq:pointest_2p_small} \\
-  \hat{Y}_{G,psmall,2p} & =\hat{\bar{\pmb{Z}}}_G^t\hat{\pmb{\beta}}_{s_2} + \frac{1}{n_{2,G}}\hat{R}(x) \label{eq:pest_2p_psmall}
+  \hat{Y}_{G,psmall,2p} & =\hat{\bar{\pmb{Z}}}_G^t\hat{\pmb{\beta}}_{s_2} + \frac{1}{n_{2,G}}\hat{R}(x)  \label{eq:pest_2p_psmall}
 \end{align}
 \end{subequations}
 
