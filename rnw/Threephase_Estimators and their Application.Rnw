@@ -3,7 +3,7 @@
 \section{Threephase Estimators and their Application}
 \label{sec:threephase_and_appl}
 
-
+% ---------------------------------------------------------------------------- %
 % ---------------------------------------------------------------------------- %
 \subsection{Global Estimators}
 
@@ -11,27 +11,143 @@
 % - Quite Likely, we cannot go through all estimators ...
 %   Idea: --> maybe only for non-exhaustive case, and then demonstrate with one example how the exhaustive can be applied in general
 %
-% - 
-%
-% - We could give the function call for all cases, but we should only show the output
-%   for demonstrating particular things
-
-% Concentrate on subset of estimators to go through the "tree": --> non-exhaustive case
-% 1) nex, simple sampling, pseudo extended sae estimator
-% 2) nex, simple sampling, pseudo sae estimator
-% 3) nex, simple sampling, pseudo synthetic sae estimator --> give reason when to use (if n2G < 5, because ...)
 % 
-% 4) for the cluster case, show: nex, simple sampling, pseudo extended sae estimator
-% 5) for the exhaustive case, show: ex, simple sampling, pseudo extended sae estimator
-%    (mention that in cluster case, the cluster means shall be used)
-% always use bw-adjustment (?)
+% NOTES:
+% - mention that the exhaustive 3phase was originally called "2phase with partially exhaustive info"
+% - clarify terminology "full" and "reduced"
 %
 
+% ------------------------------------- %
+\subsubsection{Mathematical Background}
 
+
+The the vector of regression coefficients for the \textbf{\textit{reduced model}} using the reduced set of explanatory variables $\pmb{Z}^{(0)}(x)$ is derived by solving the normal equation
+
+\begin{eqnarray}\label{eq:normequ_redmod}
+\hat{\pmb{\alpha}}_{s_2} &=& \Big(\frac{1}{n_2}\sum_{x\in{s}_2}\pmb{Z}^{(0)}(x)\pmb{Z}^{(0)t}(x)
+\Big)^{-1}\frac{1}{n_2}\sum_{x\in{s}_2}Y(x)\pmb{Z}^{(0)}(x)
+\end{eqnarray}
+
+and likewise the vector of regression coefficients for the \textbf{\textit{full model}} using the full set of explanatory variables $\pmb{Z}^t(x)=(\pmb{Z}^{(0)t}(x),\pmb{Z}^{(1)t}(x))$:
+
+\begin{eqnarray}\label{eq:normequ_redmod}
+\hat{\pmb{\beta}}_{{s_2}}&=&\Big(\frac{1}{n_2}\sum_{x\in{s}_2}\pmb{Z}(x)\pmb{Z}^t(x)
+\Big)^{-1}\frac{1}{n_2}\sum_{x\in{s}_2}Y(x)\pmb{Z}(x)
+\end{eqnarray}
+
+The variance-covariance matrices of the regression coefficients are thus defined as
+
+\begin{subequations}\label{eq:covar3p}
+\begin{align}
+  \hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}_{s_2}}=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}^{(0)}(x)\pmb{Z}^{(0)t}(x) \Big)^{-1}
+  \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}_{0}^2(x)\pmb{Z}^{(0)}(x)\pmb{Z}^{(0)t}(x)\Big)
+  \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}^{(0)}(x)\pmb{Z}^{(0)t}(x) \Big)^{-1} \label{eq:covar_alpha} \\
+  \hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}(x)\pmb{Z}^t(x) \Big)^{-1}
+  \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}^2(x)\pmb{Z}(x)\pmb{Z}^t(x)\Big)
+  \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}(x)\pmb{Z}^t(x) \Big)^{-1} \label{eq:covar_beta}
+\end{align}
+\end{subequations}
+
+with the residuals $R_0(x)$ and $R(x)$ derived under the reduced and the full regression model respectively.
+
+Likewise the two-phase estimation (section \ref{sec:twophase_and_appl}), also the three-phase estimation can be applied under \textit{non-exhaustive} and \textit{exhaustive} derivation of the explanatory variables at the $s_0$ phase. 
+
+In the \textbf{non-exhaustive case}, we use the \textit{estimated} means of $\pmb{Z}^{(0)}(x)$ over both the $s_0$ and $s_1$ phase, as well as the \textit{estimated} mean of $\pmb{Z}(x)$ over both the $s_1$ phase (equation \ref{meanvalues3pnex}). If the explanatory variables used in the reduced model are exhaustively derived (\textbf{exhaustive case}), the estimated mean $\hat{\bar{\pmb{Z}}}^{(0)}_0$ is simply replaced by the exact mean $\bar{\pmb{Z}}^{(0)}_0$. Note that in case of applied boundary adjustment (section \ref{sec:twophase_and_appl}), the simple mean is again replaced by the weighted mean analogous to equation \ref{eq:wmeanZ}.
+
+\begin{equation}\label{meanvalues3pnex}
+\hat{\bar{\pmb{Z}}}^{(0)}_0=\frac{1}{n_0}\sum_{x\in{s_0}} \pmb{Z}^{(0)}(x), \quad \hat{\bar{\pmb{Z}}}^{(0)}_1=\frac{1}{n_1}\sum_{x\in{s}_1}\pmb{Z}^{(0)}(x) ,
+\quad \hat{\bar{\pmb{Z}}}_1=\frac{1}{n_1}\sum_{x\in{s}_1}\pmb{Z}(x)
+\end{equation}
+
+Under the internal model prerequisite which insures that the zero mean residual property over $F$, \textbf{point estimates} are then calculated as 
+
+\begin{subequations}\label{reg3p}
+\begin{align}
+\hat{Y}_{reg3p,ex}&=(\bar{\pmb{Z}}^{(0)}_0-\hat{\bar{\pmb{Z}}}^{(0)}_1)^t\hat{\pmb{\alpha}}_2 +
+\hat{\bar{\pmb{Z}}}^t_1\hat{\pmb{\beta}}_{2} \label{eq:reg3p_ex} \\
+\hat{Y}_{reg3p,nex}&=(\hat{\bar{\pmb{Z}}}^{(0)}_0-\hat{\bar{\pmb{Z}}}^{(0)}_1)^t\hat{\pmb{\alpha}}_2 +
+\hat{\bar{\pmb{Z}}}^t_1\hat{\pmb{\beta}}_{2} \label{eq:reg3p_nex}
+\end{align}
+\end{subequations}
+
+Equations \ref{eq:reg3p_nex} and \ref{eq:reg3p_ex} nicely demonstrate the philosophy of the three-phase estimation approach. Without the first term, the equations exactly equal the one of two-phase estimator where the estimated means in $\hat{\bar{\pmb{Z}}}_1$ are based on the $s_1$ sample and are transformed into predictions $\hat{Y}(x)$ of the local density $Y(x)$. The difference however is that we can now derive a more precise mean $\hat{\bar{\pmb{Z}}}^{(0)}_0$ (or even the exact mean $\bar{\pmb{Z}}^{(0)}_0$) over $s_0$ for a subset $\pmb{Z}^{(0)}(x) \in \pmb{Z}(x)$. The first term of equation \ref{eq:reg3p_nex} and \ref{eq:reg3p_ex} can thus be interpreted as a correction term that transforms the difference to the more precise / exact mean of $\pmb{Z}^{(0)}(x)$ into a residual of $Y(x)$ and adds it to the second term, thus making the point estimate more precise. 
+
+The \textbf{design-based variance} is then calculated as
+
+\begin{subequations}\label{eq:dbvar_reg3p}
+\begin{align}
+\hat{\var}(\hat{Y}_{reg3p,ex})& =\frac{n_2}{n_1}\bar{\pmb{Z}}^{(0)t}\hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}_{s_2}}
+\bar{\pmb{Z}}^{(0)}+(1-\frac{n_2}{n_1})\hat{\bar{\pmb{Z}}}_1^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}
+\hat{\bar{\pmb{Z}}}_1 \label{eq:dbvar_reg3p_ex} \\
+\hat{\var}(\hat{Y}_{reg3p,nex})& =\hat{\pmb{\alpha}}_2^t\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{Z}}}^{(0)}_0}\hat{\pmb{\alpha}}_2
++\frac{n_2}{n_1}\hat{\bar{\pmb{Z}}}^{(0)t}_0
+\hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}_{2}}\hat{\bar{\pmb{Z}}}^{(0)}_0 + (1-\frac{n_2}{n_1})\hat{\bar{\pmb{Z}}}^{t}_1\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_2}\hat{\bar{\pmb{Z}}}_1 \label{eq:dbvar_reg3p_nex}
+\end{align}
+\end{subequations}
+
+with the variance-covariance matrix $\hat{\Sigma}_{\hat{\bar{\pmb{Z}}}^{(1)}_0}$:
+
+\begin{equation}\label{estvarcovaux3p}
+\hat{\Sigma}_{\hat{\bar{\pmb{Z}}}^{(0)}_0}=
+\frac{1}{n_{0}(n_{0}-1)}\sum_{x\in{s_{0}}}
+(\pmb{Z}^{(0)}(x)-\hat{\bar{\pmb{Z}}}^{(0)}_{0})(\pmb{Z}(x)-\hat{\bar{\pmb{Z}}}^{(0)}_{0})^t
+\end{equation}
+
+We see that equation \ref{eq:dbvar_reg3p_ex} (exhaustive case) and \ref{eq:dbvar_reg3p_nex} (non-exhaustive case) differ by the term $\hat{\pmb{\alpha}}_2^t\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{Z}}}^{(0)}_0}\hat{\pmb{\alpha}}_2$ which is exactly the variance of the prediction $\hat{Y}_{0}(x)$ of the reduced model in the $s_0$ phase. This term can be made very small by chosing a large sample size $n_0$ for $s_0$ \citep{mandallaz2013techb}.
+
+The package also gives the \textbf{external variance} defined as
+
+\begin{subequations}\label{eq:extvar_reg3p}
+\begin{align}
+\hat{\var}(\hat{Y}_{reg3p,ex})&=\frac{1}{n_1}\frac{1}{n_2}\sum_{x\in{s_2}}\hat{R}_{0}^2(x))
++ (1-\frac{n_2}{n_1})\frac{1}{n^2_2}\sum_{x\in{s_2}}\hat{R}^2(x) \label{eq:extvar_reg3p_ex} \\
+\hat{\var}_{ext}(\hat{Y}_{reg3p,nex})&=\frac{1}{n_0}\frac{\sum_{x\in{s_0}}(\hat{Y}_0(x)-\hat{\bar{Y}}_0)^2}{n_0-1} 
++\frac{1}{n_1}\frac{1}{n_2-1}\sum_{x\in{s}_2}(\hat{R}_0(x)-\hat{\bar{R_0}})^2 \nonumber\\
+&+(1-\frac{n_2}{n_1})\frac{1}{n_2(n_2-1)}\sum_{x\in{s}_2}(\hat{R}(x)-\hat{\bar{R}})^2 \label{eq:extvar_reg3p_nex}
+\end{align}
+\end{subequations}
+
+with ${R}(x)$ being the full model residuals calculated as $Y(x)-\pmb{Z}^t(x)\hat{\beta}_{s_2}$ and ${R}_{0}(x)$ being the reduced model residuals calculated as $Y(x)-\pmb{Z}^{(0)t}\hat{\alpha}_{s_2}$.
+
+
+
+
+
+
+% \begin{subequations}\label{eq:var_reg3p_nex}
+% \begin{align}
+% \hat{\var}(\hat{Y}_{reg3p,nex})& =\hat{\pmb{\alpha}}_2^t\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{Z}}}^{(0)}_0}\hat{\pmb{\alpha}}_2
+% +\frac{n_2}{n_1}\hat{\bar{\pmb{Z}}}^{(0)t}_0
+% \hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}_{2}}\hat{\bar{\pmb{Z}}}^{(0)}_0 + (1-\frac{n_2}{n_1})\hat{\bar{\pmb{Z}}}^{t}_1\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_2}\hat{\bar{\pmb{Z}}}^{t}_1 \label{eq:dbvar_reg3p_nex} \\
+% \hat{\var}_{ext}(\hat{Y}_{reg3p,nex})& = \frac{1}{n_0}\frac{\sum_{x\in{s_0}}(\hat{Y}_1(x)-\hat{\bar{Y}}_1)^2}{n_0-1} \nonumber\\
+% &+ \frac{1}{n_1}\frac{1}{n_2-1}\sum_{x\in{s}_2}(\hat{R}_1(x)-\hat{\bar{R_1}})^2+
+% (1-\frac{n_2}{n_1})\frac{1}{n_2(n_2-1)}\sum_{x\in{s}_2}(\hat{R}(x)-\hat{\bar{R}})^2 \label{eq:extvar_reg3p_nex}
+% \end{align}
+% \end{subequations}
+
+
+
+% ------------------------------------- %
+\subsubsection{Application}
+
+
+
+
+
+
+
+
+%--------------------------------------------------------------------------------------------------%
+% ################################################################################################ %
+%--------------------------------------------------------------------------------------------------%
+
+% ---------------------------------------------------------------------------- %
 \subsection{Small Area Estimators}
 
 
 
+% ------------------------------------- %
+\subsubsection{Mathematical Background}
 
 
 
@@ -42,18 +158,23 @@
 
 
 
-% The psynth estimator:
-% 
-% \begin{equation}\label{pseudosynth1}
-% \hat{Y}_{G,psynth}=\hat{\bar{\pmb{Z}}}_{1,G}^t\hat{\pmb{\beta}}_{s_2}
-% =\frac{1}{n_{1,G}}\sum_{x\in{s_{1,G}}}\hat{Y}(x)
-% \end{equation}
-% 
-% \begin{equation}\label{estvarpseudosynth1}
-% \hat{\var}(\hat{Y}_{G,psynth}): =
-% \hat{\bar{\pmb{Z}}}_{1,G}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}\hat{\bar{\pmb{Z}}}_{1,G}
-% + \hat{\pmb{\beta}}_{s_2}^t\hat{\Sigma}_{\hat{\bar{\pmb{Z}}}_{1,G}}\hat{\pmb{\beta}}_{s_2}
-% \end{equation}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%------------------------------------------------------------- %
+\subsubsection{Application}
+
 
 
 
