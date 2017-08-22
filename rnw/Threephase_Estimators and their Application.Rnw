@@ -6,6 +6,7 @@
 % ---------------------------------------------------------------------------- %
 % ---------------------------------------------------------------------------- %
 \subsection{Global Estimators}
+\label{sec:glob_est_3p}
 
 % - Merge Mathematical Background and Application
 % - Quite Likely, we cannot go through all estimators ...
@@ -63,10 +64,10 @@ The internal model case again insures that the zero mean residual property over 
 
 \begin{subequations}\label{reg3p}
 \begin{align}
-\hat{Y}_{reg3p,ex}&=(\bar{\pmb{Z}}^{(0)}_0-\hat{\bar{\pmb{Z}}}^{(0)}_1)^t\hat{\pmb{\alpha}}_2 +
-\hat{\bar{\pmb{Z}}}^t_1\hat{\pmb{\beta}}_{2} \label{eq:reg3p_ex} \\
-\hat{Y}_{reg3p,nex}&=(\hat{\bar{\pmb{Z}}}^{(0)}_0-\hat{\bar{\pmb{Z}}}^{(0)}_1)^t\hat{\pmb{\alpha}}_2 +
-\hat{\bar{\pmb{Z}}}^t_1\hat{\pmb{\beta}}_{2} \label{eq:reg3p_nex}
+\hat{Y}_{reg3p,ex}&=(\bar{\pmb{Z}}^{(0)}_0-\hat{\bar{\pmb{Z}}}^{(0)}_1)^t\hat{\pmb{\alpha}}_{s_2} +
+\hat{\bar{\pmb{Z}}}^t_1\hat{\pmb{\beta}}_{s_2} \label{eq:reg3p_ex} \\
+\hat{Y}_{reg3p,nex}&=(\hat{\bar{\pmb{Z}}}^{(0)}_0-\hat{\bar{\pmb{Z}}}^{(0)}_1)^t\hat{\pmb{\alpha}}_{s_2}  +
+\hat{\bar{\pmb{Z}}}^t_1\hat{\pmb{\beta}}_{s_2} \label{eq:reg3p_nex}
 \end{align}
 \end{subequations}
 
@@ -79,9 +80,9 @@ The \textbf{design-based variance} is then calculated as
 \hat{\var}(\hat{Y}_{reg3p,ex})& =\frac{n_2}{n_1}\bar{\pmb{Z}}^{(0)t}\hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}_{s_2}}
 \bar{\pmb{Z}}^{(0)}+(1-\frac{n_2}{n_1})\hat{\bar{\pmb{Z}}}_1^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}
 \hat{\bar{\pmb{Z}}}_1 \label{eq:dbvar_reg3p_ex} \\
-\hat{\var}(\hat{Y}_{reg3p,nex})& =\hat{\pmb{\alpha}}_2^t\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{Z}}}^{(0)}_0}\hat{\pmb{\alpha}}_2
+\hat{\var}(\hat{Y}_{reg3p,nex})& =\hat{\pmb{\alpha}}_{s_2} ^t\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{Z}}}^{(0)}_0}\hat{\pmb{\alpha}}_{s_2}
 +\frac{n_2}{n_1}\hat{\bar{\pmb{Z}}}^{(0)t}_0
-\hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}_{2}}\hat{\bar{\pmb{Z}}}^{(0)}_0 + (1-\frac{n_2}{n_1})\hat{\bar{\pmb{Z}}}^{t}_1\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_2}\hat{\bar{\pmb{Z}}}_1 \label{eq:dbvar_reg3p_nex}
+\hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}_{s_2}}\hat{\bar{\pmb{Z}}}^{(0)}_0 + (1-\frac{n_2}{n_1})\hat{\bar{\pmb{Z}}}^{t}_1\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}\hat{\bar{\pmb{Z}}}_1 \label{eq:dbvar_reg3p_nex}
 \end{align}
 \end{subequations}
 
@@ -93,7 +94,7 @@ with the variance-covariance matrix $\hat{\Sigma}_{\hat{\bar{\pmb{Z}}}^{(0)}_0}$
 (\pmb{Z}^{(0)}(x)-\hat{\bar{\pmb{Z}}}^{(0)}_{0})(\pmb{Z}^{(0)}(x)-\hat{\bar{\pmb{Z}}}^{(0)}_{0})^t
 \end{equation}
 
-We see that equation \ref{eq:dbvar_reg3p_ex} (exhaustive case) and \ref{eq:dbvar_reg3p_nex} (non-exhaustive case) differ by the term $\hat{\pmb{\alpha}}_2^t\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{Z}}}^{(0)}_0}\hat{\pmb{\alpha}}_2$ which is exactly the variance of the prediction $\hat{Y}_{0}(x)$ of the reduced model in the $s_0$ phase. This term can be made very small by chosing a large sample size $n_0$ for $s_0$ \citep{mandallaz2013techb}.
+We see that equation \ref{eq:dbvar_reg3p_ex} (exhaustive case) and \ref{eq:dbvar_reg3p_nex} (non-exhaustive case) differ by the term $\hat{\pmb{\alpha}}_{s_2}^t\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{Z}}}^{(0)}_0}\hat{\pmb{\alpha}}_2$ which is exactly the variance of the prediction $\hat{Y}_{0}(x)$ of the reduced model in the $s_0$ phase. This term can be made very small by chosing a large sample size $n_0$ for $s_0$ \citep{mandallaz2013techb}.
 
 The package also gives the \textbf{external variance} defined as
 
@@ -122,7 +123,7 @@ table(grisons$phase_id_3p)
 @
 \end{small}
 
-We see that in the three-phase example, we now have 40 terrestrial sample locations providing the timber volume per hectare (\code{tvol}). The large phase $s_0$ comprises $178 + 88 + 40 = 306$ sample locations, since $s_2 \subset s_1 \subset s_0$. We now assume that at sample locations $x \in s_0$, only the mean canopy height (\code{mean}) is available, whereas at sample locations $x \in s_1$ we have also have the explanatory variables \code{stddev}, \code{max} and \code{q75} at hand. We can now define the reduced and full regression model formulas that we will use in the three-phase estimation. Note that the models are nested.
+We see that in the three-phase example, we now have 40 terrestrial sample locations providing the timber volume per hectare (\code{tvol}). The large phase $s_0$ comprises $178 + 88 + 40 = 306$ sample locations, since $s_2 \subset s_1 \subset s_0$. We now assume that at sample locations $x \in s_0$, only the mean canopy height (\code{mean}) is available, whereas at sample locations $x \in s_1$ we have also have the explanatory variables \code{stddev}, \code{max} and \code{q75} at hand. We can now define the reduced and full regression model formulas that we will use in the \code{threephase()} function. Note that the models are nested.
 
 \begin{small}
 <<>>=
@@ -172,8 +173,6 @@ reg2p_nex$estimation
 
 Comparing the $R^2$s of the three and two-phase result, it becomes obvious that the incorporation of the additional explanatory variables \code{stddev}, \code{max} and \code{q75} led to a 20\% increase in explained variance in the regression model. While the more precise regression model was only applied at 40\% of all 306 sample locations (\textit{sampling fraction}), it was possible to considerably reduce the two-phase variance and thus achieve a higher estimation precision. 
 
-Finally note that in practice, there are basically \textit{three scenarios} how a two-phase sample design might be extended to a three-phase estimation procedure. In the first scenario, more precise auxiliary information becomes available at a subset of the allready existing and used sample locations. In this case, one simply reclassifies the existing sample locations $x \in s_1$ into $s_0$ sample locations and assigns the $s_1$ indicator to those points where the new variables are available. In the second scenario, the auxiliary information is available at all sample locations $x \in s_1$, but the computation of some of the explanatory variables is computationally expensive. In this case, a considerable time saving could be realized by restricing their computation to a subset of all $s_1$ sample locations, which consequently leads to a three-phase scenario that is handeled likewise the first scenario. A respective example is given in \citet{mandallaz2013b} and \citet{mandallaz2013c}. In both the first and second scenario, the original sample size of the two-phase inventory remains unchanged, but the $s_1$ sample locations are splitted into $s_0$ and $s_1$ locations. In the third and last scenario, one has already used a set of explanatory variables at $s_1$ sample locations for a time before additional, less precise information becomes available in a much larger quantity over the inventory area. It still might yield an increase in estimation precision if this information is considered in the estimation in a much larger sample size than the more precise information (sample fraction). In this case, one creates a new phase $s_0$ by densifying the allready existing $s_1$ sample locations (which in practice are often arranged in regular grids) such that $n_0 >> n_1$ and $s_1 \in s_0$.
-
 %--------------------------------------------------------------------------------------------------%
 % ################################################################################################ %
 %--------------------------------------------------------------------------------------------------%
@@ -203,10 +202,10 @@ The \textbf{point estimates} are unbiased and given by:
 
 \begin{subequations}\label{eq:pest_3p_small_psmall}
 \begin{align}
-\hat{Y}_{G,small,3p}&=(\bar{\pmb{Z}}^{(0)}_{0,G}-\hat{\bar{\pmb{Z}}}^{(0)}_{1,G})^t\hat{\pmb{\alpha}}_2 +
-\hat{\bar{\pmb{Z}}}^t_{1,G}\hat{\pmb{\beta}}_{2}+\frac{1}{n_{2,G}}\bar{\hat{R}}_{G}(x) \label{eq:pe_3p_small} \\
-\hat{Y}_{G,psmall,3p}&=(\hat{\bar{\pmb{Z}}}^{(0)}_{0,G}-\hat{\bar{\pmb{Z}}}^{(0)}_{1,G})^t\hat{\pmb{\alpha}}_2 +
-\hat{\bar{\pmb{Z}}}^t_{1,G}\hat{\pmb{\beta}}_{2}+\frac{1}{n_{2,G}}\bar{\hat{R}}_{G}(x) \label{eq:pe_3p_psmall}
+\hat{Y}_{G,small,3p}&=(\bar{\pmb{Z}}^{(0)}_{0,G}-\hat{\bar{\pmb{Z}}}^{(0)}_{1,G})^t\hat{\pmb{\alpha}}_{s_2} +
+\hat{\bar{\pmb{Z}}}^t_{1,G}\hat{\pmb{\beta}}_{s_2}+\frac{1}{n_{2,G}}\bar{\hat{R}}_{G}(x) \label{eq:pe_3p_small} \\
+\hat{Y}_{G,psmall,3p}&=(\hat{\bar{\pmb{Z}}}^{(0)}_{0,G}-\hat{\bar{\pmb{Z}}}^{(0)}_{1,G})^t\hat{\pmb{\alpha}}_{s_2} +
+\hat{\bar{\pmb{Z}}}^t_{1,G}\hat{\pmb{\beta}}_{s_2}+\frac{1}{n_{2,G}}\bar{\hat{R}}_{G}(x) \label{eq:pe_3p_psmall}
 \end{align}
 \end{subequations}
 
@@ -218,7 +217,7 @@ with ${R}_{G}(x)=Y_G(x)-\pmb{Z}_G^t(x)\hat{\beta}_{s_2}$ being the full model re
 \bar{\pmb{Z}}^{(0)}_{0,G}+(1-\frac{n_2}{n_1})\hat{\bar{\pmb{Z}}}_{1,G}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}
 \hat{\bar{\pmb{Z}}}_{1,G} + 
 \frac{1}{n_{2,G}}\frac{1}{n_{2,G}-1}\sum_{x \in s_{2,G}} \Big(\hat{R}_{G}(x)-\bar{\hat{R}}_{2,G}\Big)^2 \label{eq:var_3p_reg_small}&\\
-\hat{\var}(\hat{Y}_{G,psmall,3p})& = \hat{\pmb{\alpha}}_2^t\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{Z}}}^{(0)}_{0,G}}\hat{\pmb{\alpha}}_2 +
+\hat{\var}(\hat{Y}_{G,psmall,3p})& = \hat{\pmb{\alpha}}_{s_2}^t\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{Z}}}^{(0)}_{0,G}}\hat{\pmb{\alpha}}_{s_2} +
 \frac{n_2}{n_1}\hat{\bar{\pmb{Z}}}^{(0)t}_{0,G}\hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}_{s_2}}
 \hat{\bar{\pmb{Z}}}^{(0)}_{0,G}+(1-\frac{n_2}{n_1})\hat{\bar{\pmb{Z}}}_{1,G}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}
 \hat{\bar{\pmb{Z}}}_{1,G} \nonumber &\\
@@ -226,7 +225,7 @@ with ${R}_{G}(x)=Y_G(x)-\pmb{Z}_G^t(x)\hat{\beta}_{s_2}$ being the full model re
 \end{flalign}
 \end{subequations}
 
-with the variance-covariance matrix $\hat{\Sigma}_{\hat{\bar{\pmb{Z}}}^{(0)}_{0,G}}$ as
+with the variance-covariance matrix
 
 \begin{equation}\label{estvarcovaux3pG}
 \hat{\Sigma}_{\hat{\bar{\pmb{Z}}}^{(0)}_{0,G}}=
@@ -253,14 +252,14 @@ with $\hat{Y}_{0}(x)=\pmb{Z}^{(0)t}(x)\hat{\pmb{\alpha}}_{s_2}$ being the reduce
 %------------------------------------------------------------- %
 % \textbf{Synthetic and Pseudo Synthetic Estimator}\par
 
-The \textbf{synthetic} (\textit{synth}) and \textbf{pseudo synthetic estimator} \textit{psynth} ca be applied if no terrestrial samples are available in the small area, i.e. $n_{2,G}=0$. Consequently, the residual correction and the residual variation term of the full model can no longer be applied an vanishes from the point (equation \ref{eq:pe_3p_synth} and \ref{eq:pe_3p_psynth}) and design-based variance (equation \ref{eq:var_3p_reg_synth} and \ref{eq:var_3p_reg_psynth}) formulas. The point estimates are again potentially biased since the zero mean residual property $\int_G R(x)dx=0$ of the full model can not be insured within the small area $G$. Also the variance will be small but to the cost of ignoring the model uncertainties. Note that there is again no external variance formula for the synthetic and pseudo synthetic estimation.
+The \textbf{synthetic} (\textit{synth}) and \textbf{pseudo synthetic estimator} (\textit{psynth}) ca be applied if no terrestrial samples are available in the small area, i.e. $n_{2,G}=0$. Consequently, the residual correction and the residual variation term of the full model can no longer be applied an vanishes from the point (equation \ref{eq:pe_3p_synth} and \ref{eq:pe_3p_psynth}) and design-based variance (equation \ref{eq:var_3p_reg_synth} and \ref{eq:var_3p_reg_psynth}) formulas. The point estimates are again potentially biased since the zero mean residual property $\int_G R(x)dx=0$ of the full model can not be insured within the small area $G$. Also the variance will be small but to the cost of ignoring the model uncertainties. Note that there is again no external variance formula for the synthetic and pseudo synthetic estimation.
 
 \begin{subequations}\label{eq:pest_3p_synth_psynth}
 \begin{align}
 \hat{Y}_{G,synth,3p}&=(\bar{\pmb{Z}}^{(0)}_{0,G}-\hat{\bar{\pmb{Z}}}^{(0)}_{1,G})^t\hat{\pmb{\alpha}}_2 +
-\hat{\bar{\pmb{Z}}}^t_{1,G}\hat{\pmb{\beta}}_{2} \label{eq:pe_3p_synth} \\
+\hat{\bar{\pmb{Z}}}^t_{1,G}\hat{\pmb{\beta}}_{s_2} \label{eq:pe_3p_synth} \\
 \hat{Y}_{G,psynth,3p}&=(\hat{\bar{\pmb{Z}}}^{(0)}_{0,G}-\hat{\bar{\pmb{Z}}}^{(0)}_{1,G})^t\hat{\pmb{\alpha}}_2 +
-\hat{\bar{\pmb{Z}}}^t_{1,G}\hat{\pmb{\beta}}_{2}\label{eq:pe_3p_psynth}
+\hat{\bar{\pmb{Z}}}^t_{1,G}\hat{\pmb{\beta}}_{s_2}\label{eq:pe_3p_psynth}
 \end{align}
 \end{subequations}
 
@@ -280,73 +279,162 @@ The \textbf{synthetic} (\textit{synth}) and \textbf{pseudo synthetic estimator} 
 %------------------------------------------------------------- %
 % \textbf{Extended Synthetic and Extended Pseudo Synthetic Estimator}\par
 
+The \textbf{extended synthetic} (\textit{extsynth}) and \textbf{extended pseudo synthetic estimator} (\textit{extpsynth}) insures that the residuals of the full model over both the entire inventory area $F$ and the small area $G$ are zero at the same time, i.e. $\int_F R(x)dx=\int_G R(x)dx=0$. This is again realized by extending the vector of explanatory variables by a binary categorical indicator variable $I_G(x)$ which takes the value \code{1} if the observation lies inside the small area $G$ and is otherwise set to \code{0}. The extended auxiliary vector thus is defined as $\pmb{\mathbb{Z}}^t(x)=(\pmb{\mathbb{Z}}^{(0)t}(x),\pmb{\mathbb{Z}}^{t}(x))$, where $\pmb{\mathbb{Z}}^{(0)t}(x)=(\pmb{Z}^{(1)t}(x), I_G^t(x))$ and $\pmb{\mathbb{Z}}^{t}(x)=\pmb{Z}^{t}(x)$. This practically means that we have to specify the binary indicator variable for all observations in the data frame that is passed to the package-functions.
+
+We first recalculate the regression coefficients $\hat{\pmb{\gamma}}_{s_2}$ and $\hat{\pmb{\theta}}_{s_2}$, and their variance-covarianve matrices $\hat{\pmb{\Sigma}}_{\hat{\pmb{\gamma}}_{s_2}}$ and $\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}$ as
+
+\begin{subequations}\label{eq:normequ_redmod_ext}
+\begin{align}
+\hat{\pmb{\gamma}}_{s_2} &= \Big(\frac{1}{n_2}\sum_{x\in{s}_2}\pmb{\mathbb{Z}}^{(0)}(x)\pmb{\mathbb{Z}}^{(0)t}(x)
+\Big)^{-1}\frac{1}{n_2}\sum_{x\in{s}_2}Y(x)\pmb{\mathbb{Z}}^{(0)}(x) \\
+\hat{\pmb{\theta}}_{{s_2}}&=\Big(\frac{1}{n_2}\sum_{x\in{s}_2}\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x)
+\Big)^{-1}\frac{1}{n_2}\sum_{x\in{s}_2}Y(x)\pmb{\mathbb{Z}}(x)
+\end{align}
+\end{subequations}
+
+and
+
+\begin{subequations}\label{eq:covar3p_ext}
+\begin{align}
+  \hat{\pmb{\Sigma}}_{\hat{\pmb{\gamma}}_{s_2}}=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}^{(0)}(x)\pmb{\mathbb{Z}}^{(0)t}(x) \Big)^{-1}
+  \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}_{0}^2(x)\pmb{\mathbb{Z}}^{(0)}(x)\pmb{\mathbb{Z}}^{(0)t}(x)\Big)
+  \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}^{(0)}(x)\pmb{\mathbb{Z}}^{(0)t}(x) \Big)^{-1} \\
+  \hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x) \Big)^{-1}
+  \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}^2(x)\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x)\Big)
+  \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x) \Big)^{-1}
+\end{align}
+\end{subequations}
 
 
+After computing the auxiliary means $\hat{\bar{\pmb{Z}}}^{(0)}_{0,G}=\frac{1}{n_{0,G}}\sum_{x\in{s_{0,G}}} \pmb{Z}^{(0)}(x)$, $\hat{\bar{\pmb{Z}}}^{(0)}_{1,G}=\frac{1}{n_{1,G}}\sum_{x\in{s}_{1,G}}\pmb{Z}^{(0)}(x)$, and $\hat{\bar{\pmb{Z}}}_{1,G}=\frac{1}{n_{1,G}}\sum_{x\in{s}_{1,G}}\pmb{Z}(x)$, we can calculate the \textbf{point estimate} as
 
 
+\begin{subequations}\label{eq:pest_3p_synth_psynth_ext}
+\begin{align}
+\hat{Y}_{G,extsynth,3p}&=(\bar{\pmb{\mathbb{Z}}}^{(0)}_{0,G}-\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{1,G})^t\hat{\pmb{\gamma}}_2 +
+\hat{\bar{\pmb{\mathbb{Z}}}}^t_{1,G}\hat{\pmb{\theta}}_{s_2} \label{eq:pe_3p_extsynth} \\
+\hat{Y}_{G,extpsynth,3p}&=(\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{0,G}-\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{1,G})^t\hat{\pmb{\gamma}}_2 +
+\hat{\bar{\pmb{\mathbb{Z}}}}^t_{1,G}\hat{\pmb{\theta}}_{s_2}\label{eq:pe_3p_extpsynth}
+\end{align}
+\end{subequations}
 
+and the \textbf{design-based variance} defined as
 
+\begin{subequations}\label{eq:var_synth_psynth_ext}
+\begin{align}
+\hat{\var}(\hat{Y}_{G,extsynth,3p})& =\frac{n_2}{n_1}\bar{\pmb{\mathbb{Z}}}^{(0)t}_{0,G}\hat{\pmb{\Sigma}}_{\hat{\pmb{\gamma}}_{s_2}}
+\bar{\pmb{Z}}^{(0)}_{0,G}+(1-\frac{n_2}{n_1})\hat{\bar{\pmb{\mathbb{Z}}}}_{1,G}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}
+\hat{\bar{\pmb{\mathbb{Z}}}}_{1,G} \label{eq:var_3p_reg_extsynth}\\
+\hat{\var}(\hat{Y}_{G,extpsynth,3p})& = \hat{\pmb{\gamma}}_{s_2}^t\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{0,G}}\hat{\pmb{\gamma}}_{s_2} + \frac{n_2}{n_1}\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)t}_{0,G}\hat{\pmb{\Sigma}}_{\hat{\pmb{\gamma}}_{s_2}}
+\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{0,G}+(1-\frac{n_2}{n_1})\hat{\bar{\pmb{\mathbb{Z}}}}_{1,G}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}
+\hat{\bar{\pmb{\mathbb{Z}}}}_{1,G} \label{eq:var_3p_reg_extpsynth}
+\end{align}
+\end{subequations}
 
+with 
 
+\begin{equation}\label{estvarcovaux3pG_ext}
+\hat{\Sigma}_{\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{0,G}}=
+\frac{1}{n_{0,G}(n_{0,G}-1)}\sum_{x\in{s_{0,G}}}
+(\pmb{\mathbb{Z}}^{(0)}(x)-\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{0,G})(\pmb{\mathbb{Z}}^{(0)}(x)-\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{0,G})^t
+\end{equation}
 
+The package also returns the \textbf{external variance} which is defined as
 
+\begin{subequations}\label{eq:pest_3p_synth_psynth_ext}
+\begin{flalign}
+\hat{\var}_{ext}(\hat{Y}_{G,extsynth,3p})&= \frac{1}{n_{1,G}(n_{2,G}-1)}\sum_{x\in{s}_{2,G}}
+ (\hat{\mathbb{R}}_0(x)-\hat{\bar{\mathbb{R}}}_{0,G})^2 + 
+ (1-\frac{n_{2,G}}{n_{1,G}})\frac{1}{n_{2,G}(n_{2,G}-1)}\sum_{x\in{s_{2,G}}}(\hat{\mathbb{R}}(x)-\bar{\hat{\mathbb{R}}}_G)^2 \label{eq:var_3p_reg_extsynth}&\\
+\hat{\var}_{ext}(\hat{Y}_{G,extpsynth,3p})&= \frac{1}{n_{0,G}(n_{0,G}-1)}\sum_{x\in{s_{0,G}}}(\hat{Y}_0(x)-\hat{\bar{Y}}_{0,G})^2 + 
+{\frac{1}{n_{1,G}(n_{2,G}-1)}\sum_{x\in{s}_{2,G}}}
+ (\hat{\mathbb{R}}_0(x)-\bar{\hat{\mathbb{R}}}_{0,G})^2 \nonumber &\\
+ &+ (1-\frac{n_{2,G}}{n_{1,G}})\frac{1}{n_{2,G}(n_{2,G}-1)}\sum_{x\in{s_{2,G}}}(\hat{\mathbb{R}}(x)-\bar{\hat{\mathbb{R}}}_G)^2 \label{eq:var_3p_reg_extpsynth}
+\end{flalign}
+\end{subequations}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+with $\hat{Y}_{0}(x)=\pmb{\mathbb{Z}}^{(0)t}(x)\hat{\pmb{\gamma}}_{s_2}$ being the reduced model predictions and $\hat{\mathbb{R}}_{0}=Y(x)-\hat{Y}_{0}$ being the reduced model residuals. The equations for the point estimate and variances again look similar to the synthetic and pseudo synthetic form given in equation \ref{eq:pe_3p_synth}, \ref{eq:pe_3p_psynth}, \ref{eq:var_3p_reg_synth} and \ref{eq:var_3p_reg_psynth}. Note that they are however design-unbiased since the residual correction term is included in the regression coefficient vector $\hat{\pmb{\theta}}_{s_2}$.
 
 
 %------------------------------------------------------------- %
 \subsubsection{Application}
 
 
+We will demonstrate the use of three-phase small area estimation in the package \pkg{forestinventory} by applying the \textbf{extended synthetic} and the \textbf{synthetic} estimator to the \code{grisons} dataset. The setup is thus exactly the same as in the example for global three-phase estimation (section \ref{sec:glob_est_3p}). However, this time will use the exact auxiliary mean of the mean canopy height variable (\code{mean}) and assume that we do not know the exact means of the remaining explanatory variables \code{stddev}, \code{max} and \code{q75}. We thus first define the true means for each small area likewise we did in the \code{twophase()} example (section \ref{sec:twophase_sae}):
+
+\begin{small}
+<<>>=
+truemeans.G <- data.frame(Intercept = rep(1, 4),
+                         mean = c(12.85, 12.21, 9.33, 10.45))
+rownames(truemeans.G) <- c("A", "B", "C", "D")
+@
+\end{small}
+
+Three-phase small area estimation in the package can in general be applied by additionally specifying the \code{small_area} list argument. The exhaustive estimators can be called by optionally passing a \code{data.frame} containing the exact auxiliary means to the \code{exhaustive} argument. The \textbf{extended synthetic estimator} can be applied by setting the argument \code{unbiased} to \code{TRUE} (default):
+
+\begin{small}
+<<>>=
+extsynth_3p <- threephase(formula.rm, formula.fm, data = grisons,
+                  phase_id = list(phase.col = "phase_id_3p", 
+                                  s1.id = 1, terrgrid.id = 2),
+                  small_area = list(sa.col = "smallarea", areas = c("A", "B"),
+                                   unbiased = TRUE),
+                  exhaustive = truemeans.G, 
+                  boundary_weights = "boundary_weights")
+
+@
+\end{small}
+
+\begin{small}
+<<>>=
+extsynth_3p$estimation
+@
+\end{small}
+
+The \textbf{synthetic estimator} can be applied by changing the argument \code{unbiased} to \code{FALSE}, which causes the function to ignore any terrestrial data available in the respective small area.
+
+\begin{small}
+<<>>=
+synth_3p <- threephase(formula.rm, formula.fm, data = grisons,
+              phase_id = list(phase.col="phase_id_3p", s1.id = 1, terrgrid.id = 2),
+              small_area = list(sa.col = "smallarea", areas = c("A", "B"),
+                               unbiased = FALSE),
+              exhaustive = truemeans.G,
+              boundary_weights = "boundary_weights")
+@
+\end{small}
+
+\begin{small}
+<<>>=
+synth_3p$estimation
+@
+\end{small}
+
+We see that the \code{threephase()} function returns the sample sizes in the entire inventory area as well as within each small area. The value \code{Inf} for \code{n0G} indicates that the explanatory variables at $s_0$ sample locations used in the reduced model were in our case derived exhaustively. If we compare the two results, we see that the synthetic estimation again yields a much lower variance than the extended synthetic estimation, but to the cost of ignoring the model uncertainties.
 
 
+We can also analyse how the exhaustive derivation of \code{mean} performed compared to the case where \code{mean} is not non-exhaustively available but only at a very large $s_0$ phase with $n_{0,G}>>n_{1,G}$. To do this, we additionally compute the \textbf{extended pseudo synthetic} estimates. As we can see, the exhaustive derivation of \code{mean} only yielded a slightly smaller variance.
+
+\begin{small}
+<<>>=
+extpsynth_3p <- threephase(formula.rm, formula.fm, data = grisons,
+                  phase_id = list(phase.col = "phase_id_3p", 
+                                  s1.id = 1, terrgrid.id = 2),
+                  small_area = list(sa.col = "smallarea", areas = c("A", "B"),
+                                   unbiased = TRUE),
+                  boundary_weights = "boundary_weights")
+
+@
+\end{small}
+
+\begin{small}
+<<>>=
+extpsynth_3p$estimation
+@
+\end{small}
+
+
+Finally note that in practice, there are basically \textit{three scenarios} how a two-phase sample design might be extended to a three-phase estimation procedure. In the first scenario, more precise auxiliary information becomes available at a subset of the allready existing and used sample locations. In this case, one simply reclassifies the existing sample locations $x \in s_1$ into $s_0$ sample locations and assigns the $s_1$ indicator to those points where the new variables are available. In the second scenario, the auxiliary information is available at all sample locations $x \in s_1$, but the computation of some of the explanatory variables is computationally expensive. In this case, a considerable time saving could be realized by restricing their computation to a subset of all $s_1$ sample locations, which consequently leads to a three-phase scenario that is handeled likewise the first scenario. A respective example is given in \citet{mandallaz2013b} and \citet{mandallaz2013c}. In both the first and second scenario, the original sample size of the two-phase inventory remains unchanged, but the $s_1$ sample locations are splitted into $s_0$ and $s_1$ locations. In the third and last scenario, one has already used a set of explanatory variables at $s_1$ sample locations for a time before additional, less precise information becomes available in a much larger quantity over the inventory area. It still might yield an increase in estimation precision if this information is considered in the estimation in a much larger sample size than the more precise information (sample fraction). In this case, one creates a new phase $s_0$ by densifying the allready existing $s_1$ sample locations (which in practice are often arranged in regular grids) such that $n_0 >> n_1$ and $s_1 \in s_0$.
 
 \newpage
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
