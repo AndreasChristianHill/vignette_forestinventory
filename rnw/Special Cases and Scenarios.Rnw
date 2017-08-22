@@ -8,6 +8,7 @@
 % - cluster sampling and differences between (p)small and extended (p)small if cluster is not copletely inside small area
 % - violation of nested sample design + error handling / data adjustments / printed warnings
 % - missing factor levels in s2-sample that occur in s1 / s0 sample + error warning
+% - mention that especially in the case of postratification, the g-weight variance is the preferred type because ...
 %
 
 

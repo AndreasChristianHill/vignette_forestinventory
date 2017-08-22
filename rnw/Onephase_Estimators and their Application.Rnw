@@ -1,0 +1,26 @@
+% !Rnw root = JStatSoft_forestinventory_master.Rnw
+
+\section{One-phase Estimators and their Application}
+\label{sec:onephase_and_appl}
+
+
+% ---------------------------------------------------------------------------- %
+  \subsection{One-phase Estimators}
+
+
+\subsubsection{Mathematical Background}
+
+
+
+
+
+\subsubsection{Application}
+
+
+
+
+
+
+
+
+\newpage

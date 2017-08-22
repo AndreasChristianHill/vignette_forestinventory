@@ -1,6 +1,6 @@
 % !Rnw root = JStatSoft_forestinventory_master.Rnw
 
-\section{Twophase Estimators and their Application}
+\section{Two-phase Estimators and their Application}
 \label{sec:twophase_and_appl}
 
 
@@ -188,10 +188,11 @@ Note that both variances of the exhaustive estimation are smaller than those of 
 %--------------------------------------------------------------------------------------------------%
 
 \subsection{Small Area Estimators}
+\label{sec:twophase_sae}
 
 \subsubsection{Mathematical Background}
 
-The package \pkg{forestinventory} offers 3 small area estimators. A general principle of all small area estimators of the package is to restrict the information to the small area $G$ whenever possible. An exception however is the retrieval of the regression coefficient vector $\hat{\pmb{\beta}}$ and its variance-covariance matrix $\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}$, which are always calculated using the entire sample $s_2$ according to equation \ref{normequ_simple} and \ref{eq:estvarmatrix}.\par
+The package \pkg{forestinventory} provides 3 small area estimators. A general principle of all small area estimators of the package is to restrict the information to the small area $G$ whenever possible. An exception however is the retrieval of the regression coefficient vector $\hat{\pmb{\beta}}$ and its variance-covariance matrix $\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}$, which are always calculated using the entire sample $s_2$ according to equation \ref{normequ_simple} and \ref{eq:estvarmatrix}.\par
 
 %----------------------------------------------- %
 % \textbf{Small and Pseudo Small Area Estimator}\par
@@ -420,4 +421,4 @@ extsynth_2p$estimation
 
 Comparing this result with the non-exhaustive counterpart \textit{extpsynth}, we see that the estimation uncertainty defined by the variance has again be significantly increased by substituting the estimated by the exact auxiliary means. In the function output, exhaustive phases are indicated by a sample size of infinity (\code{Inf}). Also note that the function extracts the required exact means for small area \code{"A"} and \code{"B"} from the complete set of exact means defined in \code{true.means.Z.G}.
 
-%\newpage
+\newpage
