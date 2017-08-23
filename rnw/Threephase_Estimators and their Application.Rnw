@@ -385,6 +385,10 @@ extsynth_3p <- threephase(formula.rm, formula.fm, data = grisons,
 @
 \end{small}
 
+<<echo=FALSE>>=
+options(width=90) 
+@
+
 \begin{small}
 <<>>=
 extsynth_3p$estimation
