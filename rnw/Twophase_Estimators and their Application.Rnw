@@ -8,7 +8,6 @@
 \subsection{Global Estimators}
 \label{sec:twophase_globest}
 
-test
 
 % NOTES:
 % - The package also allows for calculating estimates solely based on the terrestrial sample $s_2$ (so called \textit{onephase estimation})
