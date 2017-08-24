@@ -107,6 +107,8 @@ Forest inventories provide reliable and evidence-based information to assess the
 \newcommand{\DEP}{\mathbb{D}}
 
 %\setlength{\parindent}{1em}
+%\setlength{\mathindent}{0pt}
+
 
 %------------------------------------------------------------------------------------------------%
 % -------------------------------------- Main Document------------------------------------------ %
@@ -128,6 +130,7 @@ options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
 <<echo=FALSE>>=
 library(forestinventory)
 @
+
 
 %------------------------------------------------------------------------------------------------%
 % ---------------------------------- Introduction ---------------------------------------------- %
@@ -183,7 +186,7 @@ library(forestinventory)
 %------------------------------------------------------------------------------------------------%
 % ---------------------------------- Estimators and their Application -------------------------- %
 
-% \SweaveInput{rnw/One-Phase Estimators and their Application.Rnw}
+% \SweaveInput{rnw/Onephase_Estimators and their Application.Rnw}
 
 \SweaveInput{rnw/Twophase_Estimators and their Application.Rnw}
 
@@ -220,7 +223,7 @@ library(forestinventory)
 %------------------------------------------------------------------------------------------------%
 % ---------------------------------- Special Cases and Scenarios ------------------------------- %
 
-% \SweaveInput{rnw/Analysis and Visualization.Rnw}
+% \SweaveInput{rnw/.Rnw}
 
 
 %------------------------------------------------------------------------------------------------%
@@ -238,7 +241,7 @@ library(forestinventory)
 % ---------------------------------------- Literature ------------------------------------------ %
 
 
-\bibliography{bib/literature}\newpage
+\bibliography{bib/literature}
 
 % -------------------------------------------------------------------------- %
 \end{document}
