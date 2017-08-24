@@ -16,7 +16,7 @@ The package \pkg{forestinventory} also provides methods for \textit{analysing} a
 
 \subsection{Analysis}
 
-If we want to compare the results and performance of different estimation methods and estimators for a given global or small area inventory data set, the function to start with is \code{estTable()}. This function restructures the results of \code{onephase}, \code{twophase} and \code{threephase} estimations and merges them into one single data set that provides the basis for further analysis. For demonstration purposes, we will first recalculate the one-phase estimations as well as the two-phase and three-phase \textit{extended pseudo synthetic} and the \textit{pseudo synthetic} estimations for the \code{grisons} dataset:
+If we want to compare the results and performance of different estimation methods and estimators for a given global or small area inventory data set, the function to start with is \code{estTable()}. This function restructures the results of \code{onephase()}, \code{twophase()} and \code{threephase()} estimations and merges them into one single data set that provides the basis for further analysis. For demonstration purposes, we will first recalculate the one-phase estimations as well as the two-phase and three-phase \textit{extended pseudo synthetic} and the \textit{pseudo synthetic} estimations for the \code{grisons} dataset:
 
 \begin{small}
 <<>>=
@@ -25,6 +25,7 @@ op <- onephase(formula = tvol~1, data = grisons,
                area = list(sa.col = "smallarea", areas = c("A", "B", "C", "D")))
 @
 \end{small}
+
 
 \begin{small}
 <<>>=
@@ -53,7 +54,8 @@ extpsynth_3p<- threephase(formula.s0 = tvol ~ mean,
                 formula.s1 = tvol ~ mean + stddev + max + q75, data = grisons,
                 phase_id = list(phase.col = "phase_id_3p", s1.id = 1, terrgrid.id = 2),
                 small_area=list(sa.col = "smallarea", areas = c("A", "B", "C", "D"),
-                                unbiased = TRUE))
+                                unbiased = TRUE),
+                boundary_weights = "boundary_weights")
 @
 \end{small}
 
@@ -64,7 +66,8 @@ psynth_3p<- threephase(formula.s0 = tvol ~ mean,
                 phase_id = list(phase.col = "phase_id_3p", s1.id = 1, terrgrid.id = 2),
                 small_area = list(sa.col = "smallarea", 
                                   areas = c("A", "B", "C", "D"),
-                                  unbiased = FALSE))
+                                  unbiased = FALSE),
+                boundary_weights = "boundary_weights")
 @
 \end{small}
 

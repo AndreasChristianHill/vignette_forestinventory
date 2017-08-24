@@ -6,6 +6,7 @@
 
 % ---------------------------------------------------------------------------- %
 \subsection{Global Estimators}
+\label{sec:twophase_globest}
 
 % NOTES:
 % - The package also allows for calculating estimates solely based on the terrestrial sample $s_2$ (so called \textit{onephase estimation})
@@ -134,7 +135,7 @@ The structure of the data frame has to meet certain requirements to be used by t
   \itemsep0em
   \item the regression model (\code{formula}) as specified in the \code{lm}-function \citep{R}
   \item the \code{data.frame} containing the inventory information (\code{data})
-  \item the \code{list}-object \code{phase_id} taking the column name (\code{phase.col}) specifying the sample association of an observation ($s_1$ or $s_2$) and the indicator for the $s_2$ (\code{terrgrid.id})
+  \item the \code{list}-object \code{phase_id} taking the column name (\code{phase.col}) specifying the sample association of an observation ($s_1$ or $s_2$) and the indicator for the $s_2$ phase (\code{terrgrid.id})
   \item the name of the column containing the weights $w(x)$ of the boundary adjustments (optional)
 \end{itemize}
 
@@ -313,10 +314,10 @@ The package also provides the external variance which is calculated as
 
 \begin{subequations}\label{eq:ext_varexternal_2p_extsynth}
 \begin{align}
-  \hat{\var}_{ext}(\hat{Y}_{G,extsynth,2p}) & = \frac{1}{n_{2,G}} \frac{1}{n_{2,G}-1}\sum_{x\in{s_{2,G}}}(\hat{R}(x)-\bar{\hat{R}})^2 \label{eq:ext_varexternal_2p_extsynth} \\
+  \hat{\var}_{ext}(\hat{Y}_{G,extsynth,2p}) & = \frac{1}{n_{2,G}} \frac{1}{n_{2,G}-1}\sum_{x\in{s_{2,G}}}(\hat{\mathbb{R}}(x)-\bar{\hat{\mathbb{R}}})^2 \label{eq:ext_varexternal_2p_extsynth} \\
   \hat{\var}_{ext}(\hat{Y}_{G,extpsynth,2p}) & =
  \frac{1}{n_{1,G}}\frac{1}{n_{2,G}-1}\sum_{x\in{s_{2,G}}}(Y(x)-\bar{Y}_{2,G})^2 \nonumber \\
- &+ (1-\frac{n_{2,G}}{n_{1,G}})\frac{1}{n_{2,G}}\frac{1}{n_{2,G}-1}\sum_{x\in{s_{2,G}}}(\hat{R}(x)-\bar{\hat{R}})^2 \label{eq:ext_varexternal_2p_extpsynth}
+ &+ (1-\frac{n_{2,G}}{n_{1,G}})\frac{1}{n_{2,G}}\frac{1}{n_{2,G}-1}\sum_{x\in{s_{2,G}}}(\hat{\mathbb{R}}(x)-\bar{\hat{\mathbb{R}}})^2 \label{eq:ext_varexternal_2p_extpsynth}
 \end{align}
 \end{subequations}
 

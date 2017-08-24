@@ -186,7 +186,7 @@ library(forestinventory)
 %------------------------------------------------------------------------------------------------%
 % ---------------------------------- Estimators and their Application -------------------------- %
 
-\SweaveInput{rnw/Onephase_Estimators and their Application.Rnw}
+% \SweaveInput{rnw/Onephase_Estimators and their Application.Rnw}
 
 \SweaveInput{rnw/Twophase_Estimators and their Application.Rnw}
 
@@ -223,7 +223,7 @@ library(forestinventory)
 %------------------------------------------------------------------------------------------------%
 % ---------------------------------- Special Cases and Scenarios ------------------------------- %
 
-% \SweaveInput{rnw/Analysis and Visualization.Rnw}
+% \SweaveInput{rnw/.Rnw}
 
 
 %------------------------------------------------------------------------------------------------%

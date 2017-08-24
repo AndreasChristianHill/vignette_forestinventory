@@ -281,7 +281,7 @@ The \textbf{synthetic} (\textit{synth}) and \textbf{pseudo synthetic estimator} 
 
 The \textbf{extended synthetic} (\textit{extsynth}) and \textbf{extended pseudo synthetic estimator} (\textit{extpsynth}) insures that the residuals of the full model over both the entire inventory area $F$ and the small area $G$ are zero at the same time, i.e. $\int_F R(x)dx=\int_G R(x)dx=0$. This is again realized by extending the vector of explanatory variables by a binary categorical indicator variable $I_G(x)$ which takes the value \code{1} if the observation lies inside the small area $G$ and is otherwise set to \code{0}. The extended auxiliary vector thus is defined as $\pmb{\mathbb{Z}}^t(x)=(\pmb{\mathbb{Z}}^{(0)t}(x),\pmb{\mathbb{Z}}^{t}(x))$, where $\pmb{\mathbb{Z}}^{(0)t}(x)=(\pmb{Z}^{(1)t}(x), I_G^t(x))$ and $\pmb{\mathbb{Z}}^{t}(x)=\pmb{Z}^{t}(x)$. This practically means that we have to specify the binary indicator variable for all observations in the data frame that is passed to the package-functions.
 
-We first recalculate the regression coefficients $\hat{\pmb{\gamma}}_{s_2}$ and $\hat{\pmb{\theta}}_{s_2}$, and their variance-covarianve matrices $\hat{\pmb{\Sigma}}_{\hat{\pmb{\gamma}}_{s_2}}$ and $\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}$ as
+We first recalculate the regression coefficients $\hat{\pmb{\gamma}}_{s_2}$ and $\hat{\pmb{\theta}}_{s_2}$, and their variance-covarianve matrices $\hat{\pmb{\Sigma}}_{\hat{\pmb{\gamma}}_{s_2}}$ and $\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}$ under the extended auxiliary vector as
 
 \begin{subequations}\label{eq:normequ_redmod_ext}
 \begin{align}
