@@ -10,17 +10,9 @@
 % - Interpretation of Confidence Intervals
 %
 
-The estimated variance provides a measure of uncertainty for a given point estimate.
+The estimated variance of a point estimate provides us with a measure of estimation uncertainty. However, its interpretation is rather diffult to use by practitioners. Converting the estimated variance into a 95\% \textit{confidence interval} allows for a much more intuitive and practice-oriented interpretation of the uncertainties associated to a point estimate. In the design-based framework, it denotes that if we would repreatedly conduct the inventory using the same estimation method, estimator and auxiliary information but each time using a new independently and randomly selected sample, 95\% of the calculated confidence intervals will contain the true but unknown quantity. The confidence level $1-\alpha$ (e.g. 95\%) is thus the frequency or proportion of possible confidence intervals that contain the unknown quantity and is therefore often also referred to as \textit{coverage rate}.
 
-Confidence intervals thus allow for a much more intuitive interpretation of the uncertainties associated to a point estimate, and are also more suited to be incorporated into planning forest management operations.
-
-% Frequentisitsche Interpretation streng genommen die einzig richtige: unter rein hypothetischer Wiederholung der Inventur (Gleicher Schaetzer, gleicher Wald, gleiche Hilfvariablen / Aux.info) werden 95\% der berechneten Intervalle den wahren Wert enthalten. Man weiss nun aber - selbst wenn man das machen wuerde (was praktisch ja nie der Fall sein wird) - nie, auf welche der berechneten Intervalle das zutreffen wird. Die klassische statistische Interpration ist hier also nicht zulaessig (ungleich: der wahre wert befindet sich mit 95\% Sicherheit in meinem berechneten Intervall).
-% 
-% Da diese strenge Interpretation dem Praktiker nicht viel nuetzen wird (ausser evtl einem Gefuhl der Sicherheit), kann man sich aufgrund der CI-Breite (abhaengig von der Varianz der SChaetzung) an folgender Frage orientieren: "Wuerde ich innerhalb des Vertrauensintervalles zu der selben Entscheidung (z.b. Eingriff ja/nein, Vorrat um x\% reduzieren) kommen, oder nicht?" Wenn ja, dann ist die Genauigkeit der SChaetzung bereits ausreichend, wenn nein, dann ist dies die Motivation nach effizien
-% Stichwort: signifikanz vs. relevanz
-
-
-The confidence intervals for one-phase as well as two-phase and three-phase global and small area point estimates are defined by
+Based on the central limit theorem, it can be assumed that under hypothetical repeated sampling, the point estimates will asymptotically follow a normal distribution. \citet{mandallaz2013a} recommended to better base the confidence intervals on the Student's \textit{t} distribution. The confidence intervals for one-phase as well as two-phase and three-phase global and small area point estimates calculated by the package \pkg{forestinventory} are thus defined as \\
 
 \textit{One-Phase Estimation}
 
@@ -48,9 +40,7 @@ CI_{1-\alpha}(\hat{Y})=\bigg{\lbrack}\hat{Y}-t_{n_{2,G}-1, 1-\frac{\alpha}{2}}\s
 
 where $\hat{Y}$ is the respective point estimate, $\var(\hat{Y})$ is the respective estimated variance, and $1-\alpha$ is the confidence level. Note that in the three-phase case, $p$ is the number of parameters used in the \textit{full} regression model. In case of cluster-sampling, $n_{2,G}$ is the number of terrestrial clusters (a cluster constitutes the sample unit and comprises multiple sample plots).
 
-In the package \pkg{forestinventory}, the confidence levels for all estimation methods and estimators can be computed by the S3 generic function \code{confint()}. The function requires an estimation object created by the \code{onephase()}, \code{twophase()} or \code{threephase()} function. Optionally, the confidence level $1-\alpha$ can be specified by the argument \code{level} and has a default value of 0.95, which will cause the function to return the 95\% confidence intervall.
-
-The 95\% confidence intervall for the small area estimations by the \textit{extpsynth} estimator (section \ref{sec:twophase_sae}) can for example be applied by:
+In the package, the confidence levels for all estimation methods and estimators can be computed by the S3 generic function \code{confint()}, which requires an estimation object created by the \code{onephase()}, \code{twophase()} or \code{threephase()} function, and the confidence level $1-\alpha$ specified by the argument \code{level} (default value of 0.95, i.e. 95\%). The 95\% confidence intervall of the small area estimates by the \textit{extpsynth} estimator (section \ref{sec:twophase_sae}) can for example be applied by:
 
 \begin{small}
 <<>>=
@@ -59,33 +49,10 @@ confint(extpsynth_2p)
 \end{small}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+% Frequentisitsche Interpretation streng genommen die einzig richtige: unter rein hypothetischer Wiederholung der Inventur (Gleicher Schaetzer, gleicher Wald, gleiche Hilfvariablen / Aux.info) werden 95\% der berechneten Intervalle den wahren Wert enthalten. Man weiss nun aber - selbst wenn man das machen wuerde (was praktisch ja nie der Fall sein wird) - nie, auf welche der berechneten Intervalle das zutreffen wird. Die klassische statistische Interpration ist hier also nicht zulaessig (ungleich: der wahre wert befindet sich mit 95\% Sicherheit in meinem berechneten Intervall).
+% 
+% Da diese strenge Interpretation dem Praktiker nicht viel nuetzen wird (ausser evtl einem Gefuhl der Sicherheit), kann man sich aufgrund der CI-Breite (abhaengig von der Varianz der SChaetzung) an folgender Frage orientieren: "Wuerde ich innerhalb des Vertrauensintervalles zu der selben Entscheidung (z.b. Eingriff ja/nein, Vorrat um x\% reduzieren) kommen, oder nicht?" Wenn ja, dann ist die Genauigkeit der SChaetzung bereits ausreichend, wenn nein, dann ist dies die Motivation nach effizien
+% Stichwort: signifikanz vs. relevanz
 
 
 \newpage
