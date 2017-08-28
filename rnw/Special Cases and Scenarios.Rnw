@@ -5,11 +5,120 @@
 
 % include:
 % - categorical variables (zberg) and interaction terms (not so clear to everyone)
-% - cluster sampling and differences between (p)small and extended (p)small if cluster is not copletely inside small area
-% - violation of nested sample design + error handling / data adjustments / printed warnings
-% - missing factor levels in s2-sample that occur in s1 / s0 sample + error warning
-% - mention that especially in the case of postratification, the g-weight variance is the preferred type because ...
+% - !!! cluster sampling and differences between (p)small and extended (p)small if cluster is not completely inside small area
+% - !!! violation of nested sample design + error handling / data adjustments / printed warnings
+% - !!! missing factor levels in s2-sample that occur in s1 / s0 sample + error warning
+% - [mention that especially in the case of postratification, the g-weight variance is the preferred type because ...]
 %
+
+
+\subsection{Small Area Estimation under Cluster Sampling}
+
+
+<<echo=FALSE>>=
+extpsynth.clust<- twophase(formula = basal ~ stade + couver + melange, data=zberg,
+                     phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
+                      cluster = "cluster",
+                      small_area = list(sa.col = "ismallold", areas = c("1"),
+                                        unbiased = TRUE))
+@
+
+
+\begin{small}
+\begin{Schunk}
+\begin{Sinput}
+R> extpsynth.clust<- twophase(formula = basal ~ stade + couver + melange, data=zberg,
++                      phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
++                      cluster = "cluster",
++                      small_area = list(sa.col = "ismallold", areas = c("1"),
++                                        unbiased = TRUE))
+Warning message:
+At least one terrestrial cluster not entirely included within the small area 1.
+Zero mean residual assumption for small area maybe violated.
+Check mean_Rc_x_hat_G and consider alternative estimator 'psmall'
+\end{Sinput}
+\end{Schunk}
+\end{small}
+
+\begin{small}
+<<>>=
+extpsynth.clust$mean_Rc_x_hat_G
+@
+\end{small}
+
+\begin{small}
+<<>>=
+extpsmall.clust<- twophase(formula = basal ~ stade + couver + melange, data=zberg,
+                     phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
+                      cluster = "cluster",
+                      small_area = list(sa.col = "ismallold", areas = c("1"),
+                                        unbiased = TRUE),
+                     psmall = TRUE)
+@
+\end{small}
+
+\begin{small}
+<<>>=
+extpsynth.clust$estimation
+@
+\end{small}
+
+\begin{small}
+<<>>=
+extpsmall.clust$estimation
+@
+\end{small}
+
+
+% --------------------------------------------------------------------- %
+\subsection{Nesting Violation in Sample Design}
+
+% explain
+% 
+% # Checking the nesting of the sample-design:
+% # 1) --> each s2-point muss have the complete set of s1-auxvars (s1-info) available
+% # 2) --> each s2-point muss have the complete set of s0-auxvars (s0-info) available
+% # 3) --> each s1-point muss have the complete set of s0-auxvars (s0-info) available
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -20,3 +129,4 @@
 
 
 \newpage
+
