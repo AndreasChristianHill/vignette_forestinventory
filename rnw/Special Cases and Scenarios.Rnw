@@ -55,19 +55,16 @@ The overall variance of estimators under poststratification will mainly depend o
 \subsection{Small Area Estimation under Cluster Sampling}
 
 % NOTE:
-% 
+% - not going into too much detail
+% - rather briefly describe the important difference to simple sampling needed
+%   to understand the problem
 %
-%
 
+As mentioned in section \ref{sec:packstruc}, \textit{cluster sampling} is a special case of sample designs where the sample location, i.e. sample unit, does no longer consist of one, but multiple spatially agglomerated sample points. Whereas the maximal possible number of sample points per cluster $M$ is defined by the user, the actual number of points $M(x)$ falling into the forest area $F$ at sample location $x$ is random. Without going into too much mathematical detail, the estimators under simple sampling are extended in a way that all parameters (local density, mean vector of explanatory variables, mean model residuals) have to be calculated as the weighted cluster means with $M(x)$ being the cluster weights (for more detail see Appendix). The package functions allow to consider cluster-structures by storing aspecifying the argument \code{cluster}
 
+For small area applications, the scenario might occur where the points of a cluster at sample locations $x$ spread over more than one small area, i.e. only a subset $M_{G}(x) < M(x)$ in included in the small area of interest. In this case, the zero mean residual property within the small area $\int_{G}M(x)R_{c}(x)d(x)=0$ is no longer insured when using the \textbf{(pseudo) extended synthetic estimator} (\textit{extsynth} and \textit{extpsynth}) which extends the set of explanatory variables by an indicator variable for the small area (see section \ref{sec:twophase_sae} and \ref{sec:threephase_sae}). In this case, one should additionally calculate the \textbf{(pseudo) small area estimator} (\textit{psmall}) where the zero mean residual property is still insured. 
 
-
-
-
-
-
-
-
+In oder to keep track of such cases, the package \pkg{forestinventory} tells the user to do so by returning a warning message:
 <<echo=FALSE>>=
 extpsynth.clust<- twophase(formula = basal ~ stade + couver + melange, data=zberg,
                      phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
@@ -75,8 +72,6 @@ extpsynth.clust<- twophase(formula = basal ~ stade + couver + melange, data=zber
                       small_area = list(sa.col = "ismallold", areas = c("1"),
                                         unbiased = TRUE))
 @
-
-
 \begin{small}
 \begin{Schunk}
 \begin{Sinput}
@@ -91,12 +86,6 @@ Zero mean residual assumption for small area maybe violated.
 Check mean_Rc_x_hat_G and consider alternative estimator 'psmall'
 \end{Sinput}
 \end{Schunk}
-\end{small}
-
-\begin{small}
-<<>>=
-extpsynth.clust$mean_Rc_x_hat_G
-@
 \end{small}
 
 \begin{small}
@@ -122,11 +111,19 @@ extpsmall.clust$estimation
 @
 \end{small}
 
+Comparing the \textit{extpsynth} and \textit{psmall} estimates, we see that the point estimates are close and more important, the external as well as the design-based variances only differ marginally. This can be taken as a hint that the violation of the zero mean residual property can expected to be negligible in this case. We can also check the calculated mean of the residuals for the small area by
 
+\begin{small}
+<<>>=
+extpsynth.clust$mean_Rc_x_hat_G
+@
+\end{small}
+
+The deviation to zero is in this case rather small, especially compared to the magnitude of the point estimate. Note however that the zero mean residual property is a mathematical property of an estimator and can not be proven by analyzing the empirical model residuals. 
 
 
 % --------------------------------------------------------------------- %
-\subsection{Nesting Violation in Sample Design}
+\subsection{Violation of Nesting in Sample Design}
 
 % explain
 % 
@@ -136,50 +133,136 @@ extpsmall.clust$estimation
 % # 3) --> each s1-point muss have the complete set of s0-auxvars (s0-info) available
 
 
+As explained in section \ref{sec:str_and_mod}, a basis principle and prerequisite of the multi-phase estimation methods and estimators is that the sample phases ($s_0$, $s_1$, $s_2$) are \textit{nested} in each other. The correct nesting thereby concerns the spatial arrangement of the sample phases (figure \ref{fig:concmphase_and_sae_a}) as well as the availability of terrestrial and auxiliary information per phase and sample location. For the latter, the package \pkg{forestinventory} runs validity checks in the background, provides warning and error messages and, if possible, applies first aid adjustments to the inventory data set to prevent the calculations from failing. We will shortly demonstrate possible nesting violations by applying the gobal three-phase estimator to the \code{grisons} and \code{zberg} data set.
+
+\subsubsection*{Violation 1}
+
+Based on the first nesting rule $s_2 \in s_1 \in s_0$, each $s_2$ (i.e. terrestrially surveyed) and $s_1$ sample location \textit{must} have all explanatory variables available that are used in the full (and thus reduced) regression model. If e.g. an $s_2$ and /or $s_1$ point misses a variable which is used in the full \textit{\textbf{and}} reduced model (here: \code{mean}), the function will \textbf{delete} this sample point from the dataset and produce the following messages:  
+
+\begin{small}
+<<eval=FALSE>>=
+## delete "mean" value from an s2-sample point:
+grisons[which(grisons$phase_id_3p==2)[1],"mean"]<- NA
+@
+\end{small}
+
+\begin{small}
+\begin{Schunk}
+\begin{Sinput}
+R> threephase(formula.s0 = tvol ~ mean, 
++             formula.s1 = tvol ~  mean + stddev + max + q75, 
++             data = grisons,
++             phase_id = list(phase.col="phase_id_3p", s1.id = 1, terrgrid.id = 2),
++             boundary_weights = "boundary_weights")
+1 rows deleted due to missingness in the set of auxiliary parameters for the first phase (s0) 
+ (1 terrestrial plots affected by deletion)
+Warning messages:
+1: In threephase(formula.s0 = tvol ~ mean, formula.s1 = tvol ~ mean +  :
+  Sample design not nested: for 1 terrestrial plots at least one auxiliary parameter 
+  of the second phase (s1) is missing
+2: In threephase(formula.s0 = tvol ~ mean, formula.s1 = tvol ~ mean +  :
+  Sample design not nested: for 1 terrestrial plots at least one auxiliary parameter 
+  of the first phase (s0) is missing
+\end{Sinput}
+\end{Schunk}
+\end{small}
+
+\subsubsection*{Violation 2} % 2) and 3)
+
+However, if an $s_2$ and/or $s_1$ point misses a variable which is only used in the full regression model (here \code{q75}), the function will \textbf{recode} the phase indicator of that point to $s_0$, since the point still provides the required information for the reduced model. If this concerns an $s_2$ sample loaction, the associated response variable can no longer be used.
+
+\begin{small}
+<<eval=FALSE>>=
+## delete "q75" value from an s2-sample point:
+grisons[which(grisons$phase_id_3p==2)[1],"q75"]<- NA
+@
+\end{small}
+
+\begin{small}
+\begin{Schunk}
+\begin{Sinput}
+R> threephase(formula.s0 = tvol ~ mean, 
++             formula.s1 = tvol ~  mean + stddev + max + q75, 
++             data = grisons,
++             phase_id = list(phase.col="phase_id_3p", s1.id = 1, terrgrid.id = 2),
++             boundary_weights = "boundary_weights")
+Changed the phase_id for 1 rows to the first phase (s0) due to missingness in the set of 
+  auxiliary parameters for the second phase (s1) (1 terrestrial information no longer usable
+  by this change)
+Warning message:
+In threephase(formula.s0 = tvol ~ mean, formula.s1 = tvol ~ mean +  :
+  Sample design not nested: for 1 terrestrial plots at least one auxiliary parameter 
+  of the second phase (s1) is missing
+\end{Sinput}
+\end{Schunk}
+\end{small}
+
+% # Violation:
+% # each s2-point muss have the complete set of s1-auxvars (s1-info) available
+% 
+% # error message:
+% # missing expl.variable in s1-aux.set at 1 s2-plot.
+% 
+% # error handling:
+% # since there is still the complete set of s0 available, the phase-id has been changed
+% # to s0 (by this, we could keep the plot); but we thereby can no longer use the available
+% # terrestrial info from this plot --> could hamper sae estimation)
+% 
+% # NOTE: This could violate the "randomness" assumption.
+% #       Be sure that we you have a "completely missing at random" case!!!
+
+\subsubsection*{Violation 3}
+
+If an $s_0$ point misses at least one of the explanatory variables used in the reduced model, the sample locations is \textbf{deleted} from the data set.
+
+\begin{small}
+<<eval=FALSE>>=
+## delete "mean" value from an s0-sample point:
+grisons[which(grisons$phase_id_3p==2)[0],"mean"]<- NA
+@
+\end{small}
+
+\begin{small}
+\begin{Schunk}
+\begin{Sinput}
+R> threephase(formula.s0 = tvol ~ mean, 
++             formula.s1 = tvol ~  mean + stddev + max + q75, 
++             data = grisons,
++             phase_id = list(phase.col="phase_id_3p", s1.id = 1, terrgrid.id = 2),
++             boundary_weights = "boundary_weights")
+1 rows deleted due to missingness in the set of auxiliary parameters for the first phase (s0) 
+ (0 terrestrial plots affected by deletion)
+\end{Sinput}
+\end{Schunk}
+\end{small}
+
+Note that that all the automatic data adjustments (deletion, recoding) have to be accepted with caution. Recapitulating, the unbiasedness of estimators in the design-based framework is based on the randomization of the sample locations. This means that every possible location within the forest area $F$ has a inclusion probability greater zero. Whereas this is already violated in practice by the use of regular grids, one can still expect that these grids do not exclude specific forest structures. If any information should be missing at the sample locations, one should clearify the reason for this and make sure that the information is \textit{completely missing at random}.
 
 
+\subsubsection*{Violation 4}
 
+If a categorical variable is used in the regression model(s) and the terrestrial sample $s_2$ is considerably small compared to the $s_1$ phase, it might occur that a category is only present in the $s_1 \not\in s_2$ sample, and thus missing in the $s_2$ sample. Conclusively, an internal regression model can not be calculated and the function \textbf{stops} with the following error message:
 
+\begin{small}
+<<eval=FALSE>>=
+## delete s2-points with "stade"-level '300'
+zberg<- zberg[-which(zberg.n$phase_id_2p == 2 & zberg.n$stade=="300"), ]
+@
+\end{small}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+\begin{small}
+\begin{Schunk}
+\begin{Sinput}
+R> twophase(formula = basal ~ stade + couver + melange,
++           data = zberg,
++           phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
++           cluster = "cluster")
+Error in check.mandatoryInputs(formula, data, phase_id) : 
+ Level '300' of factor variable 'stade' existing in s1(s0)- but not in s2 sample. 
+ Calculation of coefficient not feasible.
+\end{Sinput}
+\end{Schunk}
+\end{small}
 
 
 

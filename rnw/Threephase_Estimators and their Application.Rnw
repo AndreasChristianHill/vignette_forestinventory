@@ -179,7 +179,7 @@ Comparing the $R^2$s of the three and two-phase result, it becomes obvious that 
 
 % ---------------------------------------------------------------------------- %
 \subsection{Small Area Estimators}
-
+\label{sec:threephase_sae}
 
 % ------------------------------------- %
 \subsubsection{Mathematical Background}

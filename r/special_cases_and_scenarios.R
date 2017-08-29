@@ -183,7 +183,7 @@ tp<- threephase(formula.s0 = tvol ~ mean,
                 boundary_weights = "boundary_weights")
 
 # Violation:
-# s2 point misses expl.variable used in s1 and s0
+# s2 point misses expl.variable used in s0
 
 # warning message:
 # s2 point misses expl.variable used in s1
@@ -192,6 +192,32 @@ tp<- threephase(formula.s0 = tvol ~ mean,
 # error handling:
 # plot deleted
 
+
+# 1) & 2) ---------------------------------
+
+## save grisons as new dataset:
+grisons.n<- grisons
+
+
+## delete "mean" value from an s2-sample point:
+grisons.n[which(grisons.n$phase_id_3p==0)[1],"mean"]<- NA
+
+
+tp<- threephase(formula.s0 = tvol ~ mean, 
+                formula.s1 = tvol ~  mean + stddev + max + q75, 
+                data = grisons.n,
+                phase_id = list(phase.col="phase_id_3p", s1.id = 1, terrgrid.id = 2),
+                boundary_weights = "boundary_weights")
+
+# Violation:
+# s2 point misses expl.variable used in s0
+
+# warning message:
+# s2 point misses expl.variable used in s1
+# since s1 nested in s0, this expl.variables is also missing in s0
+
+# error handling:
+# plot deleted
 
 
 # 1) & 2) ---------------------------------
@@ -282,6 +308,7 @@ tp<- threephase(formula.s0 = tvol ~ mean,
 #------------------------------------------------------------------------------#
 
 # Missing factor level in s2-sample:
+zberg.n<- zberg
 
 levels(zberg.n$stade)
 
