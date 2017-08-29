@@ -5,14 +5,67 @@
 
 % include:
 % - categorical variables (zberg) and interaction terms (not so clear to everyone)
+% - [mention that especially in the case of postratification, the g-weight variance is the preferred type because ...]
 % - !!! cluster sampling and differences between (p)small and extended (p)small if cluster is not completely inside small area
 % - !!! violation of nested sample design + error handling / data adjustments / printed warnings
 % - !!! missing factor levels in s2-sample that occur in s1 / s0 sample + error warning
-% - [mention that especially in the case of postratification, the g-weight variance is the preferred type because ...]
+%
+
+% --------------------------------------------------------- %
+\subsection{Poststratification}
+
+A special case of multi-phase regression estimators is \textit{poststratification}, which can further be divided into the case of \textit{multi-phase sampling for stratification} and \textit{multi-phase sampling for regression within strata}. Both imply the use of one or more categorical variables in the regression model(s), leading to classical ANOVA and ANCOVA models.
+
+To demonstrate \textit{poststratification}, we first create an artificial categorical variable \textit{developement stage} (\code{stage}) by clustering the mean canopy heights of the \code{grisons} dataset into 3 classes:
+
+\begin{small}
+<<>>=
+grisons$stage<- as.factor(kmeans(grisons$mean, centers = 3)$cluster)
+@
+\end{small}
+
+\textit{Two-phase sampling for stratification} is now applied if we only use categorical variables in the model, in this case the factor variable \code{stage} (i.e. we have an ANOVA model). It basically means that the model predictions are the means of terrestrial response values within each development stage (within-strata means).
+
+\begin{small}
+<<eval=FALSE>>=
+# two-phase sampling for stratification
+twophase(formula=tvol ~ stage,
+         data=grisons,
+         phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 2),
+         boundary_weights = "boundary_weights")
+@
+\end{small}
+
+\textit{Two-phase sampling for regression within strata} implies the combination of continuous and categorical variables within the model (i.e. we have an ANCOVA model). If an interaction term is not present between categorical and continuous variables, the regression lines within the strata will have the same slope but different intercepts. If an interaction term is present, both the intercept and the slope are allowed to vary within the strata. Note that one can actually use the entire range of ols regression techniques in the multi-phase estimators.
+
+\begin{small}
+<<eval=FALSE>>=
+# two-phase sampling for regression within strata:
+twophase(formula=tvol ~ mean + stddev + max + q75 + stage,
+         data=grisons,
+         phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 2),
+         boundary_weights = "boundary_weights")
+@
+\end{small}
+
+The overall variance of estimators under poststratification will mainly depend on the between and within-strata variation of the model residuals and can therefore be reduced by minimizing the within strata residual square sum. In case of poststratification, the g-weight variance estimator has the advantage that the strata weights are estimated from the large sample, whereas the external variance calculates them solely based on the terrestrial sample $s_2$.
+
+
+% --------------------------------------------------------- %
+\subsection{Small Area Estimation under Cluster Sampling}
+
+% NOTE:
+% 
+%
 %
 
 
-\subsection{Small Area Estimation under Cluster Sampling}
+
+
+
+
+
+
 
 
 <<echo=FALSE>>=
@@ -68,6 +121,8 @@ extpsynth.clust$estimation
 extpsmall.clust$estimation
 @
 \end{small}
+
+
 
 
 % --------------------------------------------------------------------- %

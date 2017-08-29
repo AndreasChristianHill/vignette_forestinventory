@@ -1,9 +1,88 @@
+#---------------------------------------------------------------------------------- #
+#  Journal of Statistical Software                                                  #
+#  Design-Based Global and Small Area Estimations for Multiphase Forest Inventories #
+#  Andreas Hill & Alexander Massey                                                  #
+#                                                                                   #
+#  Code for running all examples given in                                           #
+#  Section 6  "Special Cases and Scenarios"                                         #
+#                                                                                   #
+#---------------------------------------------------------------------------------- #
 
-## Demonstrate error handling in package (examples)
+library(forestinventory)
+
+#####################################################
+#          Poststratification                       #
+#####################################################
+
+## save grisons as new dataset:
+grisons.n<- grisons
+
+## create artificial development stages as categorical (factor) variables
+#  used for poststratification:
+grisons.n$stage<- as.factor(kmeans(grisons.n$mean, centers = 3)$cluster)
+
+## plot:
+ggplot(data=grisons.n, aes(x = mean, y = tvol)) +
+  geom_point(aes(colour = factor(stage)))
+
+
+## apply double sampling for (post)stratification:
+twophase(formula=tvol ~ stage,
+         data=grisons.n,
+         phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 2),
+         boundary_weights = "boundary_weights")
+
+
+## apply double sampling for regression within (post)strata:
+twophase(formula=tvol ~ mean + stddev + max + q75 + stage,
+         data=grisons.n,
+         phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 2),
+         boundary_weights = "boundary_weights")
+
+
+
+#####################################################
+#  SMALL AREA ESTIMATION UNDER CLUSTER SAMPLING     #
+#####################################################
+
+
+## apply extended pseudo synthetic estimator under cluster sampling:
+extpsynth.clust<- twophase(formula = basal ~ stade + couver + melange, data=zberg,
+                           phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
+                           cluster = "cluster",
+                           small_area = list(sa.col = "ismallold", areas = c("1"),
+                                             unbiased = TRUE))
+
+# --> creates warning message: At least one cluster not entirely included within small area
+
+## check mean of residuals in small area:
+extpsynth.clust$mean_Rc_x_hat_G
+
+
+## alternatively apply pseudo small area estimator:
+extpsmall.clust<- twophase(formula = basal ~ stade + couver + melange, data=zberg,
+                           phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
+                           cluster = "cluster",
+                           small_area = list(sa.col = "ismallold", areas = c("1"),
+                                             unbiased = TRUE),
+                           psmall = TRUE)
+
+
+## compare estimation results:
+extpsynth.clust$estimation
+extpsmall.clust$estimation
+
+# --> very similar, only minor differences in the variances
+
+
+
+#####################################################
+# Demonstrate error handling in package (examples)  #
+#####################################################
 
 
 # --------------------------------------------------------------------------- #
-# TWO-PHASE
+# TWO-PHASE 
 # --------------------------------------------------------------------------- #
 
 ## save grisons as new dataset:
@@ -232,6 +311,6 @@ tpc<- twophase(formula = basal ~ stade + couver + melange,
 # Execution stopped
 
 
-
+#########
 ## End ##
-
+#########

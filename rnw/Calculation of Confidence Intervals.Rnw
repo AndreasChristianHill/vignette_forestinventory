@@ -5,14 +5,14 @@
 
 % NOTE:
 % - Provide all confidence equations for the estimators: onephase, twophase, threephase
-% - Give recommendations for n-threshold of unbiased estimators based on confid.level (dfs)
-% - ... and asymptotic of estimators
+% - !!! Give recommendations for n-threshold of unbiased estimators based on confid.level (dfs)
+% - ... and asymptotics of estimators
 % - Interpretation of Confidence Intervals
 %
 
-Whereas the estimated variance of a point estimate provides a measure of estimation uncertainty, its interpretation is rather diffult to use by practitioners. Converting the estimated variance into a 95\% \textit{confidence interval} allows for a much more intuitive and practice-oriented interpretation of the uncertainties associated to a point estimate. The correct interpretation of a confidence interval is not that there is a 95\% probability that it contains the true value.  In the design-based context, the true value of the population parameter we are trying to estimate, albeit unknown, is fixed and the sample is randomly generated under the sampling design. Theoretically, if we were to repreatedly conduct the inventory using the same estimation method, estimator and auxiliary information under newly drawn random samples, and then calculate 95\% confidence intervals from each sample, then 95\% of them are expected to contain the true population parameter. The confidence level $1-\alpha$ (e.g. 95\%) is thus the frequency or proportion of possible confidence intervals that contain the unknown  population parameter and is therefore often also referred to as \textit{coverage rate}.
+Converting the estimated variance into a 95\% \textit{confidence interval} (CI) allows for an intuitive and practice-oriented interpretation of the uncertainties associated to a point estimate. The correct interpretation of a CI is not that there is a 95\% probability that it contains the true value.  In the design-based context, the true value of the population parameter we are trying to estimate, albeit unknown, is fixed and the sample is randomly generated under the sampling design. Theoretically, if we were to repreatedly conduct the inventory using the same estimation method, estimator and auxiliary information under newly drawn random samples, and then calculate 95\%  CIs from each sample, then 95\% of them are expected to contain the true population parameter. The confidence level $1-\alpha$ (e.g. 95\%) is thus the frequency or proportion of possible confidence intervals that contain the unknown population parameter and is therefore often also referred to as \textit{coverage rate}. For a user, the CI is a measure of precision that can also be used for hypothesis testing, i.e. providing evidence that an estimate is statistically different from a given value if that value lies outside the CI boundaries.
 
-Based on the central limit theorem, it can be assumed that under hypothetical repeated sampling, the point estimates will asymptotically follow a normal distribution. \citet{mandallaz2013a} recommended to better base the confidence intervals on the Student's \textit{t} distribution. The confidence intervals for one-phase as well as two-phase and three-phase global and small area point estimates are thus defined as \\
+Based on the central limit theorem, it can be assumed that under hypothetical repeated sampling, the point estimates will asymptotically follow a normal distribution. \citet{mandallaz2013a} recommends to better base the confidence intervals on the Student's \textit{t} distribution. The confidence intervals for one-phase as well as two-phase and three-phase global and small area point estimates are thus defined as 
 
 \textit{One-Phase Estimation}
 
@@ -38,26 +38,13 @@ CI_{1-\alpha}(\hat{Y})=\bigg{\lbrack}\hat{Y}-t_{n_{2,G}-1, 1-\frac{\alpha}{2}}\s
                               \hat{Y}+t_{n_{2,G}-1, 1-\frac{\alpha}{2}}\sqrt{\var(\hat{Y})}\bigg{\rbrack}
 \end{equation}
 
-where $\hat{Y}$ is the point estimate, $\var(\hat{Y})$ is the estimated variance, and $1-\alpha$ is the confidence level. Note that for three-phase sampling, $p$ constitutes the number of parameters used in the \textit{full} regression model. In case of cluster-sampling, $n_{2,G}$ is the number of terrestrial clusters (a cluster constitutes the sample unit and comprises multiple sample plots).
-
-In the package, the confidence intervals for all estimation methods and estimators can be computed by the S3 generic function \code{confint()}, which requires an estimation object created by the \code{onephase()}, \code{twophase()} or \code{threephase()} function. The 95\% confidence intervall of the small area estimates by the \textit{extpsynth} estimator (section \ref{sec:twophase_sae}) can for example be applied by:
+where $\hat{Y}$ is the point estimate, $\var(\hat{Y})$ is the estimated variance, and $1-\alpha$ is the confidence level. Note that for three-phase sampling, $p$ constitutes the number of parameters used in the \textit{full} regression model. In case of cluster-sampling, $n_{2,G}$ is the number of terrestrial clusters (a cluster constitutes the sample unit and comprises multiple sample plots). In the package, the confidence intervals for all estimation methods and estimators can be computed by the S3 generic function \code{confint()}, which requires an estimation object created by the \code{onephase()}, \code{twophase()} or \code{threephase()} function. The 95\% confidence intervals for the small area estimates by the \textit{extpsynth} estimator (section \ref{sec:twophase_sae}) for example can  be applied by:
 
 \begin{small}
 <<>>=
 confint(extpsynth_2p)
 @
 \end{small}
-
-%  NOTE:
-% - note that the CIs can be used for hypothesis testing, i.e. it can give us an idea wether
-%   an estimate is statistically different from a given value
-% - 
-%
-%
-
-
-
-
 
 
 % Frequentisitsche Interpretation streng genommen die einzig richtige: unter rein hypothetischer Wiederholung der Inventur (Gleicher Schaetzer, gleicher Wald, gleiche Hilfvariablen / Aux.info) werden 95\% der berechneten Intervalle den wahren Wert enthalten. Man weiss nun aber - selbst wenn man das machen wuerde (was praktisch ja nie der Fall sein wird) - nie, auf welche der berechneten Intervalle das zutreffen wird. Die klassische statistische Interpration ist hier also nicht zulaessig (ungleich: der wahre wert befindet sich mit 95\% Sicherheit in meinem berechneten Intervall).

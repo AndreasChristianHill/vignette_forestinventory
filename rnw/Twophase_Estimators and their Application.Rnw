@@ -92,7 +92,7 @@ where the uncertainty caused by the estimation of $\bar{\pmb{Z}}$ by $\hat{\bar{
 (\pmb{Z}(x)-\hat{\bar{\pmb{Z}}}_{1})(\pmb{Z}(x)-\hat{\bar{\pmb{Z}}}_{1})^t
 \end{equation}
 
-The package \pkg{forestinventory} additionally provides the \textbf{external variance} (equation \ref{eq:varexternal_2p_reg_ex} and \ref{eq:varexternal_2p_reg_nex}). Note that the external variance neglects the uncertainty in the regression coefficients and is thus usually slightly lower than the design-based variance, where this uncertainty is considered by the variance-covariance matrix of the regression coefficients.
+The package \pkg{forestinventory} additionally provides the \textbf{external variance} (equation \ref{eq:varexternal_2p_reg_ex} and \ref{eq:varexternal_2p_reg_nex}). Note that the external variance neglects the uncertainty in the regression coefficients and is thus usually slightly smaller than the design-based variance, where this uncertainty is considered by the variance-covariance matrix of the regression coefficients.
 
 \begin{subequations}\label{eq:varexternal_2p_reg}
 \begin{align}
