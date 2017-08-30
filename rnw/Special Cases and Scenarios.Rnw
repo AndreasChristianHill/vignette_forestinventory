@@ -62,7 +62,7 @@ The overall variance of estimators under poststratification will mainly depend o
 
 As mentioned in section \ref{sec:packstruc}, \textit{cluster sampling} is a special case of sample designs where the sample location, i.e. sample unit, does no longer consist of one, but multiple spatially agglomerated sample points. Whereas the maximal possible number of sample points per cluster $M$ is defined by the user, the actual number of points $M(x)$ falling into the forest area $F$ at sample location $x$ is random. Without going into too much mathematical detail, the estimators under simple sampling are extended in a way that all parameters (local density, mean vector of explanatory variables, mean model residuals) have to be calculated as the weighted cluster means with $M(x)$ being the cluster weights (for more detail see Appendix). The package functions allow to consider cluster-structures by storing aspecifying the argument \code{cluster}
 
-For small area applications, the scenario might occur where the points of a cluster at sample locations $x$ spread over more than one small area, i.e. only a subset $M_{G}(x) < M(x)$ in included in the small area of interest. In this case, the zero mean residual property within the small area $\int_{G}M(x)R_{c}(x)d(x)=0$ is no longer insured when using the \textbf{(pseudo) extended synthetic estimator} (\textit{extsynth} and \textit{extpsynth}) which extends the set of explanatory variables by an indicator variable for the small area (see section \ref{sec:twophase_sae} and \ref{sec:threephase_sae}). In this case, one should additionally calculate the \textbf{(pseudo) small area estimator} (\textit{psmall}) where the zero mean residual property is still insured. 
+For small area applications, the scenario might occur where the points of a cluster at sample locations $x$ spread over more than one small area, i.e. only a subset $M_{G}(x) < M(x)$ is included in the small area of interest. In this case, the zero mean residual property within the small area $\int_{G}M(x)R_{c}(x)d(x)=0$ is no longer insured when using the \textbf{(pseudo) extended synthetic estimator} (\textit{extsynth} and \textit{extpsynth}) which extends the set of explanatory variables by an indicator variable for the small area (see section \ref{sec:twophase_sae} and \ref{sec:threephase_sae}). In this case, one should additionally calculate the \textbf{(pseudo) small area estimator} (\textit{psmall}) where the zero mean residual property is still insured. 
 
 In oder to keep track of such cases, the package \pkg{forestinventory} tells the user to do so by returning a warning message:
 <<echo=FALSE>>=
@@ -137,7 +137,7 @@ As explained in section \ref{sec:str_and_mod}, a basis principle and prerequisit
 
 \subsubsection*{Violation 1}
 
-Based on the first nesting rule $s_2 \in s_1 \in s_0$, each $s_2$ (i.e. terrestrially surveyed) and $s_1$ sample location \textit{must} have all explanatory variables available that are used in the full (and thus reduced) regression model. If e.g. an $s_2$ and /or $s_1$ point misses a variable which is used in the full \textit{\textbf{and}} reduced model (here: \code{mean}), the function will \textbf{delete} this sample point from the dataset and produce the following messages:  
+Based on the nesting rule $s_2 \in s_1 \in s_0$, each $s_2$ (i.e. terrestrially surveyed) and $s_1$ sample location \textit{must} have all explanatory variables available that are used in the full (and thus reduced) regression model. If e.g. an $s_2$ and /or $s_1$ point misses a variable which is used in the full \textit{\textbf{and}} reduced model (here: \code{mean}), the function will \textbf{delete} this sample point from the dataset and produce the following messages:  
 
 \begin{small}
 <<eval=FALSE>>=
@@ -236,7 +236,7 @@ R> threephase(formula.s0 = tvol ~ mean,
 \end{Schunk}
 \end{small}
 
-Note that that all the automatic data adjustments (deletion, recoding) have to be accepted with caution. Recapitulating, the unbiasedness of estimators in the design-based framework is based on the randomization of the sample locations. This means that every possible location within the forest area $F$ has a inclusion probability greater zero. Whereas this is already violated in practice by the use of regular grids, one can still expect that these grids do not exclude specific forest structures. If any information should be missing at the sample locations, one should clearify the reason for this and make sure that the information is \textit{completely missing at random}.
+Note that that all the automatic data adjustments (deletion, recoding) have to be accepted with caution. Recapitulating, the unbiasedness of estimators in the design-based framework is based on the randomization of the sample locations. This means that every possible location within the forest area $F$ has an inclusion probability greater zero. Whereas this is already violated in practice by the use of regular grids, one can still expect that these grids do not exclude specific forest structures. If any information should be missing at the sample locations, one should clearify the reason for this and make sure that the information is \textit{completely missing at random}.
 
 
 \subsubsection*{Violation 4}
