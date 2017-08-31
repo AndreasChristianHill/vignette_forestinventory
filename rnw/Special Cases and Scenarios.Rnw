@@ -16,7 +16,7 @@
 
 A special case of multi-phase regression estimators is \textit{poststratification}, which can further be divided into the case of \textit{multi-phase sampling for stratification} and \textit{multi-phase sampling for regression within strata}. Both imply the use of one or more categorical variables in the regression model(s), leading to classical ANOVA and ANCOVA models.
 
-To demonstrate \textit{poststratification}, we first create an artificial categorical variable \textit{developement stage} (\code{stage}) by clustering the mean canopy heights of the \code{grisons} dataset into 3 classes:
+To demonstrate \textit{poststratification}, we first create an artificial categorical variable \textit{developement stage} (\code{stage}) by clustering the mean canopy heights of the \code{grisons} data set into 3 classes:
 
 \begin{small}
 <<>>=
@@ -60,9 +60,9 @@ The overall variance of estimators under poststratification will mainly depend o
 %   to understand the problem
 %
 
-As mentioned in section \ref{sec:packstruc}, \textit{cluster sampling} is a special case of sample designs where the sample location, i.e. sample unit, does no longer consist of one, but multiple spatially agglomerated sample points. Whereas the maximal possible number of sample points per cluster $M$ is defined by the user, the actual number of points $M(x)$ falling into the forest area $F$ at sample location $x$ is random. Without going into too much mathematical detail, the estimators under simple sampling are extended in a way that all parameters (local density, mean vector of explanatory variables, mean model residuals) have to be calculated as the weighted cluster means with $M(x)$ being the cluster weights (for more detail see Appendix). The package functions allow to consider cluster-structures by storing aspecifying the argument \code{cluster}
+As mentioned in section \ref{sec:packstruc}, \textit{cluster sampling} is a special case of sample designs where the sample location, i.e. sample unit, does no longer consist of one, but multiple spatially agglomerated sample points. Whereas the maximal possible number of sample points per cluster $M$ is defined by the user, the actual number of points $M(x)$ falling into the forest area $F$ at sample location $x$ is random. Without going into too much mathematical detail, the estimators under simple sampling are extended in a way that all parameters (local density, mean vector of explanatory variables, mean model residuals) have to be calculated as the weighted cluster means with $M(x)$ being the cluster weights (for more detail see Appendix). The package functions allow to define cluster-structures by specifying the argument \code{cluster}.
 
-For small area applications, the scenario might occur where the points of a cluster at sample locations $x$ spread over more than one small area, i.e. only a subset $M_{G}(x) < M(x)$ is included in the small area of interest. In this case, the zero mean residual property within the small area $\int_{G}M(x)R_{c}(x)d(x)=0$ is no longer insured when using the \textbf{(pseudo) extended synthetic estimator} (\textit{extsynth} and \textit{extpsynth}) which extends the set of explanatory variables by an indicator variable for the small area (see section \ref{sec:twophase_sae} and \ref{sec:threephase_sae}). In this case, one should additionally calculate the \textbf{(pseudo) small area estimator} (\textit{psmall}) where the zero mean residual property is still insured. 
+For small area applications, the scenario might occur where the points of a cluster at sample locations $x$ spread over more than one small area, i.e. only a subset $M_{G}(x) < M(x)$ is included in the small area of interest. In this case, the zero mean residual property within the small area $\int_{G}M(x)R_{c}(x)d(x)=0$ is no longer insured when using the \textbf{extended} and \textbf{pseudo extended synthetic estimator} (\textit{extsynth} and \textit{extpsynth}) which extends the set of explanatory variables by an indicator variable for the small area (see section \ref{sec:twophase_sae} and \ref{sec:threephase_sae}). In this case, one should additionally calculate the \textbf{(pseudo) small area estimator} (\textit{psmall}) where the zero mean residual property is still insured under this scenario.
 
 In oder to keep track of such cases, the package \pkg{forestinventory} tells the user to do so by returning a warning message:
 <<echo=FALSE>>=
@@ -111,7 +111,7 @@ extpsmall.clust$estimation
 @
 \end{small}
 
-Comparing the \textit{extpsynth} and \textit{psmall} estimates, we see that the point estimates are close and more important, the external as well as the design-based variances only differ marginally. This can be taken as a hint that the violation of the zero mean residual property can expected to be negligible in this case. We can also check the calculated mean of the residuals for the small area by
+Comparing the \textit{extpsynth} and \textit{psmall} estimates, we see that in this particular case the point estimates are close and more important, the external as well as the design-based variances only differ marginally. This can be taken as evidence that the violation of the zero mean residual property can here expected to be negligible. We can also check the calculated mean of the residuals for the small area by
 
 \begin{small}
 <<>>=
@@ -133,7 +133,7 @@ The deviation to zero is in this case rather small, especially compared to the m
 % # 3) --> each s1-point muss have the complete set of s0-auxvars (s0-info) available
 
 
-As explained in section \ref{sec:str_and_mod}, a basis principle and prerequisite of the multi-phase estimation methods and estimators is that the sample phases ($s_0$, $s_1$, $s_2$) are \textit{nested} in each other. The correct nesting thereby concerns the spatial arrangement of the sample phases (figure \ref{fig:concmphase_and_sae_a}) as well as the availability of terrestrial and auxiliary information per phase and sample location. For the latter, the package \pkg{forestinventory} runs validity checks in the background, provides warning and error messages and, if possible, applies first aid adjustments to the inventory data set to prevent the calculations from failing. We will shortly demonstrate possible nesting violations by applying the gobal three-phase estimator to the \code{grisons} and \code{zberg} data set.
+As explained in section \ref{sec:str_and_mod}, a basis principle and prerequisite of the multi-phase estimation methods and estimators is that the sample phases ($s_0$, $s_1$, $s_2$) are \textit{nested} in each other. The correct nesting thereby concerns the spatial arrangement of the sample phases (figure \ref{fig:concmphase_and_sae_a}) as well as the availability of terrestrial and auxiliary information per phase and sample location. For the latter, the package \pkg{forestinventory} runs validity checks in the background, provides warning and error messages and, if possible, applies first aid adjustments to the inventory data set to prevent the calculations from failing. We will shortly demonstrate possible nesting violations by applying the gobal three-phase estimator to the \code{grisons} and \code{zberg} data sets.
 
 \subsubsection*{Violation 1}
 
@@ -169,7 +169,7 @@ Warning messages:
 
 \subsubsection*{Violation 2} % 2) and 3)
 
-However, if an $s_2$ and/or $s_1$ point misses a variable which is only used in the full regression model (here \code{q75}), the function will \textbf{recode} the phase indicator of that point to $s_0$, since the point still provides the required information for the reduced model. If this concerns an $s_2$ sample loaction, the associated response variable can no longer be used.
+However, if an $s_2$ and/or $s_1$ point misses a variable which is only used in the full regression model (here \code{q75}), the function will \textbf{recode} the phase indicator of that point to $s_0$, since the point still provides the required information for the reduced model. If this concerns an $s_2$ sample location, the associated response variable can no longer be used.
 
 \begin{small}
 <<eval=FALSE>>=

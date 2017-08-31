@@ -41,7 +41,6 @@ Forest inventories provide reliable and evidence-based information to assess the
   8092 Z\"urich, Switzerland\\
   E-mail: \email{andreas.hill@usys.ethz.ch}\\
   Telephone: +41/44/632 32 36\\
-  URL: \url{http://www.lue.ethz.ch/people/hilla}
   
   Alexander Massey\\
   Department of Environmental Systems Science\\
@@ -54,7 +53,6 @@ Forest inventories provide reliable and evidence-based information to assess the
 
 
 %% for those who use Sweave please include the following line (with % symbols):
-
 \usepackage{Sweave}
 
 %% end of declarations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -90,24 +88,7 @@ Forest inventories provide reliable and evidence-based information to assess the
 
 % new commands
 \newcommand{\bwi}{BWI3}
-\newcommand{\LF}{\ensuremath{\lambda(F)}}
-\newcommand{\LFC}{\ensuremath{\lambda^2(F)}}
-\newcommand{\EX}{\mathbb{E}}
-\newcommand{\PR}{\mathbb{P}}
 \newcommand{\var}{\mathbb{V}}
-% \newcommand{\COV}{\mathbb{COV}}
-\newcommand{\MAV}{\mathbb{MAV}}
-\newcommand{\MRAV}{\mathbb{MRAV}}
-\newcommand{\POP}{\mathcal{P}}
-\newcommand{\SAMP}{\mathcal{S}}
-\newcommand{\RE}{\mathbb{RE}}
-\newcommand{\PLAN}{\Re^2}
-\newcommand{\SUR}{\mathbb{S}}
-\newcommand{\ING}{\mathbb{I}}
-\newcommand{\DEP}{\mathbb{D}}
-
-%\setlength{\parindent}{1em}
-%\setlength{\mathindent}{0pt}
 
 
 %------------------------------------------------------------------------------------------------%
@@ -137,51 +118,22 @@ library(forestinventory)
 
 \SweaveInput{rnw/Introduction.Rnw}
 
-
 % NOTES:
-% --> take parts of the old introduction version of the diploma-thesis!
-
-% NOTES:
-% 1st section: - general introduction to forest inventories --> model-'supported' inventories --> 
-%                model-dependent vs. design-based
-% 2nd section: + (more R-specific): what's already there? --> mention sampling / inventory packages
-%                 and seperate them from our package (focus, applied areas, approach)
-%              + important reasoning for our package: we are the first that implemented and provide 
-%                a large range of design-based estimators
-% 3rd section: what is the motivation of the package: - to make the broad range of Mandallaz-estimators
-%              available to a large user community, to facilitate their application in science as well as 
-%              operational forest management (why is this important? --> because the methods have demonstrate
-%              the potential of considerably increasing the estimation precision)
-% 4th section: whats the purpose of the paper? --> the objective of the paper is to 
-%             a) establish the link between the mathematical description of the estimators (given in Mandallaz ...) 
-%                and their implementation in our package
-%             b) illustrate the application of the various estimators by the respsective functions in our package 
-%                to real-world inventory scenarios
-%             c) highlight 'special cases' , i.e. rare inventory scenarios, and demonstrate how the package-functions
-%                deal with such situations (error-checking functions and data-adjustments)
-
-% Idee: Reine Theory und Applikation NICHT stark trennen --> Jeweils für jeden Schätzer die nötigsten Formeln geben 
-%       (Punktschätzung und g-weight und external variance, wenn nötig noch zusätzliche Infos wie Dummy Variable)
-%      WICHITG: Davor muss das generelle Konzept kommen (Entscheidungsbaum und konzeptionelle Erklärung (z.B.: was heisst
-%               "exhaustive" usw.) --> auf der Graphik dann ansetzen
 %
-% evtl auch noch die Art von Graphik für den Aufbau einer 2- und 3-phaisgen Inventurs (wie in den Präsentationen)
-
+%
+%
+%
 
 %------------------------------------------------------------------------------------------------%
-% --------------------------- Structure of the Package ----------------------------------------- %
+% --------------------------- Methods and structure of the Package ----------------------------- %
 
 \SweaveInput{rnw/Main structure and modules of the Package.Rnw}
 
-
 % NOTES:
-% - Pyramide / decision tree Graphik
-% - Confidence Interval calculation
-% - Analysis of estimations results. a) Visualization functions; b) Gain-analysis
+% - mention difference between finite and infinite population apporach ?
 %
-% --> explain each point briefly without to much (mathematical) detail
-
-
+%
+%
 
 %------------------------------------------------------------------------------------------------%
 % ---------------------------------- Estimators and their Application -------------------------- %
@@ -193,8 +145,9 @@ library(forestinventory)
 \SweaveInput{rnw/Threephase_Estimators and their Application.Rnw}
 
 % NOTES:
-% 1st subsection: Global 2 and 3-phase estimators for simple and cluster sampling
-% 2nd subsection: 2- and 3-phase Small Area estiamtors for simple and cluster sampling
+%
+%
+%
 %
 
 
@@ -205,7 +158,8 @@ library(forestinventory)
 \SweaveInput{rnw/Calculation of Confidence Intervals.Rnw}
 
 % NOTES:
-% - demonstrate calculation of confidence intervals (give the formulas)
+%
+%
 
 
 
@@ -215,15 +169,9 @@ library(forestinventory)
 \SweaveInput{rnw/Special Cases and Scenarios.Rnw}
 
 % NOTES:
-% - Error handling and adjustments: Sampling designs not nested (always give background and then illustrate handling in package)
-% - Error warning: unbalanced designs and singularities due to missing factor levels in s2-sample (2-phase)
-%                   or s2 or/and s1 sample in 3-phase case
-% - Error warning: cluster not completely within one small area (--> g-weight variance estimator) +  recommendation
-
-%------------------------------------------------------------------------------------------------%
-% ---------------------------------- Special Cases and Scenarios ------------------------------- %
-
-% \SweaveInput{rnw/.Rnw}
+%
+%
+%
 
 
 %------------------------------------------------------------------------------------------------%
@@ -231,8 +179,13 @@ library(forestinventory)
 
 \SweaveInput{rnw/Analysis and Visualization.Rnw}
 
+% NOTES:
+% 
+%
+%
 
 %------------------------------------------------------------------------------------------------%
+% ---------------------------------------- Acknowledgements ------------------------------------ %
 
 \SweaveInput{rnw/Acknowledgements.Rnw}
 
