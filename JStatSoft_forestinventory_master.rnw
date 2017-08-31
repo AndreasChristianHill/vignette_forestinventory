@@ -7,7 +7,7 @@
 
 %% almost as usual
 \author{Andreas Hill \And Alexander Massey}
-\title{The \proglang{R} Package \pkg{forestinventory}: Design-Based Global and Small Area Estimations for Multiphase Forest Inventories}
+\title{The \proglang{R} Package \pkg{forestinventory}: Design-Based Global and Small Area Estimations for Multi-Phase Forest Inventories}
 
 %% for pretty printing and a nice hypersummary also set:
 \Plainauthor{Andreas Hill, Alexander Massey} %% comma-separated
@@ -130,7 +130,7 @@ library(forestinventory)
 \SweaveInput{rnw/Main structure and modules of the Package.Rnw}
 
 % NOTES:
-% - mention difference between finite and infinite population apporach ?
+% - mention difference between finite and infinite population approach ?
 %
 %
 %

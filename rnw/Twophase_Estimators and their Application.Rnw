@@ -357,7 +357,7 @@ psmall_2p$samplesizes
 @
 \end{small}
 
-The \textbf{extended pseudo small area estimator} (\textit{extpsynth}) can be applied by setting \code{unbiased=TRUE} and leaving the optional argument \code{psmall} to its default value of \code{FALSE}:
+The \textbf{extended pseudo synthetic estimator} (\textit{extpsynth}) can be applied by setting \code{unbiased=TRUE} and leaving the optional argument \code{psmall} to its default value of \code{FALSE}:
 \begin{small}
 <<>>=
 extpsynth_2p <- twophase(formula = tvol ~ mean + stddev + max + q75, data = grisons,

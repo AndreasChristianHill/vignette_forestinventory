@@ -26,14 +26,21 @@ ggplot(data=grisons.n, aes(x = mean, y = tvol)) +
   geom_point(aes(colour = factor(stage)))
 
 
-## apply double sampling for (post)stratification:
+## apply 'double sampling for (post)stratification':
 twophase(formula=tvol ~ stage,
          data=grisons.n,
          phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 2),
          boundary_weights = "boundary_weights")
 
 
-## apply double sampling for regression within (post)strata:
+## apply 'double sampling for regression':
+twophase(formula=tvol ~ mean + stddev + max + q75 + stage,
+         data=grisons.n,
+         phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 2),
+         boundary_weights = "boundary_weights")
+
+
+## apply 'double sampling for regression within (post)strata'":
 twophase(formula=tvol ~ mean + stddev + max + q75 + stage,
          data=grisons.n,
          phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 2),
@@ -88,8 +95,7 @@ extpsmall.clust$estimation
 ## save grisons as new dataset:
 grisons.n<- grisons
 
-
-## delete explanatory variables from an s2-sample point:
+## delete explanatory variables from an s2-(i.e. s1-) sample point:
 grisons.n[which(grisons.n$phase_id_2p==2)[1],c(4,5,6,7)]<- NA
 
 tp<- twophase(formula=tvol ~ mean + stddev + max + q75,
@@ -100,7 +106,7 @@ tp<- twophase(formula=tvol ~ mean + stddev + max + q75,
 # Violation:
 # s2-point MUST have all explanatory variables available
 
-# --> error message due to nesting violation: s2 not nested in s1
+# --> error message due to nesting violation: s2 not nested
 
 # error handling:
 # s2 point with missing auxiliary information is deleted from the dataset
@@ -144,9 +150,6 @@ tp<- twophase(formula=tvol ~ mean + stddev + max + q75,
 # Violation:
 # every s2 point must provide a response value
 
-# warning message:
-# --> 
-
 # error handling:
 # s2 point with missing response value recoded to s1-point
 
@@ -171,37 +174,8 @@ tp<- twophase(formula=tvol ~ mean + stddev + max + q75,
 ## save grisons as new dataset:
 grisons.n<- grisons
 
-
-## delete "mean" value from an s2-sample point:
+## delete "mean" value from an s2-(i.e. s1- and s0-) sample point:
 grisons.n[which(grisons.n$phase_id_3p==2)[1],"mean"]<- NA
-
-
-tp<- threephase(formula.s0 = tvol ~ mean, 
-                formula.s1 = tvol ~  mean + stddev + max + q75, 
-                data = grisons.n,
-                phase_id = list(phase.col="phase_id_3p", s1.id = 1, terrgrid.id = 2),
-                boundary_weights = "boundary_weights")
-
-# Violation:
-# s2 point misses expl.variable used in s0
-
-# warning message:
-# s2 point misses expl.variable used in s1
-# since s1 nested in s0, this expl.variables is also missing in s0
-
-# error handling:
-# plot deleted
-
-
-# 1) & 2) ---------------------------------
-
-## save grisons as new dataset:
-grisons.n<- grisons
-
-
-## delete "mean" value from an s2-sample point:
-grisons.n[which(grisons.n$phase_id_3p==0)[1],"mean"]<- NA
-
 
 tp<- threephase(formula.s0 = tvol ~ mean, 
                 formula.s1 = tvol ~  mean + stddev + max + q75, 
@@ -237,7 +211,7 @@ tp<- threephase(formula.s0 = tvol ~ mean,
                 boundary_weights = "boundary_weights")
 
 # Violation:
-# s2 point misses expl.variable used in s1
+# s2 point misses expl.variable used (reduced model) at s1 sample points
 
 # warning message:
 # s2 point misses expl.variable used in s1
@@ -256,20 +230,17 @@ tp<- threephase(formula.s0 = tvol ~ mean,
 ## save grisons as new dataset:
 grisons.n<- grisons
 
-## delete "mean"-value from an s1-aux.set:
-grisons.n[which(grisons.n$phase_id_3p==1)[1],"mean"]<- NA
+## delete "mean"-value from an s0-sample point:
+grisons.n[which(grisons.n$phase_id_3p==0)[1],"mean"]<- NA
 
 tp<- threephase(formula.s0 = tvol ~ mean, 
-                formula.s1 = tvol ~  mean + stddev + max + q75, 
+                formula.s1 = tvol ~ mean + stddev + max + q75, 
                 data = grisons.n,
                 phase_id = list(phase.col="phase_id_3p", s1.id = 1, terrgrid.id = 2),
                 boundary_weights = "boundary_weights")
 
 # Violation:
-# for s1-plot, one expl.variable also used in s0 is missing
-
-# warning message: 
-# for s1-plot, one expl.variable also used in s0 is missing
+#  an s0 point misses at least one of the explanatory variables used in the reduced model at the s1-sample points
 
 # error handling:
 # plot deleted

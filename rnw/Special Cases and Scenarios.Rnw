@@ -141,7 +141,7 @@ Based on the nesting rule $s_2 \in s_1 \in s_0$, each $s_2$ (i.e. terrestrially 
 
 \begin{small}
 <<eval=FALSE>>=
-## delete "mean" value from an s2-sample point:
+## delete "mean" value from an s2- (i.e. s1- and s0-) sample point:
 grisons[which(grisons$phase_id_3p==2)[1],"mean"]<- NA
 @
 \end{small}
@@ -218,7 +218,7 @@ If an $s_0$ point misses at least one of the explanatory variables used in the r
 \begin{small}
 <<eval=FALSE>>=
 ## delete "mean" value from an s0-sample point:
-grisons[which(grisons$phase_id_3p==2)[0],"mean"]<- NA
+grisons[which(grisons$phase_id_3p==0)[1],"mean"]<- NA
 @
 \end{small}
 
