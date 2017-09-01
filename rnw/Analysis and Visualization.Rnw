@@ -178,31 +178,4 @@ plot(grisons.sae.table, ncol = 2)
 
 Note that the \code{plot()}-function call can arbitrarily be extended by additional \pkg{ggplot2} parameterizations.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 \newpage
-
-
