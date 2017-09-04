@@ -12,11 +12,11 @@
 %   compared to the onephase procedure --> allows to calculate the financial benefit --> rel.eff
 
 
-The package \pkg{forestinventory} also provides methods for \textit{analysing} and \textit{visualizing} the estimation results created by the \code{onephase}, \code{twophase} and \code{threephase} functions. 
+The package \pkg{forestinventory} also provides methods for \textit{analyzing} and \textit{visualizing} the estimation results created by the \code{onephase()}, \code{twophase()} and \code{threephase()} functions. 
 
 \subsection{Analysis}
 
-If we want to compare the results and performance of different estimation methods and estimators for a given global or small area inventory data set, the function to start with is \code{estTable()}. This function restructures the results of \code{onephase()}, \code{twophase()} and \code{threephase()} estimations and merges them into one single data set that provides the basis for further analysis. For demonstration purposes, we will first recalculate the one-phase estimations as well as the two-phase and three-phase \textit{extended pseudo synthetic} and the \textit{pseudo synthetic} estimations for the \code{grisons} dataset:
+If we want to compare the results and performances of different estimation methods and estimators for a given global or small area inventory, the function to start with is \code{estTable()}. This function restructures the results of \code{onephase()}, \code{twophase()} and \code{threephase()} estimations and merges them into one single data set that provides the basis for further analysis. For demonstration purposes, we will first recalculate the one-phase estimations as well as the two-phase and three-phase \textit{extended pseudo synthetic} and the \textit{pseudo synthetic} estimations for the \code{grisons} data set:
 
 \begin{small}
 <<>>=
@@ -82,9 +82,9 @@ grisons.sae.table<- estTable(est.list = list(op, extpsynth_2p, psynth_2p,
 @
 \end{small}
 
-The function merges the estimation results and returns a \code{list} object with the subclasses \code{"esttable"  "smallarea"}. If one prefers the \code{data.frame} format for further analysis, this can easily be done using \code{as.data.frame(grisons.sae.table)}. Note however that the package \pkg{forestinventory} provides several \code{S3} generic functions that particularly respond to the class \code{"esttable"}. Note that the \code{vartypes} argument can be used to restrict the \code{estTable()} output to certain types of variances.
+The function merges the estimation results and returns a \code{list} object with the subclasses \code{"esttable"  "smallarea"}. If one prefers the \code{data.frame} format for further analysis, this can easily be done using \code{as.data.frame(grisons.sae.table)}. Note however that the package \pkg{forestinventory} provides several \code{S3} generic methods that particularly respond to the class \code{"esttable"}. Note that the \code{vartypes} argument can be used to restrict the \code{estTable()} output to certain types of variances.
 
-The structure of an \code{esttable} object is very similar to the objects created by the small area estimation functions of the package. However, the point estimates and variances from all estimation objects passed to \code{estTable()} have been stored in one single column (\code{estimate} and \code{variance}) and can be distinguished by the variables \code{method}, \code{estimator} and \code{vartype} which specify the estimation method (one, two or threephase), the estimator and the type of variance (\code{g_} for \textit{g-weight} and \code{ext_} for \textit{external} variance) that was applied. Per default, also the confidence intervals are added.
+The structure of an \code{esttable} object is very similar to the objects created by the small area estimation functions of the package. However, the point estimates and variances from all estimation objects passed to \code{estTable()} have been stored in one single column (\code{estimate} and \code{variance}) and can be distinguished by the variables \code{method}, \code{estimator} and \code{vartype} which specify the estimation method (one, two or three-phase), the estimator and the type of variance (\code{g_} for \textit{g-weight} and \code{ext_} for \textit{external} variance) that was applied. Per default, also the confidence intervals are added.
 
 \begin{small}
 <<eval=FALSE>>=
@@ -135,9 +135,9 @@ The \textit{relative efficiency} can be interpreted as the relative sample size 
 
 \subsection{Visualization}
 
-The package \pkg{forestinventory} also provides a \code{S3} generic plotting function based on the \pkg{ggplot2} package \citep{ggplot2} to visualize the estimation results. Likewise \code{mphase.gain()}, also the plot method requires an \code{esttable} object created by the \code{estTable()}-function. The \code{plot()}-function allows for two kinds of visualization: \textbf{1)} the \textit{\textbf{point estimates}} with overlayed confidence intervals, and \textbf{2)} the \textit{\textbf{estimation errors}}.
+The package \pkg{forestinventory} also provides a \code{S3} generic plot method based on the \pkg{ggplot2} package \citep{ggplot2} to visualize the estimation results. Likewise \code{mphase.gain()}, also the plot method requires an \code{esttable} object created by the \code{estTable()}-function. The \code{plot()}-function allows for two kinds of visualization: \textbf{1)} the \textit{\textbf{point estimates}} with overlayed confidence intervals, and \textbf{2)} the \textit{\textbf{estimation errors}}.
 
-If a plot of the point estimates with overlayed confidence intervals is required, one has to make sure that the confidence intervals (\code{ci_lower}, \code{ci_upper}) are contained in the \code{esttable} object which is automatically the case for the default settings of \code{estTable()}:
+If a plot of the point estimates with overlayed confidence intervals is required, one has to make sure that the confidence intervals (\code{ci_lower}, \code{ci_upper}) are contained in the \code{esttable} object which is automatically the case using the default setting of \code{estTable()}:
 
 \begin{small}
 <<>>=
@@ -148,7 +148,7 @@ grisons.sae.table<- estTable(est.list = list(op, extpsynth_2p, psynth_2p,
 @
 \end{small}
 
-The graphic for the point estimates and confidence intervals is then produced by passing the \code{esstable} object to the \code{S3} generic plot function and setting the argument \code{yvar = "estimate"}:
+The graphic for the point estimates and confidence intervals is then produced by passing the \code{esstable} object to the \code{S3} generic \code{plot} method and setting the argument \code{yvar = "estimate"}:
 
 \begin{small}
 <<eval=FALSE>>=
@@ -163,7 +163,7 @@ plot(grisons.sae.table, ncol = 2, yvar = "estimate") +
 \end{figure}
 
 
-If we want the estimation errors to be plotted, we simply leave the \code{yvar} argument to its default (\code{"error"}):
+If we want the estimation errors to be plotted, we simply set the \code{yvar} argument \code{"error"} (default):
 
 \begin{small}
 <<eval=FALSE>>=
@@ -176,33 +176,6 @@ plot(grisons.sae.table, ncol = 2)
 \resizebox{0.86\hsize}{!}{\includegraphics{fig/plot_error.png}}
 \end{figure}
 
-Note that the \code{plot}-function call can arbitrarily be extended by additional \pkg{ggplot2} functions and specifications.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Note that the \code{plot()}-function call can arbitrarily be extended by additional \pkg{ggplot2} parameterizations.
 
 \newpage
-
-
