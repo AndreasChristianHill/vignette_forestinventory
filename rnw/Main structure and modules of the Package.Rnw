@@ -33,12 +33,12 @@ We enter the topic of small area estimation if we want to make an estimation for
 \begin{figure}[htb]
 	\begin{subfigure}[t]{0.5\textwidth}
 		\centering
-    \resizebox{1.12\hsize}{!}{\includegraphics{fig/phases_graphic(2).eps}}%
+    \resizebox{1.12\hsize}{!}{\includegraphics{fig/phases_graphic(3).eps}}%
 		\caption{} \label{fig:concmphase_and_sae_a}
 		\end{subfigure}
 	\begin{subfigure}[t]{0.5\textwidth}
 		\centering
-   \resizebox{0.8\hsize}{!}{\includegraphics{fig/sae_graphic(2).eps}}%
+   \resizebox{0.8\hsize}{!}{\includegraphics{fig/sae_graphic(3).eps}}%
 		\caption{} \label{fig:concmphase_and_sae_b}
 	\end{subfigure}
 \caption{\textbf{(a)} Concept of multiphase sampling. The square represents the forest area for which an inventory is being conducted. The points denote the sample locations $x$. Filled points indicate \textit{available} information. \textbf{(b)} Illustration of the Small Area Estimation problem}
