@@ -90,7 +90,7 @@ Forest inventories provide reliable and evidence-based information to assess the
 % new commands
 \newcommand{\bwi}{BWI3}
 \newcommand{\var}{\mathbb{V}}
-
+\newcommand{\EX}{\mathbb{E}}
 
 %------------------------------------------------------------------------------------------------%
 % -------------------------------------- Main Document------------------------------------------ %
