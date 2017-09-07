@@ -107,7 +107,7 @@ The package \pkg{forestinventory} additionally provides the \textbf{external var
 \begin{figure}[htb]
 	\begin{subfigure}[t]{0.5\textwidth}
 		\centering
-    \resizebox{1.12\hsize}{!}{\includegraphics{fig/exh_and_boundweights(2).PNG}}%
+    \resizebox{1.11\hsize}{!}{\includegraphics{fig/exh_and_boundweights(2).PNG}}%
 		\caption{} \label{fig:exh_nexh_and_boundweights_a}
 		\end{subfigure}
 	\begin{subfigure}[t]{0.5\textwidth}

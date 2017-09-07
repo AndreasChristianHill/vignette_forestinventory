@@ -10,77 +10,6 @@
 
 library(forestinventory)
 
-#####################################################
-#          Poststratification                       #
-#####################################################
-
-## save grisons as new dataset:
-grisons.n<- grisons
-
-## create artificial development stages as categorical (factor) variables
-#  used for poststratification:
-grisons.n$stage<- as.factor(kmeans(grisons.n$mean, centers = 3)$cluster)
-
-## plot:
-ggplot(data=grisons.n, aes(x = mean, y = tvol)) +
-  geom_point(aes(colour = factor(stage)))
-
-
-## apply 'double sampling for (post)stratification':
-twophase(formula=tvol ~ stage,
-         data=grisons.n,
-         phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 2),
-         boundary_weights = "boundary_weights")
-
-
-## apply 'double sampling for regression':
-twophase(formula=tvol ~ mean + stddev + max + q75 + stage,
-         data=grisons.n,
-         phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 2),
-         boundary_weights = "boundary_weights")
-
-
-## apply 'double sampling for regression within (post)strata'":
-twophase(formula=tvol ~ mean + stddev + max + q75 + stage,
-         data=grisons.n,
-         phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 2),
-         boundary_weights = "boundary_weights")
-
-
-
-#####################################################
-#  SMALL AREA ESTIMATION UNDER CLUSTER SAMPLING     #
-#####################################################
-
-
-## apply extended pseudo synthetic estimator under cluster sampling:
-extpsynth.clust<- twophase(formula = basal ~ stade + couver + melange, data=zberg,
-                           phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
-                           cluster = "cluster",
-                           small_area = list(sa.col = "ismallold", areas = c("1"),
-                                             unbiased = TRUE))
-
-# --> creates warning message: At least one cluster not entirely included within small area
-
-## check mean of residuals in small area:
-extpsynth.clust$mean_Rc_x_hat_G
-
-
-## alternatively apply pseudo small area estimator:
-extpsmall.clust<- twophase(formula = basal ~ stade + couver + melange, data=zberg,
-                           phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
-                           cluster = "cluster",
-                           small_area = list(sa.col = "ismallold", areas = c("1"),
-                                             unbiased = TRUE),
-                           psmall = TRUE)
-
-
-## compare estimation results:
-extpsynth.clust$estimation
-extpsmall.clust$estimation
-
-# --> very similar, only minor differences in the variances
-
 
 
 #####################################################
@@ -95,12 +24,16 @@ extpsmall.clust$estimation
 ## save grisons as new dataset:
 grisons.n<- grisons
 
+grisons.n[grisons$phase_id_2p==2, "phase_id_2p"]<- 3
+grisons.n[grisons$phase_id_2p==1, "phase_id_2p"]<- 2
+table(grisons.n$phase_id_2p)
+
 ## delete explanatory variables from an s2-(i.e. s1-) sample point:
-grisons.n[which(grisons.n$phase_id_2p==2)[1],c(4,5,6,7)]<- NA
+grisons.n[which(grisons.n$phase_id_2p==3)[1],c(4,5,6,7)]<- NA
 
 tp<- twophase(formula=tvol ~ mean + stddev + max + q75,
                  data=grisons.n,
-                 phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 2),
+                 phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 3),
                  boundary_weights = "boundary_weights")
 
 # Violation:
@@ -116,12 +49,17 @@ tp<- twophase(formula=tvol ~ mean + stddev + max + q75,
 ## save grisons as new dataset:
 grisons.n<- grisons
 
+grisons.n[grisons$phase_id_2p==2, "phase_id_2p"]<- 3
+grisons.n[grisons$phase_id_2p==1, "phase_id_2p"]<- 2
+table(grisons.n$phase_id_2p)
+
+
 ## delete explanatory variables from an s1-sample point:
-grisons.n[which(grisons.n$phase_id_2p==1)[1],"mean"]<- NA
+grisons.n[which(grisons.n$phase_id_2p==2)[1],"mean"]<- NA
 
 tp<- twophase(formula=tvol ~ mean + stddev + max + q75,
               data=grisons.n,
-              phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 2),
+              phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 3),
               boundary_weights = "boundary_weights")
 
 # Violation:
@@ -139,12 +77,16 @@ tp<- twophase(formula=tvol ~ mean + stddev + max + q75,
 ## save grisons as new dataset:
 grisons.n<- grisons
 
+grisons.n[grisons$phase_id_2p==2, "phase_id_2p"]<- 3
+grisons.n[grisons$phase_id_2p==1, "phase_id_2p"]<- 2
+table(grisons.n$phase_id_2p)
+
 ## delete response value from an s2-sample point:
-grisons.n[which(grisons.n$phase_id_2p==2)[1],"tvol"]<- NA
+grisons.n[which(grisons.n$phase_id_2p==3)[1],"tvol"]<- NA
 
 tp<- twophase(formula=tvol ~ mean + stddev + max + q75,
               data=grisons.n,
-              phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 2),
+              phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 3),
               boundary_weights = "boundary_weights")
 
 # Violation:
@@ -174,13 +116,18 @@ tp<- twophase(formula=tvol ~ mean + stddev + max + q75,
 ## save grisons as new dataset:
 grisons.n<- grisons
 
+grisons.n[grisons$phase_id_3p==2, "phase_id_3p"]<- 3
+grisons.n[grisons$phase_id_3p==1, "phase_id_3p"]<- 2
+grisons.n[grisons$phase_id_3p==0, "phase_id_3p"]<- 1
+table(grisons.n$phase_id_3p)
+
 ## delete "mean" value from an s2-(i.e. s1- and s0-) sample point:
-grisons.n[which(grisons.n$phase_id_3p==2)[1],"mean"]<- NA
+grisons.n[which(grisons.n$phase_id_3p==3)[1],"mean"]<- NA
 
 tp<- threephase(formula.s0 = tvol ~ mean,
                 formula.s1 = tvol ~  mean + stddev + max + q75,
                 data = grisons.n,
-                phase_id = list(phase.col="phase_id_3p", s1.id = 1, terrgrid.id = 2),
+                phase_id = list(phase.col="phase_id_3p", s1.id = 2, terrgrid.id = 3),
                 boundary_weights = "boundary_weights")
 
 # Violation:
@@ -199,6 +146,10 @@ tp<- threephase(formula.s0 = tvol ~ mean,
 ## save grisons as new dataset:
 grisons.n<- grisons
 
+grisons.n[grisons$phase_id_3p==2, "phase_id_3p"]<- 3
+grisons.n[grisons$phase_id_3p==1, "phase_id_3p"]<- 2
+grisons.n[grisons$phase_id_3p==0, "phase_id_3p"]<- 1
+table(grisons.n$phase_id_3p)
 
 ## delete "mean" value from an s2-sample point:
 grisons.n[which(grisons.n$phase_id_3p==2)[1],"q75"]<- NA
@@ -209,6 +160,10 @@ tp<- threephase(formula.s0 = tvol ~ mean,
                 data = grisons.n,
                 phase_id = list(phase.col="phase_id_3p", s1.id = 1, terrgrid.id = 2),
                 boundary_weights = "boundary_weights")
+
+table(tp$input$data$phase_id_3p)
+
+summary(tp)
 
 # Violation:
 # s2 point misses expl.variable used (reduced model) at s1 sample points
