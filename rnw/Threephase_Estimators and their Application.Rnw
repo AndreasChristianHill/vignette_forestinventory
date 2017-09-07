@@ -160,7 +160,7 @@ The \code{summary()} of a \code{threephase()}-function recalls both regression m
 \begin{small}
 <<>>=
 reg2p_nex<- twophase(formula = formula.rm, data = grisons,
-                       phase_id = list(phase.col="phase_id_3p", terrgrid.id = 2),
+                       phase_id = list(phase.col="phase_id_2p", terrgrid.id = 2),
                        boundary_weights = "boundary_weights")
 @
 \end{small}
