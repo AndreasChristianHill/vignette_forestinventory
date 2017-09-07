@@ -115,7 +115,7 @@ The package \pkg{forestinventory} additionally provides the \textbf{external var
    \resizebox{0.77\hsize}{!}{\includegraphics{fig/nexh_and_boundweights.PNG}}%
 		\caption{} \label{fig:exh_nexh_and_boundweights_b}
 	\end{subfigure}
-\caption{Concept of exhaustive \textbf{(a)} and non-exhaustive \textbf{(b)} calculation of explanatory variables including boundary adjustment at the support level. Auxiliary data are in both cases available over the entire inventory area marked by the large rectangle. A set $\pmb{Z}$ of $p$ explanatory variables $x_{1},...,x_{p}$ is calculated within the small squares at each sample location $x$ (points) that falls into the forest area (green underlying polygon). w: weights used for calculating the weighted mean of each explanatory variable. Dotted circles indicate terrestrial sample plots.}
+\caption{Concept of exhaustive \textbf{(a)} and non-exhaustive \textbf{(b)} calculation of explanatory variables including boundary adjustment at the support level. Auxiliary data are in both cases available over the entire inventory area marked by the large rectangle. A set $\pmb{Z}$ of $p$ explanatory variables $z_{1},...,z_{p}$ is calculated within the small squares at each sample location $x$ (points) that falls into the forest area (green underlying polygon). w: weights used for calculating the weighted mean of each explanatory variable. Dotted circles indicate terrestrial sample plots.}
 \label{fig:exh_nexh_bw}
 \end{figure}
 
