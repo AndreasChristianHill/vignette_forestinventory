@@ -54,7 +54,7 @@ grisons.sae.table<- estTable(est.list = list(op, extpsynth_2p, psynth_2p,
 plot(grisons.sae.table.CI, ncol = 2, yvar = "estimate")
 
 ## save graphic for article:
-ggsave("fig\\plot_est_ci.png", 
+ggsave("plot_est_ci.png", 
        plot(grisons.sae.table.CI, ncol = 2, yvar = "estimate") +
          ylab("Timber Volume [m3/ha]") +
          theme(axis.title.x =element_text(size=rel(6)), # size of axis-labels text
@@ -72,7 +72,7 @@ plot(grisons.sae.table, ncol = 2, yvar = "error")
 
 
 ## save graphic for article:
-ggsave("fig\\plot_error.png", 
+ggsave("plot_error.png", 
        plot(grisons.sae.table, ncol = 2, yvar = "error") +
          theme(axis.title.x =element_text(size=rel(6)), # size of axis-labels text
                axis.title.y =element_text(size=rel(6)),
