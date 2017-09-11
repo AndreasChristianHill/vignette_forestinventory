@@ -4,9 +4,43 @@
 \section{Methods and Structure of the Package}
 \label{sec:str_and_mod}
 
-% NOTE:
-% The aim of this section is to build the basic understanding of two and threephase sampling, and the extention to small area estimation. We introduce the general terminology and show
-% how the package is structured to apply the methods
+
+\subsection{Forest Inventory in the Infinite Population Approach}
+
+Lets assume that the spatial distribution of a target variable (e.g. the timber volume) over the forest area is determined by a mathematical continuous function. The total amount of the target variable $Y$ (e.g. the total timber volume of the forest) consequently is the integral of that function, in other words: the volume that expands under the surface of that function (Figure \ref{fig:inf_pop_apr}). We can thus reconsider our task of estimating e.g. the true timber volume of a forest as "estimating the integral of the unknown function that determines the timber volume distribution over our forest". The challenging part of an inventory is that the form of this function, and thus $Y$ is unknown. Theoretically, we still could get $Y$ by observing the function value $Y(x)$, called the \textit{local density}, at each possible point $x$ over the function plain (i.e. the forest area) and sum those obervations up. However, we see at the first spot that this is impossible, because the number of function values $Y(x)$ and thus the number of possible sample points $x$ is $infinite$. So the only thing we can do is to get a sample of $Y(x)$ to \textit{estimate} $Y$ by $\hat{Y}$. Since we thereby sample from an infinite population of sample points, and thus function values, this approach is consequently called the \textit{infinite population approach}. All estimators included in the \proglang{R} package \pkg{forestinventory} basically rest upon these theoretical thoughts. In practice, the value of $Y(x)$ is determined by measuring sample trees that lie within a circle (called sample plot) around the sample point $x$ located in the forest area, and aggregating their individual characteristics (e.g. their individual timber volumes). However, a key point to understand is that in the infinite population approach, a local density value $Y(x)$ has \textit{no spatial association}. Even if we use a spatial unit to calculate $Y(x)$, its value solely corresponds to the sample point $x$, which constitutes the sample unit. This has some obvious practical advantages over the finite population approach, where the sample units actually are cirular or rectangular plots. One is the impossibility of a perfect tesselation of an amorphous forest area by any kind of plot-shape, and hence, the population in the finite approach is, strictly speaking, not defined. The consideration of an underlying infinite population of sample points will also play an important role when incorporating auxiliary information in the frame of two- and three-phase estimation methods.
+
+\begin{figure}[htb]
+\centering
+\resizebox{0.5\hsize}{!}{\includegraphics{fig/OnePhase.png}}
+\caption{Visualization of the infinite population approach. The spatial distribution of the target variable $Y$ is determined by a continous function (green plain) from which 
+only a sample of function values $Y(x)$ (dots on the plain) is known from a terrestrial survey.}
+\label{fig:inf_pop_apr}
+\end{figure}
+
+
+% NOTES:
+% - Use onephase sampling to explain the difference between finite and infinite population approach
+% - infinite population approach: 
+%   - Lets assume that the spatial distribution of the target variable (e.g. the timber volume) over the forest area is determined by a fixed mathematical continuous function,
+%     and the total amount of the target variable (e.g. the total timber volume of the forest), lets call it $Y$, is the integral of that function, 
+%     in other words: the volume that expands under the surface of that function (picture). The thing is that in the inventory context,
+%     the form of this function is unknown. Theoretically, we still could get Y by observing the
+%     function value Y(x), called the local density, at each possible location $x$ over the function "plane" and sum those obervations up. However, we see at the first spot 
+%     that this is impossible, because
+%     the number of function values $Y(x)$ and thus the number of possible sample locations $x$ is $infinite$. So the only thing we can do is to get ourself a sample of Y(x)s to 
+%     $estimate$ $Y$ by $\hat{Y}$. Since we thereby sample from an infinite population of possible sample locations / function values, this approach is consequently called the 
+%     \textit{infinite population approach}.
+%   - Transferring this approach to forest inventory problems is indeed straightforward when we reconsider our task of estimating e.g. the true timber volume of the forest 
+%     as "estimating the integral of an unknown function that determines the timber volume distribution over our forest". What we do in practice is to visit each sample 
+%     location $x$ in the field and determine the respective timber volume value, i.e. local density, by measuring sample trees around each location. 
+%     The selection of sample trees is mostly done constructing one or multiple nested circles (sample plots) around a sample location, and include each tree that lies 
+%     within the plot boundaries. The local density value is then determined by aggregating the sample tree characteristics (e.g. their indiv. timber volume).
+%     Doing so, we get a sample of the infinite number of (sample locations and thus) timber volume values we could theoretically observe in our forest. 
+%  -  A key point to understand is that in the infinite population approach, a local density value Y(x) has no spatial association. Even if we used a spatial unit, i.e. 
+%    the plot, extended around the sample point to calculate Y(x), its value only corresponds to the sample point / plot center. The best example of non-existing 
+%    spatial association of Y(x) is indeed angle count sampling (ref). Whereas the lack of spatial association seems rather distracting in the first place, it actually 
+%    has some obvious practical advantages over the finite population approach where the sample units are indeed cirular or rectangular plots.
+%
 
 
 \subsection{Two-Phase Sampling}
@@ -23,7 +57,20 @@ The two-phase or double-sampling estimators use inventory information from \text
 The three-phase or triple-sampling estimators extend the principle of two-phase sampling and use inventory information from \textbf{three} nested samples (\textit{phases}) (Figure \ref{fig:concmphase_and_sae_a}). The basic assumption is that auxiliary information is available in two different frequencies, i.e. sample sizes. The phase $s_0$ provides a large number $n_0$ of auxiliary information, whereas the phase $s_1$ provides additional auxiliary information that is only available at $n_1$ subsamples of $s_0$. The terrestrial information is then collected at a subsample $s_2$ of $s_1$ and $s_0$. The basic idea of three-phase sampling is that the additional set of auxiliary information $\pmb{Z}^{(1)}(x)\in{\Re^q}$ adds considerable explanatory power to the set of auxiliary information $\pmb{Z}^{(0)}(x)\in{\Re^p}$ available at all sample locations $x \in s_0$. From that it follows that we can define \textit{two nested} regression models. The \textit{full} set of predictor variables $\pmb{Z}^t(x)=(\pmb{Z}^{(0)t}(x),\pmb{Z}^{(1)t}(x))\in{\Re^{p+q}}$ in the sample $s_1$ can be used to calculate predictions $\hat{Y}_{1}(x)$ of $Y(x)$ at all sample locations $x \in s_1$. The regression model applicable to the $s_1$ phase is thus referred to as the \textit{full model}. Whereas we can only use the subset of auxiliary information $\pmb{Z}^{(0)}(x)$ in the so called \textit{reduced model} at the sample locations $x \in s_0$, it allows for creating a much larger sample of less accurate predictions $\hat{Y}_{0}(x)$. If there is a significant gain in model precision between the reduced and the full model and the sampling fraction between $s_0$ and $s_1$ is sufficiently large, the three-phase estimator normally leads to a further increase in estimation precision compared to the two-phase estimator. 
 %In the \proglang{R} package \pkg{forestinventory}, estimators for three-phase sampling can be applied with the \code{threephase()} function.
 
-
+\begin{figure}[htb]
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+    \resizebox{1.12\hsize}{!}{\includegraphics{fig/phases_graphic(3).eps}}%
+		\caption{} \label{fig:concmphase_and_sae_a}
+		\end{subfigure}
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+   \resizebox{0.8\hsize}{!}{\includegraphics{fig/sae_graphic(3).eps}}%
+		\caption{} \label{fig:concmphase_and_sae_b}
+	\end{subfigure}
+\caption{\textbf{(a)} Concept of multiphase sampling. The square represents the forest area for which an inventory is being conducted. The points denote the sample locations $x$. Filled points indicate \textit{available} information. \textbf{(b)} Illustration of the Small Area Estimation problem}
+\label{fig:concmphase_and_sae}
+\end{figure}
 
 \subsection{Small Area Estimation}
 
@@ -39,20 +86,20 @@ Small area estimation does not necessarily refer to small spatial areas but rath
 % - soundly derive reasoning, starting with onephase, then twophase
 
 
-\begin{figure}[htb]
-	\begin{subfigure}[t]{0.5\textwidth}
-		\centering
-    \resizebox{1.12\hsize}{!}{\includegraphics{fig/phases_graphic(3).eps}}%
-		\caption{} \label{fig:concmphase_and_sae_a}
-		\end{subfigure}
-	\begin{subfigure}[t]{0.5\textwidth}
-		\centering
-   \resizebox{0.8\hsize}{!}{\includegraphics{fig/sae_graphic(3).eps}}%
-		\caption{} \label{fig:concmphase_and_sae_b}
-	\end{subfigure}
-\caption{\textbf{(a)} Concept of multiphase sampling. The square represents the forest area for which an inventory is being conducted. The points denote the sample locations $x$. Filled points indicate \textit{available} information. \textbf{(b)} Illustration of the Small Area Estimation problem}
-\label{fig:concmphase_and_sae}
-\end{figure}
+% \begin{figure}[htb]
+% 	\begin{subfigure}[t]{0.5\textwidth}
+% 		\centering
+%     \resizebox{1.12\hsize}{!}{\includegraphics{fig/phases_graphic(3).eps}}%
+% 		\caption{} \label{fig:concmphase_and_sae_a}
+% 		\end{subfigure}
+% 	\begin{subfigure}[t]{0.5\textwidth}
+% 		\centering
+%    \resizebox{0.8\hsize}{!}{\includegraphics{fig/sae_graphic(3).eps}}%
+% 		\caption{} \label{fig:concmphase_and_sae_b}
+% 	\end{subfigure}
+% \caption{\textbf{(a)} Concept of multiphase sampling. The square represents the forest area for which an inventory is being conducted. The points denote the sample locations $x$. Filled points indicate \textit{available} information. \textbf{(b)} Illustration of the Small Area Estimation problem}
+% \label{fig:concmphase_and_sae}
+% \end{figure}
 
 
 \subsection{Design-based vs. model-dependent approach}
@@ -69,9 +116,11 @@ The selection of a suitable prediction model is an essential part in the applica
 \label{sec:packstruc}
 
 
-In the \proglang{R} package \pkg{forestinventory}, estimators for two-phase and three-phase sampling can be applied with the \code{twophase()} and \code{threephase()} function. From these two overall function calls, various estimators for specific inventory scenarios under the chosen sampling design can be applied (Figure \ref{fig:struct_package}). The decision what estimator to use thereby follows a tree-like structure which can serve the user as a guideline. The first decision to make is whether an estimate and its variance should be computed for the entire inventory area (\textit{global estimators}) or only for subregions of the entire inventory area (\textit{small area estimators}). The next decision for both global and small area estimations is whether the explanatory variables were derived \textit{exhaustively} or \textit{non-exhaustively} over the inventory area. The first case allows for computing the exact mean $\bar{\pmb{Z}}$ of each explanatory variable over $s_1$ ($s_{1,G}$) and $s_0$ ($s_{0,G}$). In the second case, the mean of each explanatory variable over $s_1$ ($s_{1,G}$) and $s_0$ ($s_{0,G}$) can only be estimated by $\hat{\bar{\pmb{Z}}}$ which adds another component of uncertainty to the respective estimators. The package offers three small area estimators for both the exhaustive and non-exhaustive setup. The \textit{extended synthetic estimator} and the \textit{small area estimator} both apply a bias correction using the model residuals within small area $G$ and can only be applied if the terrestrial sample size $n_{2,G}$ within $G$ is $\geq 2$. The resulting point estimates and variances are asymptotically design-unbiased. If $n_{2,G}=0$, the bias correction can no longer be applied and the estimates of the repsective \textit{synthetic small area estimator} are potentially biased. The package also allows for calculating estimates solely based on the terrestrial sample $s_2$ (\textit{one-phase estimation}) by the \code{onephase()} function. All estimators are also available for \textit{cluster} sampling, in which case a sample unit consists of multiple, spatially agglomerated samples. The following sections describe the mathematical details and the application of the multi-phase estimators implemented in the \proglang{R} package \pkg{forestinventory}. While \cite{mandallaz2008, mandallaz2013techa, mandallaz2013techb,mandallaz2015tech} provides an extensive derivation of all estimators, we will provide the mathematical formulas that are actually implemented in the package. We will also restrict to simple sampling and provide the equations for cluster sampling in the Appendix. A special case under cluster sampling is described in section \ref{sec:speccas_and_scen}.
+% In the \proglang{R} package \pkg{forestinventory}, estimators for two-phase and three-phase sampling can be applied with the \code{twophase()} and \code{threephase()} function. From these two overall function calls, various estimators for specific inventory scenarios under the chosen sampling design can be applied (Figure \ref{fig:struct_package}). The decision what estimator to use thereby follows a tree-like structure which can serve the user as a guideline. The first decision to make is whether an estimate and its variance should be computed for the entire inventory area (\textit{global estimators}) or only for subregions of the entire inventory area (\textit{small area estimators}). The next decision for both global and small area estimations is whether the explanatory variables were derived \textit{exhaustively} or \textit{non-exhaustively} over the inventory area. The first case allows for computing the exact mean $\bar{\pmb{Z}}$ of each explanatory variable over $s_1$ ($s_{1,G}$) and $s_0$ ($s_{0,G}$). In the second case, the mean of each explanatory variable over $s_1$ ($s_{1,G}$) and $s_0$ ($s_{0,G}$) can only be estimated by $\hat{\bar{\pmb{Z}}}$ which adds another component of uncertainty to the respective estimators. The package offers three small area estimators for both the exhaustive and non-exhaustive setup. The \textit{extended synthetic estimator} and the \textit{small area estimator} both apply a bias correction using the model residuals within small area $G$ and can only be applied if the terrestrial sample size $n_{2,G}$ within $G$ is $\geq 2$. The resulting point estimates and variances are asymptotically design-unbiased. If $n_{2,G}=0$, the bias correction can no longer be applied and the estimates of the repsective \textit{synthetic small area estimator} are potentially biased. The package also allows for calculating estimates solely based on the terrestrial sample $s_2$ (\textit{one-phase estimation}) by the \code{onephase()} function. All estimators are also available for \textit{cluster} sampling, in which case a sample unit consists of multiple, spatially agglomerated samples. The following sections describe the mathematical details and the application of the multi-phase estimators implemented in the \proglang{R} package \pkg{forestinventory}. While \cite{mandallaz2008, mandallaz2013techa, mandallaz2013techb,mandallaz2015tech} provides an extensive derivation of all estimators, we will provide the mathematical formulas that are actually implemented in the package. We will also restrict to simple sampling and provide the equations for cluster sampling in the Appendix. A special case under cluster sampling is described in section \ref{sec:speccas_and_scen}.
 
-\newpage
+
+In the \proglang{R} package \pkg{forestinventory}, estimators for two-phase and three-phase sampling can be applied with the \code{twophase()} and \code{threephase()} function. From these two overall function calls, various estimators for specific inventory scenarios under the chosen sampling design can be applied (Figure \ref{fig:struct_package}). The decision what estimator to use thereby follows a tree-like structure which can serve the user as a guideline throughout this article as well as in future applications. The basic decision to make is whether an estimate and its variance should be computed for an entire inventory area (\textit{global estimators}) or only for subregions of the entire inventory area (\textit{small area estimators}). In the second case, the package offers three small area estimators that will in detail be described in the following sections. The estimators are available under \textit{exhaustive} and \textit{non-exhaustive} use of the auxiliary data. Additionally, the package provides the option of calculating one-phase estimates solely based on terrestrial samples. All estimators are also available for \textit{cluster} sampling, in which case a sample unit consists of multiple, spatially agglomerated samples. The following sections describe the mathematical details and the application of the multi-phase estimators implemented in the \proglang{R} package \pkg{forestinventory}. While \cite{mandallaz2008, mandallaz2013techa, mandallaz2013techb,mandallaz2015tech} provides an extensive derivation of all estimators, we will provide the mathematical formulas that are actually implemented in the package. We will also restrict to simple sampling and provide the equations for cluster sampling in the Appendix. A special case under cluster sampling is described in section \ref{sec:speccas_and_scen}.
+
 
 \begin{figure}[htb]
 \centering
