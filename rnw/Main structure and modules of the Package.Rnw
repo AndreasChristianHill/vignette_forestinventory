@@ -124,7 +124,7 @@ In the \proglang{R} package \pkg{forestinventory}, estimators for two-phase and 
 
 \begin{figure}[htb]
 \centering
-\resizebox{0.95\hsize}{!}{\includegraphics{fig/Package_structure_3.eps}}
+\resizebox{1\hsize}{!}{\includegraphics{fig/Package_structure_3.eps}}
 \caption{Structure of the multi-phase estimators in the \proglang{R} package \pkg{forestinventory}}
 \label{fig:struct_package}
 \end{figure}
