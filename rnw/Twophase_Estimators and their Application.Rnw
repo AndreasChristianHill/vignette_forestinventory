@@ -133,7 +133,7 @@ The key to calculating your own $\bar{\pmb{Z}}$ is to understand the difference 
 %   and that it can have an influence on model accuracy). 
 % - Figure 4(b) shows how the derivation of the Z(x) in the non-exhaustive case often looks like in practice, i.e. a regular grid is given by a 
 %   terrestrial inventory, densified to an s1-sample, and then supports are used to calculate the set of explanatory variables at sample location x.
-%   This is in perfect aggreement with just the presented theory of the non-exhaustive estimators (except for using regular grids rather than randomly
+%   This is in perfect aggreement with the just presented theory of the non-exhaustive estimators (except for using regular grids rather than randomly
 %   placed sample points) and the forestinventory package will just use the emprirical mean of the Z(x) values given in the input dataframe, i.e. 
 %   $\hat{\bar{\pmb{Z}}}=\frac{1}{n_{1}}\sum_{x\in{s_{1}}}\pmb{Z}(x)$.
 % - The exhaustive case however leaves some space for the implementation:
