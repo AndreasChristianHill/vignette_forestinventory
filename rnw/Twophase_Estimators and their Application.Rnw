@@ -155,6 +155,11 @@ The key to calculating your own $\bar{\pmb{Z}}$ is to understand the difference 
 %   n1 of Z(x) to get a reasonable approximation of $\bar{Z}$. This is possible because likewise the local density $Y(x)$ gathered in the second phase $s_2$,
 %   also the calculation of Z(x) only referrs to the sample point, and has no spatial association.
 %
+% - mention that the support size does not have to match the plotsize of the terrestrial inventory. In fact, it will in practice be chosen in order to
+%
+% - mention that a change of support size between sample points for a given expl. variable is not allowed (because.... Daniel ?)
+%
+%
 
 
 
