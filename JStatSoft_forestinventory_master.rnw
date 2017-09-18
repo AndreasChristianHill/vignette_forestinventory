@@ -92,6 +92,8 @@ Forest inventories provide reliable and evidence-based information to assess the
 \newcommand{\var}{\mathbb{V}}
 \newcommand{\EX}{\mathbb{E}}
 
+\setlength{\parindent}{1em} % Einzug bei neuen Absätzen
+
 %------------------------------------------------------------------------------------------------%
 % -------------------------------------- Main Document------------------------------------------ %
 
