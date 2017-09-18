@@ -129,7 +129,7 @@ Note that when applied to internal linear regression models, the external varian
 \subsubsection{Calculation of Explanatory Variables}
 
 We will now draw our attention to the calculation of the explanatory variables from the auxiliary data for both the non-exhaustive and exhaustive case. In both cases, a set $\pmb{Z}$ of $p$ explanatory variables $x_1,...,x_p$ is calculated within a defined spatial extent (so called \textit{support}) around each sample location $x$. Figure \ref{fig:exh_nexh_and_boundweights_b} shows how the derivation of $\pmb{Z}(x)$ in the \textbf{non-exhaustive} case often looks like in practice, i.e. a regular terrestrial grid $s_2$ is given by a terrestrial inventory, densified to a larger sample $s_1$, and then supports are used to calculate the set of explanatory variables at the sample locations. This is in perfect aggreement with the just presented theory of the non-exhaustive estimator, except for using regular grids rather than randomly placed sample points. In this case, the \pkg{forestinventory} package calculates the emprirical mean of the $\pmb{Z}(x)$ values given in the input data frame, i.e. $\hat{\bar{\pmb{Z}}}=\frac{1}{n_{1}}\sum_{x\in{s_{1}}}\pmb{Z}(x)$. The \textbf{exhaustive} case however leaves some space of discussion concerning the calculation of $\pmb{Z}(x)$: This is because in the infinite population approach, the calculation $\pmb{Z}(x)$ again only referrs to the sample point $x$ and has no spatial association. Likewise the mean of the local density (i.e. the total), the only way to determine the exact mean of $\pmb{Z}(x)$ would be to calculate the integral $\bar{\pmb{Z}}=\frac{1}{\lambda(F)}\int_{x \in F} \pmb{Z}(x)$, which in practice means to calculate $\pmb{Z}(x)$ at an infinite number ($n_1=\infty$) of sample points $x$. Since this is obviously impossible, we can only try get a reasonable approximation of $\bar{\pmb{Z}}$.\par
-One possibility to approximate the exact mean $\bar{\pmb{Z}}$ is shown in Figure \ref{fig:exh_nexh_and_boundweights_a}, which illustrates the implemented solution to the exhaustive use of the auxiliary information described in \citet{mandallaz2013b}. In order for all of the wall-to-wall auxiliary information to be exploited, the spatial arrangement of the supports were tesselated to form a perfect partition over the inventory area as is the case with the dark green polygons (squares tiles in this case). Is has to be noted that this would perfectly enable for calculating the exact mean $\bar{\pmb{Z}}$ in the \textit{finite} population approach, i.e. deriving $\pmb{Z}(x)$ for the entire finite population of supports and consequenlty calculating the exact mean $\bar{\pmb{Z}}$. While this is not equal to the exact mean $\bar{\pmb{Z}}$ in the infinite population approach, $n_1$ is still expected to be reasonably large to assume a good approximation of $\bar{\pmb{Z}}$ as long as the size of the supports are not unreasonably large. Whereas this implementation provides a convenient flexibility to switch between extimators of both the finite and infinite approach using the \textit{same} data set, it can also impose practical drawbacks. One is that a perfect tesselation by the supports strongly depends on the distance between the sample locations of $s_1$ in combination with the spatial extent of the support. Since in practice the support size will rather be chosen in order to achieve a best possible explanatory power of the regression model, thus minimizing the residual variation, a perfect tesselation might not always be feasible. In the infinite population frame however, the supports are also allowed to overlap if this seems necessary to acquire a sufficiently large sample $n_1$ of $\pmb{Z}(x)$ to get a reasonable approximation of $\bar{\pmb{Z}}$. This is again because $\pmb{Z}(x)$ only referrs to the sample point and has no spatial association. With this respect, the infinite population approach can thus provide more flexibility than the finite approach. One could even consider the use of different support sizes for an explanatory variable as long as they are consistently used at all sample locations.
+One possibility to approximate the exact mean $\bar{\pmb{Z}}$ is shown in Figure \ref{fig:exh_nexh_and_boundweights_a}, which illustrates the implemented solution to the exhaustive use of the auxiliary information described in \citet{mandallaz2013b}. In order for all of the wall-to-wall auxiliary information to be exploited, the spatial arrangement of the supports were tesselated to form a perfect partition over the inventory area as is the case with the dark green polygons (squares tiles in this case). Is has to be noted that this would perfectly enable for calculating the exact mean $\bar{\pmb{Z}}$ in the \textit{finite} population approach, i.e. deriving $\pmb{Z}(x)$ for the entire finite population of supports and consequenlty calculating the exact mean $\bar{\pmb{Z}}$. While this is not equal to the exact mean $\bar{\pmb{Z}}$ in the infinite population approach, $n_1$ is still expected to be reasonably large to assume a good approximation of $\bar{\pmb{Z}}$ as long as the size of the supports are not unreasonably large. Whereas this implementation provides a convenient flexibility to switch between extimators of both the finite and infinite approach using the \textit{same} data set, it can also impose practical drawbacks. One is that a perfect tesselation by the supports strongly depends on the distance between the sample locations of $s_1$ in combination with the spatial extent of the support. Since in practice the support size will rather be chosen in order to achieve a best possible explanatory power of the regression model, thus minimizing the residual variation, a perfect tesselation might not always be feasible. In the infinite population frame however, the supports are also allowed to overlap if this seems necessary to acquire a sufficiently large sample $n_1$ of $\pmb{Z}(x)$ to get a reasonable approximation of $\bar{\pmb{Z}}$. This is again because $\pmb{Z}(x)$ only referrs to the sample point and has no spatial association. With this respect, the infinite population approach can thus provide more flexibility than the finite approach. One could even consider the use of different support sizes for an explanatory variable as long as they are consistently used at all sample locations. % or: as long as they are not changed between sample locations (change of support)
 
 Note that there are few cases where the exact mean can also be precisely calculated in the infinite population framework. The first case is when the explanatory variables are provided by polygon layers (e.g. map of development stages). In this case, one can calculate the exact mean as the area-weighted average of each categorical variable. The second case is when the exact mean can be calculated in one step, e.g. taking the mean of all height pixels of a raster canopy height model will equal the mean calculated by the use of an infinite number of supports \citep{mandallaz2013b}.
 
@@ -198,21 +198,36 @@ An extension to the so-far published estimators by Mandallaz is the consideratio
 % --------------------------- %
 \subsubsection{Application}
 
-To demonstrate the use of the global two-phase estimators, we will use the \code{grisons} data set that comes with installing the package from the CRAN repository. The dataset contains data from a two-phase forest inventory under simple sampling design conducted in 2007 that was used in \citet{mandallaz2013b} and comprises observations from 306 sample locations ($s_1$ sample). Auxiliary information for all 306 plots is provided in the form of LiDAR canopy height metrics (\code{mean}, \code{stddev}, \code{max}, \code{q75}). For a systematic subsample of 67 out of the 306 plots, terrestrial information of the timber volume per hectare (\code{tvol}) on the sample plot level is provided from a terrestrial survey ($s_2$ sample). We can load the data frame in the \proglang{R} environment by executing:
+To demonstrate the use of the global two-phase estimators, we will use the \code{grisons} data set that comes with installing the package from the CRAN repository. The dataset contains data from a two-phase forest inventory under simple (i.e. non-cluster) sampling design conducted in 2007 that was used in \citet{mandallaz2013b} as a case study. The $s_1$ same is comprised of 306 sample locations arranged on a systematic grid containing auxiliary information in the form of LiDAR canopy height metrics (\code{mean}, \code{stddev}, \code{max}, \code{q75}). Auxiliary information for all 306 plots is provided in the form of LiDAR canopy height metrics (\code{mean}, \code{stddev}, \code{max}, \code{q75}). For a systematic subsample of 67 ($s_2$ sample), terrestrial information of the timber volume per hectare (\code{tvol}) on the sample plot level is provided from a terrestrial survey. We can load \pkg{forestinventory} and examine the \code{grisons} data set in the \proglang{R} environment as follows:
+
+<<echo=FALSE>>=
+options(width=10000) 
+@
 
 \begin{small}
-<<>>=
+<<eval=FALSE>>=
+library(forestinventory)
 data("grisons", package = "forestinventory")
+head(grisons)
 @
 \end{small}
 
-The structure of the data frame has to meet certain requirements to be usable by the \code{onephase}, \code{twophase()} and \code{threephase()} function of the package. Firstly, a row in the data frame corresponds to a sample location while the columns specify the attributes associated to the respective sample location. For global two-phase estimation, we have to specify
+\begin{small}
+<<eval=TRUE, echo=FALSE>>=
+library(forestinventory)
+set.seed(666);head(grisons[sample(1:306,10),c(1,3,4,5,6,7,8,9)], 10)
+@
+\end{small}
+
+Estimates can be made using the \code{onephase()}, \code{twophase()} or \code{threephase()} functions. The data frame inputted to these functions must have the structure where each row corresponds to a unique sample location and the columns specify the attributes associated to that respective sample location. Attributes that are missing, e.g. because they are associated with sample locations that were not selected in the subsample for the subsequent phase, should be designated as \code{NA} and the phase membership is encoded as numeric.
+
+For global two-phase estimation, we have to specify
 
 \begin{itemize}
   \itemsep0em
   \item the regression model (\code{formula}) as specified in the \code{lm}()-function \citep{R}
-  \item the \code{data.frame} containing the inventory information (\code{data})
-  \item the \code{list}-object \code{phase_id} taking the column name (\code{phase.col}) specifying the sample association of an observation ($s_1$ or $s_2$) and the indicator for the $s_2$ phase (\code{terrgrid.id})
+  \item the inputted \code{data.frame} containing the inventory information (\code{data})
+  \item the \code{list}-object \code{phase_id} containing: the \code{phase.col} argument identifying the name of the column specifying membership to $s_1$ or $s_2$, and the \code{terrgrid.id} argument specifying which numeric value indicates $s_2$ membership in that column
   \item the name of the column containing the weights $w(x)$ of the boundary adjustments (optional)
 \end{itemize}
 
@@ -226,21 +241,27 @@ reg2p_nex <- twophase(formula=tvol ~ mean + stddev + max + q75,
                    boundary_weights = "boundary_weights")
 @
 \end{small}
-The \code{twophase()} function creates an \code{S3} object of class \code{"twophase"} with subclass \code{"global"}. A \textbf{summary of the estimation results} can be obtained by passing this object to the \code{S3} generic \code{summary()}-function. The summary informs about the function call, the applied regression formula and the estimation method that was applied. The estimation results comprise the point estimate (\code{estimate}) as well as the design-based and external variance (\code{g_variance} and \code{ext_variance}). Further given are the sample sizes of the $s_1$ and $s_2$ sample (\code{n1}, \code{n2}) as well as the R$^2$ of the regression model (\code{r.squared}).
+
+The \code{twophase()} function creates an \code{S3} object of class \code{"twophase"} with subclass \code{"global"}. A readable \textbf{summary of the estimation results} can be obtained by passing this object to the \code{summary()} function, which automatically interprets what type of estimator was used and returns pertinent information such as the regression model formula, the point estimate (\code{estimate}), the design-based and external variance (\code{g_variance} and \code{ext_variance}) as well as the sample sizes and the model R$^2$:
+
 \begin{small}
 <<>>=
 summary(reg2p_nex)
 @
 \end{small}
-If the exact means of the explanatory variables $\bar{\pmb{Z}}$ are available, the \textbf{exhaustive estimator} can be applied by additionally passing a vector containg the exact means to the optional argument \code{exhaustive}. The vector must be input in the same order that the \code{lm()}-function processes a \code{formula} object including the intercept term whose exact mean will always be 1. We assume that if desired, the boundary adjustment has already been applied when deriving the exact mean of $\pmb{Z}$.
 
-The right order can easily be established by extracting the columnames of the respective \code{lm}-output. This step is particularly recommended if categorical variables are used. In our case this is:
+For practical use, one should normally always prefer the design-based variance over the external variance. This is because when we use internal models, the regression coefficients actually dependent on our sample. In contrast to the external variance, the design-based variance accounts for this sampling variability which results in more reliable point and variance estimates and also enjoys better statistical properties (g-weights). The external and design-based variances are asymptotically equivalent but the external variance is really only included here in case the user wants to compare to another estimator where no design-based variance exists.
+
+The \textbf{exhaustive estimator} can be applied by additionally passing a vector containing the \textit{exact} means of the explanatory variables, i.e. $\bar{\pmb{Z}}$, to the optional argument \code{exhaustive}. This vector must be calculated beforehand in such a way that any desired boundary adjustment has already been applied. Note that the vector input to \code{exhaustive} must be in the same order that the \code{lm()}-function processes a \code{formula} object including the intercept term whose exact mean will always be 1. This step is particularly recommended if categorical variables are present because the \code{lm()}-function, which is internally used to set up the design-matrix, automatically creates dummy variables with one of the categories used as a reference. The correct order for our \code{grisons} example can easily be extracted using:
+
 \begin{small}
 <<eval=FALSE>>=
 colnames(lm(formula = tvol ~ mean + stddev + max + q75, data = grisons, x = TRUE)$x)
 @
 \end{small}
-The \textbf{exhaustive estimator} can thus be applied after creating the vector of exact means $\bar{\pmb{Z}}$:
+
+The \textbf{exhaustive estimator} can be applied after defining the vector of exact means $\bar{\pmb{Z}}$ taken from \citet{mandallaz2013b} and denoted as \code{true.means.Z}:
+
 \begin{small}
 <<>>=
 true.means.Z <- c(1, 11.39, 8.84, 32.68, 18.03)
@@ -252,13 +273,13 @@ reg2p_ex <- twophase(formula = tvol ~ mean + stddev + max + q75,
 @
 \end{small}
 
-We can have a look on the estimation results by particularly querying the \code{estimation} object of \code{reg2p_ex}:
+An alternative way to look at the estimation results without using the \code{summary()} is to query \code{reg2p_ex} directly:
 \begin{small}
 <<>>=
 reg2p_ex$estimation
 @
 \end{small}
-Note that both variances of the exhaustive estimation are smaller than those of the non-exhaustive estimation. This is because we eliminated one component of uncertainty by substituting the estimated means of the explanatory variables $\hat{\bar{\pmb{Z}}}$ by their exact means $\bar{\pmb{Z}}$.
+Note that both variances of the exhaustive estimation are smaller than those of the non-exhaustive estimation. This is essentially because we eliminated one component of uncertainty by substituting the estimated means of the explanatory variables $\hat{\bar{\pmb{Z}}}$ by their exact means $\bar{\pmb{Z}}$.
 
 
 %--------------------------------------------------------------------------------------------------%
