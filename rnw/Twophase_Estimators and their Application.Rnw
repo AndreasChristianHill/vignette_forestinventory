@@ -401,7 +401,7 @@ To summarize, the (pseudo) synthetic estimator can be applied whether terrestria
 %------------------------------------------------------------- %
 \subsubsection{Application}
 
-Small area estimations in the package \pkg{forestinventory} can be applied by additionally specifying the optional argument \code{small_area}. The input data set has therefore to be extended by an additional column that specifies for each each row (i.e. observation of a sample location) the respective small area in which it is located. The argument \code{small_area} requires a \code{list}-object that comprises
+Small area estimates in the \pkg{forestinventory} package can be applied by specifying the optional argument \code{small_area}. The input data set has to include an additional column of class factor that describes the small area membership of the sample location represented by that row. The argument \code{small_area} requires a \code{list}-object that comprises
 
 \begin{itemize}
   \itemsep0em
@@ -423,7 +423,7 @@ summary(psmall_2p)
 @
 \end{small}
 
-The small area functions all return an \code{S3} object of class \code{"twophase"} with subclass \code{"smallarea"}. In addition to global estimation, the \code{summary()}-output and the \code{estimation} object comprise the estimates and the sample sizes (\code{n1G} and \code{n2G}) for all calculated small areas (column \code{area}). Note that the sample size information is also particularly provided in the \code{samplesizes} object returned by the function call.
+The small area functions all return an \code{S3} object of class \code{"twophase"} with subclass \code{"smallarea"}. In addition to global estimation, the \code{estimation} object now comprises the estimates and variances for all small areas (column \code{area}). We can view the sample sizes by looking into the object itself
 \begin{small}
 <<>>=
 psmall_2p$samplesizes
@@ -442,9 +442,11 @@ extpsynth_2p$estimation
 @
 \end{small}
 
-Note that the point estimates and the design-based and external variances of both estimators are very similiar. However, the $R^2$s (\code{r.squared}) under the \textit{extpsynth} estimator are changing with the small area, while they are identical under the \textit{psmall} estimator. This is because under the \textit{extpsynth} estimator, the regression model is recalculated for each small area estimation after adding the indicator variable for the respective small area in the globally derived design matrices. In case of the  \textit{psmall} estimator, the regression model stays the same for each small area estimation. Although the results of both estimators should always be close to each other, we recommend applying both estimators and compare the results afterwards in order to reveal unsuspected patterns in the data, particularly in the case of cluster sampling (see section \ref{sec:speccas_and_scen}).\par
+The \pkg{forestinventory} package automatically includes the indicator variable for the small area behind the scenes so there is no need to implement it yourself. Notice that the $R^2$s (\code{r.squared}) under the \textit{extpsynth} estimator are vary between small areas, while they are identical under the \textit{psmall} estimator. This is because under the \textit{extpsynth} estimator, the regression model is recalculated for each small area estimation after adding the indicator variable for the respective small area in the globally derived design matrices. In case of the  \textit{psmall} estimator, the regression model stays the same for each small area estimation. Although the results of both estimators should always be close to each other, we recommend applying both estimators and compare the results afterwards in order to reveal unsuspected patterns in the data, particularly in the case of cluster sampling (see section \ref{sec:speccas_and_scen}).\par
 
-Setting the argument \code{unbiased=FALSE} applies the \textbf{pseudo synthetic estimator} to the selected small areas. Note that in the \code{grisons} data set, all small areas possess at least 2 terrestrial observations ($n_{2,G} \geq 2$) and hence design-unbiased estimations are possible. Applying the pseudo synthetic estimator equals treating those small areas as if $n_{2,G}=0$ by ignoring the terrestrial information.
+Setting the argument \code{unbiased=FALSE} applies the \textbf{pseudo synthetic estimator} to the selected small areas. Note that in the \code{grisons} data set, all small areas possess much more than the suggested minimum number of terrestrial observations (a rule of thumb is that $n_{2,G} \geq 6$) required to produce reliable design-unbiased estimates. Hence, choosing to use \textit{psynth} is probably not desireable and is just applied here for demonstration purposes. The function will in this case ignore the terrestrial information in the data set.
+
+
 \begin{small}
 <<>>=
 psynth_2p <- twophase(formula = tvol ~ mean + stddev + max + q75, data = grisons,
@@ -456,9 +458,9 @@ psynth_2p$estimation
 @
 \end{small}
 
-In this case, the variances of the pseudo synthetic estimator is almost only half the variances of the \textit{psmall} and \textit{extended psynth} estimator. The reason for this is that the pseudo synthetic estimator neglects the uncertainty of the regression model predictions in terms of incorporating the residual variation (compare equation \ref{eq:var_2p_reg_psynth} to \ref{eq:var_2p_reg_psmall} and \ref{eq:var_2p_extpsynth}). Consequently, relying on the synthetic estimation would in this case lead to a severe overestimation of the estimation precision.\par
+We see here that the \textit{psynth} variances are almost only half the variances of the \textit{psmall} and \textit{extended psynth} estimators. However, \textit{psmall} and \textit{extended psynth} are design unbiased and their variances reflect the fact that they account for the uncertainty of the regression model predictions. The design-based variance of \textit{psynth} completely neglects a potential bias and as a result risks severely overstating the estimation precision.\par
 
-The \textbf{exhaustive versions} of the small area estimators (equations \ref{eq:pointest_2p_small},\ref{eq:var_2p_reg_small},\ref{eq:varext_2p_reg_small},\ref{eq:pointest_2p_reg_synth},\ref{eq:var_2p_reg_synth}) can again be applied by specifying the optional argument \code{exhaustive}. Its application requires that we know the exact means of all explanatory variables within the small area(s) of interest. In contrast to the \textit{global} estimators, the exact means have now to be delivered in the form of a \code{data.frame}, where each row corresponds to a small area, and each column specifies the exact mean of the respective explanatory variable. Note that likewise the case of global estimation, the order of the explanatory variables in the data frame has to match the order in which they appear in the design matrix defined by the \code{lm()}-function in \proglang{R}. In order to tell \proglang{R} which row describes which small area, the row names have to match the respective names of the small areas specified in the \code{areas} argument.
+The \textbf{exhaustive versions} of the small area estimators (equations \ref{eq:pointest_2p_small},\ref{eq:var_2p_reg_small},\ref{eq:varext_2p_reg_small},\ref{eq:pointest_2p_reg_synth},\ref{eq:var_2p_reg_synth}) are specified via the optional argument \code{exhaustive}. Its application requires that we know the exact means of all explanatory variables within the small area(s) of interest. In contrast to the \textit{global} estimators, the exact means have now to be delivered in the form of a \code{data.frame}, where each row corresponds to a small area, and each column specifies the exact mean of the respective explanatory variable. Note that likewise the case of global estimation, the order of the explanatory variables in the data frame has to match the order in which they appear in the design matrix defined by the \code{lm()}-function in \proglang{R}. In order to tell \proglang{R} which row describes which small area, the row names have to match the respective names of the small areas specified in the \code{areas} argument.
 
 For the \code{grisons} data set, the exact means of the explanatory variables for the small areas used in \citet{mandallaz2013b} are thus defined by
 \begin{small}
@@ -494,6 +496,6 @@ extsynth_2p$estimation
 @
 \end{small}
 
-Comparing this result with the non-exhaustive counterpart \textit{extpsynth}, we see that the estimation uncertainty defined by the variance has again be significantly increased by substituting the estimated by the exact auxiliary means. In the function output, exhaustive phases are indicated by a sample size of infinity (\code{Inf}). Also note that the function extracts the required exact means for small area \code{"A"} and \code{"B"} from the complete set of exact means defined in \code{true.means.Z.G}.
+Just as in the global case, we see that the variance has again been significantly decreased by substituting the \textit{exact} auxiliary means and both first phase sample sizes are now infinity. Note that the function extracts the required exact means for small area \code{"A"} and \code{"B"} from the complete set of exact means defined in \code{true.means.Z.G}.
 
 \newpage
