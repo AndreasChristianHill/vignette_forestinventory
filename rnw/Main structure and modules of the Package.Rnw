@@ -103,7 +103,6 @@ Small area estimation does not necessarily refer to small spatial areas but rath
 % \end{figure}
 
 
-\subsection{Design-based vs. model-dependent approach}
 \subsection{Design-Based vs. Model-Dependent Approach}
 \label{sec:db_vs_md}
 
