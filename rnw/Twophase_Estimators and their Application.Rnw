@@ -128,8 +128,8 @@ Note that when applied to internal linear regression models, the external varian
 
 \subsubsection{Calculation of Explanatory Variables}
 
-We will now draw our attention to the calculation of the explanatory variables from the auxiliary data for both the non-exhaustive and exhaustive case. In both cases, a set $\pmb{Z}$ of $p$ explanatory variables $x_1,...,x_p$ is calculated within a defined spatial extent (so called \textit{support}) around each sample location $x$. Figure \ref{fig:exh_nexh_and_boundweights_b} shows how the derivation of $\pmb{Z}(x)$ in the \textbf{non-exhaustive} case often looks like in practice, i.e. a regular terrestrial grid $s_2$ is given by a terrestrial inventory, densified to a larger sample $s_1$, and then supports are used to calculate the set of explanatory variables at the sample locations. This is in perfect aggreement with the just presented theory of the non-exhaustive estimator, except for using regular grids rather than randomly placed sample points. In this case, the \pkg{forestinventory} package calculates the emprirical mean of the $\pmb{Z}(x)$ values given in the input data frame, i.e. $\hat{\bar{\pmb{Z}}}=\frac{1}{n_{1}}\sum_{x\in{s_{1}}}\pmb{Z}(x)$. The \textbf{exhaustive} case however leaves some space of discussion concerning the calculation of $\pmb{Z}(x)$: This is because in the infinite population approach, the calculation $\pmb{Z}(x)$ again only referrs to the sample point $x$ and has no spatial association. Likewise the mean of the local density (i.e. the total), the only way to determine the exact mean of $\pmb{Z}(x)$ would be to calculate the integral $\bar{\pmb{Z}}=\frac{1}{\lambda(F)}\int_{x \in F} \pmb{Z}(x)$, which in practice means to calculate $\pmb{Z}(x)$ at an infinite number ($n_1=\infty$) of sample points $x$. Since this is obviously impossible, we can only try get a reasonable approximation of $\bar{\pmb{Z}}$.\par
-One possibility to approximate the exact mean $\bar{\pmb{Z}}$ is shown in Figure \ref{fig:exh_nexh_and_boundweights_a}, which illustrates the implemented solution to the exhaustive use of the auxiliary information described in \citet{mandallaz2013b}. In order for all of the wall-to-wall auxiliary information to be exploited, the spatial arrangement of the supports were tesselated to form a perfect partition over the inventory area as is the case with the dark green polygons (squares tiles in this case). Is has to be noted that this would perfectly enable for calculating the exact mean $\bar{\pmb{Z}}$ in the \textit{finite} population approach, i.e. deriving $\pmb{Z}(x)$ for the entire finite population of supports and consequenlty calculating the exact mean $\bar{\pmb{Z}}$. While this is not equal to the exact mean $\bar{\pmb{Z}}$ in the infinite population approach, $n_1$ is still expected to be reasonably large to assume a good approximation of $\bar{\pmb{Z}}$ as long as the size of the supports are not unreasonably large. Whereas this implementation provides a convenient flexibility to switch between extimators of both the finite and infinite approach using the \textit{same} data set, it can also impose practical drawbacks. One is that a perfect tesselation by the supports strongly depends on the distance between the sample locations of $s_1$ in combination with the spatial extent of the support. Since in practice the support size will rather be chosen in order to achieve a best possible explanatory power of the regression model, thus minimizing the residual variation, a perfect tesselation might not always be feasible. In the infinite population frame however, the supports are also allowed to overlap if this seems necessary to acquire a sufficiently large sample $n_1$ of $\pmb{Z}(x)$ to get a reasonable approximation of $\bar{\pmb{Z}}$. This is again because $\pmb{Z}(x)$ only referrs to the sample point and has no spatial association. With this respect, the infinite population approach can thus provide more flexibility than the finite approach. One could even consider the use of different support sizes for an explanatory variable as long as they are consistently used at all sample locations. % or: as long as they are not changed between sample locations (change of support)
+We will now draw our attention to the calculation of the explanatory variables from the auxiliary data for both the non-exhaustive and exhaustive case. In both cases, a set $\pmb{Z}$ of $p$ explanatory variables $x_1,...,x_p$ is calculated within a defined spatial extent (so called \textit{support}) around each sample location $x$. Figure \ref{fig:exh_nexh_and_boundweights_b} shows how the derivation of $\pmb{Z}(x)$ in the \textbf{non-exhaustive} case often looks like in practice, i.e. a regular terrestrial grid $s_2$ is given by a terrestrial inventory, densified to a larger sample $s_1$, and then supports are used to calculate the set of explanatory variables at the sample locations. This is in perfect aggreement with the just presented theory of the non-exhaustive estimator, except for using regular grids rather than randomly placed sample points. In this case, the \pkg{forestinventory} package calculates the emprirical mean of the $\pmb{Z}(x)$ values given in the input data frame, i.e. $\hat{\bar{\pmb{Z}}}=\frac{1}{n_{1}}\sum_{x\in{s_{1}}}\pmb{Z}(x)$. The \textbf{exhaustive} case however leaves some space for discussion concerning the calculation of $\pmb{Z}(x)$: This is because in the infinite population approach, the calculation $\pmb{Z}(x)$ again only refers to the sample point $x$ and has no spatial association. Likewise the mean of the local density (i.e. the total), the only way to determine the exact mean of $\pmb{Z}(x)$ would be to calculate the integral $\bar{\pmb{Z}}=\frac{1}{\lambda(F)}\int_{x \in F} \pmb{Z}(x)$, which in practice means to calculate $\pmb{Z}(x)$ at an infinite number of sample points $x$ ($n_1=\infty$). Since this is obviously impossible, one can only try to get a reasonable approximation of $\bar{\pmb{Z}}$.\par
+One possibility to approximate the exact mean $\bar{\pmb{Z}}$ is shown in Figure \ref{fig:exh_nexh_and_boundweights_a}, which illustrates the implemented solution to the exhaustive use of the auxiliary information described in \citet{mandallaz2013b}. In order for all of the wall-to-wall auxiliary information to be exploited, the spatial arrangement of the supports were tesselated to form a perfect partition over the inventory area as is the case with the dark green polygons (squares tiles in this case). Is has to be noted that this would perfectly enable for calculating the exact mean $\bar{\pmb{Z}}$ in the \textit{finite} population approach, i.e. deriving $\pmb{Z}(x)$ for the entire finite population of supports and consequenlty calculating the exact mean $\bar{\pmb{Z}}$. While this is not equal to the exact mean $\bar{\pmb{Z}}$ in the infinite population approach, $n_1$ is still expected to be reasonably large to assume a good approximation of $\bar{\pmb{Z}}$ as long as the size of the supports are not unreasonably large. Whereas this implementation provides a convenient flexibility to switch between extimators of both the finite and infinite approach using the \textit{same} data set, it can also impose practical drawbacks. One is that a perfect tesselation by the supports strongly depends on the distance between the sample locations of $s_1$ in combination with the spatial extent of the support. Since in practice the support size will rather be chosen in order to achieve a best possible explanatory power of the regression model, thus minimizing the residual variation, a perfect tesselation might not always be feasible. In the infinite population frame however, the supports are also allowed to overlap if this seems necessary to acquire a sufficiently large sample $n_1$ of $\pmb{Z}(x)$ to get a reasonable approximation of $\bar{\pmb{Z}}$. This is again because $\pmb{Z}(x)$ only refers to the sample point and has no spatial association. With this respect, the infinite population approach can thus provide more flexibility than the finite approach. One could even consider the use of different support sizes for an explanatory variable as long as they are consistently used at all sample locations. % or: as long as they are not changed between sample locations (change of support)
 
 Note that there are few cases where the exact mean can also be precisely calculated in the infinite population framework. The first case is when the explanatory variables are provided by polygon layers (e.g. map of development stages). In this case, one can calculate the exact mean as the area-weighted average of each categorical variable. The second case is when the exact mean can be calculated in one step, e.g. taking the mean of all height pixels of a raster canopy height model will equal the mean calculated by the use of an infinite number of supports \citep{mandallaz2013b}.
 
@@ -215,7 +215,7 @@ head(grisons)
 \begin{small}
 <<eval=TRUE, echo=FALSE>>=
 library(forestinventory)
-set.seed(666);head(grisons[sample(1:306,10),c(1,3,4,5,6,7,8,9)], 10)
+set.seed(666);print(head(grisons[sample(1:306,10),c(1,3,4,5,6,7,8,9)], 10),row.names=c(1:10))
 @
 \end{small}
 
@@ -250,7 +250,7 @@ summary(reg2p_nex)
 @
 \end{small}
 
-For practical use, one should normally always prefer the design-based variance over the external variance. This is because when we use internal models, the regression coefficients actually dependent on our sample. In contrast to the external variance, the design-based variance accounts for this sampling variability which results in more reliable point and variance estimates and also enjoys better statistical properties (g-weights). The external and design-based variances are asymptotically equivalent but the external variance is really only included here in case the user wants to compare to another estimator where no design-based variance exists.
+For practical use, one should normally always prefer the design-based variance over the external variance. This is because when we use internal models, the regression coefficients actually dependent on our sample. In contrast to the external variance, the design-based variance accounts for this sampling variability which results in more reliable point and variance estimates and also enjoys better statistical calibration properties (g-weights). The external and design-based variances are asymptotically equivalent but the external variance is really only included here in case the user wants to compare to another estimator where no design-based variance exists.
 
 The \textbf{exhaustive estimator} can be applied by additionally passing a vector containing the \textit{exact} means of the explanatory variables, i.e. $\bar{\pmb{Z}}$, to the optional argument \code{exhaustive}. This vector must be calculated beforehand in such a way that any desired boundary adjustment has already been applied. Note that the vector input to \code{exhaustive} must be in the same order that the \code{lm()}-function processes a \code{formula} object including the intercept term whose exact mean will always be 1. This step is particularly recommended if categorical variables are present because the \code{lm()}-function, which is internally used to set up the design-matrix, automatically creates dummy variables with one of the categories used as a reference. The correct order for our \code{grisons} example can easily be extracted using:
 
@@ -260,7 +260,7 @@ colnames(lm(formula = tvol ~ mean + stddev + max + q75, data = grisons, x = TRUE
 @
 \end{small}
 
-The \textbf{exhaustive estimator} can be applied after defining the vector of exact means $\bar{\pmb{Z}}$ taken from \citet{mandallaz2013b} and denoted as \code{true.means.Z}:
+The \textbf{exhaustive estimator} can be applied after defining the vector of exact means $\bar{\pmb{Z}}$ taken from \citet{mandallaz2013b}, denoted as \code{true.means.Z}:
 
 \begin{small}
 <<>>=
@@ -291,12 +291,12 @@ Note that both variances of the exhaustive estimation are smaller than those of 
 
 \subsubsection{Mathematical Background}
 
-The package \pkg{forestinventory} provides 3 small area estimators. A general principle of all small area estimators of the package is to restrict the information to the small area $G$ whenever possible. An exception however is the retrieval of the regression coefficient vector $\hat{\pmb{\beta}}$ and its variance-covariance matrix $\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}$, which are always calculated using the entire sample $s_2$ according to equation \ref{normequ_simple} and \ref{eq:estvarmatrix}.\par
+The package \pkg{forestinventory} provides three broad types of small area estimators each of which has an exhaustive and non-exhaustive form. We will use a different nomenclature for the non-exhaustive case in small area estimation since much of the existing literature shows preference for the label \textit{pseudo} to indicate that the mean of the explanatory variables within the small area was based on a finite sample. The main idea for all these small area estimators is to calculate the regression coefficient vector $\hat{\pmb{\beta}}_{s_2}$ and its variance-covariance matrix $\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}$ on the entire $s_2$ sample according to equations \ref{normequ_simple} and \ref{eq:estvarmatrix}, and subsequently use that to make predictions for sample locations restricted to small area $G$.\par
 
 %----------------------------------------------- %
 % \textbf{Small and Pseudo Small Area Estimator}\par
 
-We first introduce the \textbf{small area estimator} (\textit{small}), which uses exhaustively computed explanatory variables, and its non-exhaustive version, the \textbf{\textit{pseudo}} \textbf{small area estimator} (\textit{psmall}). Their point estimates are given in equation \ref{eq:pointest_2p_small} and \ref{eq:pepsmall}. As obvious, the globally derived regression coefficients are first applied to the exhaustively or non-exhaustively calculated means of the explanatory variables ($\bar{\pmb{Z}}_G$, $\hat{\bar{\pmb{Z}}}_G$) available at the sample location $s_{1,G}$ in the small area. A potential bias of the regression model predictions in the small area $G$ is then corrected by adding the mean of the model residuals in $G$ to the first term. This is called the \textit{bias} or \textit{residual correction} term.
+We first introduce the \textbf{small area estimator} (\textit{small}), which uses exhaustively computed explanatory variables, and its non-exhaustive version, the \textbf{\textit{pseudo}} \textbf{small area estimator} (\textit{psmall}). 
 
 \begin{subequations}\label{eq:pest_2p_small_psmall}
 \begin{align}
@@ -305,7 +305,9 @@ We first introduce the \textbf{small area estimator} (\textit{small}), which use
 \end{align}
 \end{subequations}
 
-The package again provides the \textit{design-based} (equation \ref{eq:var_2p_reg_small}, \ref{eq:var_2p_reg_psmall}) and \textit{external variance} (equation \ref{eq:varext_2p_reg_small}, \ref{eq:varext_2p_reg_psmall}) for the \textit{small} and the \textit{psmall} estimator. Again note that all components are restricted to those available at the sample locations $s_{1,G}$ and $s_{2,G}$ in the small area, with exception of the regression coefficient components $\hat{\pmb{\beta}}_{s_2}$ and $\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}$.
+In the equations for the point estimates (\ref{eq:pointest_2p_small} and \ref{eq:pepsmall}), we see that the globally derived regression coefficients are applied to the exhaustively or non-exhaustively calculated means of the explanatory variables ($\bar{\pmb{Z}}_G$, $\hat{\bar{\pmb{Z}}}_G$) which are now only based on the first-phase sample $s_{1,G}$ located within small area $G$. A potential bias of the regression model predictions in the small area $G$, due to fitting the regression model with data outside of $G$, is then corrected by adding the mean of the model residuals in $G$ to the first term. This is called the \textit{bias} or \textit{residual correction} term.
+
+The package provides the \textit{design-based} variance for \textit{small} and \textit{psmall} respectively (Equations \ref{eq:var_2p_reg_small}, \ref{eq:var_2p_reg_psmall}) as well as the  \textit{external variance} (Equation \ref{eq:varext_2p_reg_small}, \ref{eq:varext_2p_reg_psmall}). Again note that all components are restricted to those available at the sample locations in the small area ($s_{1,G}$ and $s_{2,G}$), with exception of the regression coefficient components $\hat{\pmb{\beta}}_{s_2}$ and $\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}$.
 
 \begin{subequations}\label{eq:var_2p_small_psmall}
 \begin{align}
@@ -325,13 +327,6 @@ The package again provides the \textit{design-based} (equation \ref{eq:var_2p_re
 \end{align}
 \end{subequations}
 
-The the variance-covariance matrix of the auxiliary vector $\hat{\bar{\pmb{Z}}}_G$ is estimated by
-\begin{equation}\label{estvarcovaux_G}
-\hat{\Sigma}_{\hat{\bar{\pmb{Z}}}_{G}}=
-\frac{1}{n_{G}(n_{G}-1)}\sum_{x\in{s_{1,G}}}
-(\pmb{Z}(x)-\hat{\bar{\pmb{Z}}}_{G})(\pmb{Z}(x)-\hat{\bar{\pmb{Z}}}_{G})^t
-\end{equation}
-
 If boundary adjustment is applied, the simple mean of the explanatory variable over the small area $\hat{\bar{\pmb{Z}}}_G=\frac{1}{n_{1,G}}\sum_{x \in s_{1,G}}\pmb{Z}(x)$ is replaced by its weighted version $\hat{\bar{\pmb{Z}}}_G=\frac{\sum_{x\in{s_{1,G}}}w(x)\pmb{Z}(x)}{\sum_{x\in{s_{1,G}}}w(x)}$, and likewise for exhaustively used auxiliary information.
 
 
@@ -339,76 +334,57 @@ If boundary adjustment is applied, the simple mean of the explanatory variable o
 %------------------------------------------------------------- %
 % \textbf{Synthetic and Pseudo Synthetic Estimator}\par
 
-The \textbf{synthetic estimator} (\textit{synth}) and \textbf{pseudo synthetic estimator} \textit{psynth} are applied if no terrestrial samples are available within the small area $G$ (i.e. $n_{2,G}=0$). In this case, the point estimate (equation \ref{eq:pointest_2p_reg_synth} and \ref{eq:pointest_2p_reg_psynth}) is based \textit{only} on the predictions generated by applying the globally derived regression model to the auxiliary vector $\bar{\pmb{Z}}_G$ or $\hat{\bar{\pmb{Z}}}_G$. However, the bias correction applied in the small and pseudo small area estimator (equation \ref{eq:pointest_2p_small} and \ref{eq:pepsmall}) is no longer possible. Thus, the (pseudo) synthetic estimator is unbiased \textbf{only} if the \textit{zero mean property} of the residuals $\int_F R(x)dx=0$ also holds for the residuals in the small area $G$, i.e. $\int_G R(x)dx=0$. If this assumption is not fullfilled, the synthetic point estimate $\hat{Y}_{G,synth,2p}$ and the pseudo synthetic point estimate $\hat{Y}_{G,psynth,2p}$ will have a design-based asymptotic bias equal to $-\frac{1}{\lambda(G)}\int_G R(x)$. Also note that the residual variation can no longer be considered in the design-based variance (equation \ref{eq:var_2p_reg_synth} and \ref{eq:var_2p_reg_psynth}). Therefore, the synthetic estimators will usually have a smaller variance than estimators incorporating the regression model uncertainties, but at the cost of a potential bias. Due to the absence of available residuals in $G$, there is also no external variance form for the synthetic and pseudo synthetic estimator.
+The \textbf{synthetic estimator} (\textit{synth}) and \textbf{pseudo synthetic estimator} \textit{psynth} are commonly applied when no terrestrial sample is available within the small area $G$ (i.e. $n_{2,G}=0$). In this case, the point estimate (equation \ref{eq:pointest_2p_reg_synth} and \ref{eq:pointest_2p_reg_psynth}) are based \textit{only} on the predictions generated by applying the globally derived regression model to the auxiliary vector $\bar{\pmb{Z}}_G$ or $\hat{\bar{\pmb{Z}}}_G$. However, the bias correction using the observed residuals is not applied as was the case in the small and pseudo small area estimator (Equations \ref{eq:pointest_2p_small} and \ref{eq:pepsmall}). Thus, the (pseudo) synthetic estimator is unbiased \textbf{only} if the \textit{zero mean property} of the residuals $\int_F R(x)dx=0$ also holds for the residuals in the small area $G$, i.e. $\int_G R(x)dx=0$. However, this assumption is unlikely to be fullfilled in practice resulting in a potentially unobservable design-based bias equal to $-\frac{1}{\lambda(G)}\int_G R(x)$. Also note that the residual variation can no longer be considered in the design-based variance (equation \ref{eq:var_2p_reg_synth} and \ref{eq:var_2p_reg_psynth}). Therefore, the synthetic estimators will usually have a smaller variance than estimators incorporating the regression model uncertainties, but at the cost of a potential bias. Due to the absence of available residuals in $G$, there is also no external variance form for the synthetic and pseudo synthetic estimator.
 
 \begin{subequations}\label{eq:pest_2p_synth_psynth}
 \begin{align}
   \hat{Y}_{G,synth,2p} & =\bar{\pmb{Z}}_G^t\hat{\pmb{\beta}}_{s_2} \label{eq:pointest_2p_reg_synth} \\
-  \hat{Y}_{G,psynth,2p} & =\hat{\bar{\pmb{Z}}}_G^t\hat{\pmb{\beta}}_{s_2} \label{eq:pointest_2p_reg_psynth}
-\end{align}
-\end{subequations}
-
-\begin{subequations}\label{eq:var_2p_synth_psynth}
-\begin{align}
-  \hat{\var}(\hat{Y}_{G,synth,2p}) & := \bar{\pmb{Z}}_G^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}\bar{\pmb{Z}}_G \label{eq:var_2p_reg_synth} \\
-  \hat{\var}(\hat{Y}_{G,psynth,2p}) & := \hat{\bar{\pmb{Z}}}_G^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}\hat{\bar{\pmb{Z}}}_G
+  \hat{Y}_{G,psynth,2p} & =\hat{\bar{\pmb{Z}}}_G^t\hat{\pmb{\beta}}_{s_2} \label{eq:pointest_2p_reg_psynth} \\
+% \end{align}
+% \end{subequations}
+% \begin{subequations}\label{eq:var_2p_synth_psynth}
+% \begin{align}
+  \hat{\var}(\hat{Y}_{G,synth,2p}) & = \bar{\pmb{Z}}_G^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}\bar{\pmb{Z}}_G \label{eq:var_2p_reg_synth} \\
+  \hat{\var}(\hat{Y}_{G,psynth,2p}) & = \hat{\bar{\pmb{Z}}}_G^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}\hat{\bar{\pmb{Z}}}_G
   + \hat{\pmb{\beta}}_{s_2}^t\hat{\Sigma}_{\hat{\bar{\pmb{Z}}}_G}\hat{\pmb{\beta}}_{s_2}  \label{eq:var_2p_reg_psynth}
 \end{align}
 \end{subequations}
 
+where the variance-covariance matrix of the auxiliary vector $\hat{\bar{\pmb{Z}}}_G$ is estimated by
+\begin{equation}\label{estvarcovaux_G}
+\hat{\Sigma}_{\hat{\bar{\pmb{Z}}}_{G}}=
+\frac{1}{n_{G}(n_{G}-1)}\sum_{x\in{s_{1,G}}}
+(\pmb{Z}(x)-\hat{\bar{\pmb{Z}}}_{G})(\pmb{Z}(x)-\hat{\bar{\pmb{Z}}}_{G})^t
+\end{equation}
 
 %------------------------------------------------------------- %
 % \textbf{Extended Synthetic and Extended Pseudo Synthetic Estimator}\par
 
-In the \textit{small} and \textit{psmall} estimator, the crucial zero mean residual property for the small area $G$ is forced by the bias adjustment terms (equation \ref{eq:pointest_2p_small}, \ref{eq:pepsmall}).  However, the equations would considerably simplify if we could mathematically insure that the prediction model residuals over the entire area $F$ and the small area $G$ are by definition both zero at the same time, i.e. $\int_F R(x)dx=\int_G R(x)dx=0$. This idea is realized in the \textbf{\textit{extended}} \textbf{synthetic} and \textbf{\textit{extended}} \textbf{pseudo synthetic estimator} (\textit{extsynth} and \textit{extpsynth}) by extending the vector of auxiliary information $\pmb{Z}(x)$ by a binary categorical indicator variable $I_G(x)$ which takes the value 1 if the sample location $x$ lies inside the small area $G$ and is otherwise set to 0. The \textit{extended} auxiliary vector thus reads as $\pmb{\mathbb{Z}}^t(x)=(\pmb{Z}^t(x),I_G(x))$ and leads to a classical ANOVA regression model. Note that the intercept of the regression model is thus adjusted for all data points belonging to small area $G$ which insures that the mean of the residuals $\frac{1}{n_{2,G}}\sum_{x\in{s_{2,G}}}R(x)$ in $G$ are always zero by construction.\par
+The synthetic estimators, \textit{synth} and \textit{psynth}, have attractively compact formulas but come with the downside of potential bias in their point estimates as well as unreliably small variances. The \textit{small} and \textit{psmall} estimators overcome this issue by using a bias correction term, i.e. $\frac{1}{n_{2,G}}\sum_{x \in s_{2,G}}\hat{R}(x)$. The motivation behind the \textbf{\textit{extended}} \textbf{synthetic} and \textbf{\textit{extended}} \textbf{pseudo synthetic estimator} (\textit{extsynth} and \textit{extpsynth}) is to use the same mathematically elegant formulas of the (pseudo) synthetic estimators while at the same time ensuring that the prediction model residuals over the entire area $F$ and the small area $G$ are by definition both zero at the same time, i.e. $\int_F R(x)dx=\int_G R(x)dx=0$. This is accomplished by extending the vector of auxiliary information $\pmb{Z}(x)$ by a binary categorical indicator variable $I_G(x)$ which takes the value 1 if the sample location $x$ lies inside the target small area $G$ and is otherwise set to 0. Recalling that linear models fit using OLS have zero mean residuals property by construction, this leads to unbiased point estimates and is also true if categorical variables are included in the model. The new \textit{extended} auxiliary vector thus becomes $\pmb{\mathbb{Z}}^t(x)=(\pmb{Z}^t(x),I_G(x))$ and can be used to replace its non-extended counterpart $\pmb{Z}^t(x)$ whereever it is used in Equations \ref{eq:pest_2p_synth_psynth}, \ref{eq:var_2p_synth_psynth} and  \ref{estvarcovaux_G}. Note that the package functions internally extent the data set by the indicator variable if the \textit{extsynth} or \textit{extpsynth} estimator is called.
 
-
-Under the extended auxiliary vector, the regression coefficient is calculated as
+Not every equation needs to be re-written here, but to give an example of the notational change, the regression coefficient under extended model approach becomes
 
 \begin{equation}\label{ext_normequ_simple}
   \hat{\pmb{\theta}}_{s_2}=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x) \Big)^{-1} \Big(\frac{1}{n_2}\sum_{x\in{s_2}}Y(x)\pmb{\mathbb{Z}}(x)\Big)
 \end{equation}
 
-with its variance-covariance matrix
-
-\begin{equation}\label{eq:ext_estvarmatrix}
-  \hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}:=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x) \Big)^{-1}
-  \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}^2(x)\pmb{\mathbb{Z}}(x)\pmb{Z}(x)^t\Big)
-  \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x) \Big)^{-1}
-\end{equation}
-
-The point estimate is defined as
+The point estimates and their g-weight variances can then be re-written as
 
 \begin{subequations}\label{eq:pest_2p_extsynth_extpsynth}
 \begin{align}
-\hat{Y}_{G,extsynth,2p}= \bar{\pmb{\mathbb{Z}}}^t_{G}\hat{\pmb{\theta}}_{s_2} \label{eq:pointest_2p_extsynth} \\
-\hat{Y}_{G,extpsynth,2p}=\hat{\bar{\pmb{\mathbb{Z}}}}_{G}^t\hat{\pmb{\theta}}_{s_2} \label{eq:pointest_2p_extsynth}
-\end{align}
-\end{subequations}
-
-
-and the design-based variances are derived as
-
-\begin{subequations}\label{eq:pest_2p_extsynth_extpsynth}
-\begin{align}
-\hat{\var}(\hat{Y}_{G,extsynth,2p})= \bar{\pmb{\mathbb{Z}}}^t_{G}\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}\bar{\pmb{\mathbb{Z}}}_{G} \label{eq:var_2p_extsynth} \\
-\hat{\var}(\hat{Y}_{G,extpsynth,2p})=
+\hat{Y}_{G,extsynth,2p} & = \bar{\pmb{\mathbb{Z}}}^t_{G}\hat{\pmb{\theta}}_{s_2} \label{eq:pointest_2p_extsynth} \\
+\hat{Y}_{G,extpsynth,2p} & =\hat{\bar{\pmb{\mathbb{Z}}}}_{G}^t\hat{\pmb{\theta}}_{s_2} \label{eq:pointest_2p_extsynth} \\
+\hat{\var}(\hat{Y}_{G,extsynth,2p}) & = \bar{\pmb{\mathbb{Z}}}^t_{G}\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}\bar{\pmb{\mathbb{Z}}}_{G} \label{eq:var_2p_extsynth} \\
+\hat{\var}(\hat{Y}_{G,extpsynth,2p})& =
 \hat{\bar{\pmb{\mathbb{Z}}}}_{G}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}
 \hat{\bar{\pmb{\mathbb{Z}}}}_{G}
 + \hat{\pmb{\theta}}^t_{s_2}\hat{\Sigma}_{\hat{\bar{\pmb{\mathbb{Z}}}}_{1,G}}\hat{\pmb{\theta}}_{s_2} \label{eq:var_2p_extpsynth}
 \end{align}
 \end{subequations}
 
-with the variance-covariance matrix of the auxiliary vector $\hat{\bar{\pmb{\mathbb{Z}}}}_G$ estimated by
+While the formulas look similar to the synthetic estimators, note that a decomposition of $\hat{\pmb{\theta}}_{s_2}$ reveals that the residual correction term is now included in the regression coefficient $\hat{\pmb{\theta}}_{s_2}$ \citep{mandallaz2016} and thus the estimates are asymptotically design-unbiased.
 
-\begin{equation}\label{ext_estvarcovaux_G}
-\hat{\Sigma}_{\hat{\bar{\pmb{\mathbb{Z}}}}_{1,G}}=
-\frac{1}{n_{1,G} (n_{1,G}-1)}\sum_{x\in{s_{1,G}}}
-(\pmb{\mathbb{Z}}(x)-\hat{\bar{\pmb{\mathbb{Z}}}}_{G})(\pmb{\mathbb{Z}}(x)-
-\hat{\bar{\pmb{\mathbb{Z}}}}_{G})^t
-\end{equation}
-
-The package also provides the external variance which is calculated as
+The package also provides the external variance for both the \textit{extended} synthetic and \textit{extended} pseudo synthetic estimator. Note that both neither the extended model approach nor external variance estimates are possible in the absence of terrestrial samples und thus model residuals in $G$, which is precisely when one must rely on the (pseudo) synthetic estimates. The external variance forms of \textit{extsynth} and \textit{extpsynth} are
 
 \begin{subequations}\label{eq:ext_varexternal_2p_extsynth}
 \begin{align}
@@ -419,13 +395,13 @@ The package also provides the external variance which is calculated as
 \end{align}
 \end{subequations}
 
-The estimators are called \textit{synthetic} since no residual term is present such as in the \textit{small} and \textit{psmall} estimator (equation \ref{eq:pointest_2p_small} and \ref{eq:pepsmall}) and thus look similar to the synthetic estimators (equation \ref{eq:pointest_2p_reg_synth}, \ref{eq:pointest_2p_reg_synth}, \ref{eq:var_2p_reg_synth}, \ref{eq:var_2p_reg_psynth}). However, note that by a decomposition of $\hat{\pmb{\theta}}_{s_2}$ it can be shown that the residual correction term is indeed included in the regression coefficient $\hat{\pmb{\theta}}_{s_2}$ \citep{mandallaz2016} and thus the estimator is asymptotically design-unbiased.
+To summarize, the (pseudo) synthetic estimator can be applied whether terrestrial inventory sample is found in the small area or not, but has a deceptively small design-based variance due to its potential bias.  When terrestrial sample is observed in the small area, we can produce (asymptotically) design-unbiased estimates and variances using either \textit{small} or \textit{psmall} which remove this bias directly with a mean residual term, or more elegantly with \textit{extsynth} or \textit{extpsynth} which simply uses the same synthetic formulas while including an indicator variable for the small area in the model formula to remove the bias by construction in OLS.
 
 
 %------------------------------------------------------------- %
 \subsubsection{Application}
 
-Small area estimations in the package \pkg{forestinventory} can be applied by additionally specifying the optional argument \code{small_area}. The input data set has therefore to be extended by an additional column that specifies for each each row (i.e. observation of a sample location) the respective small area in which it is located. The argument \code{small_area} requires a \code{list}-object that comprises
+Small area estimates in the \pkg{forestinventory} package can be applied by specifying the optional argument \code{small_area}. The input data set has to include an additional column of class factor that describes the small area membership of the sample location represented by that row. The argument \code{small_area} requires a \code{list}-object that comprises
 
 \begin{itemize}
   \itemsep0em
@@ -447,7 +423,7 @@ summary(psmall_2p)
 @
 \end{small}
 
-The small area functions all return an \code{S3} object of class \code{"twophase"} with subclass \code{"smallarea"}. In addition to global estimation, the \code{summary()}-output and the \code{estimation} object comprise the estimates and the sample sizes (\code{n1G} and \code{n2G}) for all calculated small areas (column \code{area}). Note that the sample size information is also particularly provided in the \code{samplesizes} object returned by the function call.
+The small area functions all return an \code{S3} object of class \code{"twophase"} with subclass \code{"smallarea"}. In addition to global estimation, the \code{estimation} object now comprises the estimates and variances for all small areas (column \code{area}). We can view the sample sizes by looking into the object itself
 \begin{small}
 <<>>=
 psmall_2p$samplesizes
@@ -466,9 +442,11 @@ extpsynth_2p$estimation
 @
 \end{small}
 
-Note that the point estimates and the design-based and external variances of both estimators are very similiar. However, the $R^2$s (\code{r.squared}) under the \textit{extpsynth} estimator are changing with the small area, while they are identical under the \textit{psmall} estimator. This is because under the \textit{extpsynth} estimator, the regression model is recalculated for each small area estimation after adding the indicator variable for the respective small area in the globally derived design matrices. In case of the  \textit{psmall} estimator, the regression model stays the same for each small area estimation. Although the results of both estimators should always be close to each other, we recommend applying both estimators and compare the results afterwards in order to reveal unsuspected patterns in the data, particularly in the case of cluster sampling (see section \ref{sec:speccas_and_scen}).\par
+The \pkg{forestinventory} package automatically includes the indicator variable for the small area behind the scenes so there is no need to implement it yourself. Notice that the $R^2$s (\code{r.squared}) under the \textit{extpsynth} estimator are vary between small areas, while they are identical under the \textit{psmall} estimator. This is because under the \textit{extpsynth} estimator, the regression model is recalculated for each small area estimation after adding the indicator variable for the respective small area in the globally derived design matrices. In case of the  \textit{psmall} estimator, the regression model stays the same for each small area estimation. Although the results of both estimators should always be close to each other, we recommend applying both estimators and compare the results afterwards in order to reveal unsuspected patterns in the data, particularly in the case of cluster sampling (see section \ref{sec:speccas_and_scen}).\par
 
-Setting the argument \code{unbiased=FALSE} applies the \textbf{pseudo synthetic estimator} to the selected small areas. Note that in the \code{grisons} data set, all small areas possess at least 2 terrestrial observations ($n_{2,G} \geq 2$) and hence design-unbiased estimations are possible. Applying the pseudo synthetic estimator equals treating those small areas as if $n_{2,G}=0$ by ignoring the terrestrial information.
+Setting the argument \code{unbiased=FALSE} applies the \textbf{pseudo synthetic estimator} to the selected small areas. Note that in the \code{grisons} data set, all small areas possess much more than the suggested minimum number of terrestrial observations (a rule of thumb is that $n_{2,G} \geq 6$) required to produce reliable design-unbiased estimates. Hence, choosing to use \textit{psynth} is probably not desireable and is just applied here for demonstration purposes. The function will in this case ignore the terrestrial information in the data set.
+
+
 \begin{small}
 <<>>=
 psynth_2p <- twophase(formula = tvol ~ mean + stddev + max + q75, data = grisons,
@@ -480,9 +458,9 @@ psynth_2p$estimation
 @
 \end{small}
 
-In this case, the variances of the pseudo synthetic estimator is almost only half the variances of the \textit{psmall} and \textit{extended psynth} estimator. The reason for this is that the pseudo synthetic estimator neglects the uncertainty of the regression model predictions in terms of incorporating the residual variation (compare equation \ref{eq:var_2p_reg_psynth} to \ref{eq:var_2p_reg_psmall} and \ref{eq:var_2p_extpsynth}). Consequently, relying on the synthetic estimation would in this case lead to a severe overestimation of the estimation precision.\par
+We see here that the \textit{psynth} variances are almost only half the variances of the \textit{psmall} and \textit{extended psynth} estimators. However, \textit{psmall} and \textit{extended psynth} are design unbiased and their variances reflect the fact that they account for the uncertainty of the regression model predictions. The design-based variance of \textit{psynth} completely neglects a potential bias and as a result risks severely overstating the estimation precision.\par
 
-The \textbf{exhaustive versions} of the small area estimators (equations \ref{eq:pointest_2p_small},\ref{eq:var_2p_reg_small},\ref{eq:varext_2p_reg_small},\ref{eq:pointest_2p_reg_synth},\ref{eq:var_2p_reg_synth}) can again be applied by specifying the optional argument \code{exhaustive}. Its application requires that we know the exact means of all explanatory variables within the small area(s) of interest. In contrast to the \textit{global} estimators, the exact means have now to be delivered in the form of a \code{data.frame}, where each row corresponds to a small area, and each column specifies the exact mean of the respective explanatory variable. Note that likewise the case of global estimation, the order of the explanatory variables in the data frame has to match the order in which they appear in the design matrix defined by the \code{lm()}-function in \proglang{R}. In order to tell \proglang{R} which row describes which small area, the row names have to match the respective names of the small areas specified in the \code{areas} argument.
+The \textbf{exhaustive versions} of the small area estimators (equations \ref{eq:pointest_2p_small},\ref{eq:var_2p_reg_small},\ref{eq:varext_2p_reg_small},\ref{eq:pointest_2p_reg_synth},\ref{eq:var_2p_reg_synth}) are specified via the optional argument \code{exhaustive}. Its application requires that we know the exact means of all explanatory variables within the small area(s) of interest. In contrast to the \textit{global} estimators, the exact means have now to be delivered in the form of a \code{data.frame}, where each row corresponds to a small area, and each column specifies the exact mean of the respective explanatory variable. Note that likewise the case of global estimation, the order of the explanatory variables in the data frame has to match the order in which they appear in the design matrix defined by the \code{lm()}-function in \proglang{R}. In order to tell \proglang{R} which row describes which small area, the row names have to match the respective names of the small areas specified in the \code{areas} argument.
 
 For the \code{grisons} data set, the exact means of the explanatory variables for the small areas used in \citet{mandallaz2013b} are thus defined by
 \begin{small}
@@ -518,6 +496,6 @@ extsynth_2p$estimation
 @
 \end{small}
 
-Comparing this result with the non-exhaustive counterpart \textit{extpsynth}, we see that the estimation uncertainty defined by the variance has again be significantly increased by substituting the estimated by the exact auxiliary means. In the function output, exhaustive phases are indicated by a sample size of infinity (\code{Inf}). Also note that the function extracts the required exact means for small area \code{"A"} and \code{"B"} from the complete set of exact means defined in \code{true.means.Z.G}.
+Just as in the global case, we see that the variance has again been significantly decreased by substituting the \textit{exact} auxiliary means and both first phase sample sizes are now infinity. Note that the function extracts the required exact means for small area \code{"A"} and \code{"B"} from the complete set of exact means defined in \code{true.means.Z.G}.
 
 \newpage
