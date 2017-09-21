@@ -83,7 +83,7 @@ R> extpsynth.clust<- twophase(formula = basal ~ stade + couver + melange, data=z
 Warning message:
 At least one terrestrial cluster not entirely included within the small area 1.
 Zero mean residual assumption for small area maybe violated.
-Check mean_Rc_x_hat_G and consider alternative estimator 'psmall'
+Check mean_Rc_x_hat_G and consider alternative estimator 'psmall' 
 \end{Sinput}
 \end{Schunk}
 \end{small}
@@ -111,16 +111,7 @@ extpsmall.clust$estimation
 @
 \end{small}
 
-Comparing the \textit{extpsynth} and \textit{psmall} estimates, we see that in this particular case the point estimates are close and more important, the external as well as the design-based variances only differ marginally. This can be taken as evidence that the violation of the zero mean residual property can here expected to be negligible. We can also check the calculated mean of the residuals for the small area by
-
-\begin{small}
-<<>>=
-extpsynth.clust$mean_Rc_x_hat_G
-@
-\end{small}
-
-The deviation to zero is in this case rather small, especially compared to the magnitude of the point estimate. Note however that the zero mean residual property is a mathematical property of an estimator and can not be proven by analyzing the empirical model residuals. 
-
+Comparing the \textit{extpsynth} and \textit{psmall} estimates, we see that in this particular case the point estimates are close and more important, the external as well as the design-based variances only differ marginally. This can be taken as evidence that the violation of the zero mean residual property can here expected to be negligible.
 
 % --------------------------------------------------------------------- %
 \subsection{Violation of Nesting in Sample Design}
@@ -154,15 +145,16 @@ R> threephase(formula.s0 = tvol ~ mean,
 +             data = grisons,
 +             phase_id = list(phase.col="phase_id_3p", s1.id = 1, terrgrid.id = 2),
 +             boundary_weights = "boundary_weights")
-1 rows deleted due to missingness in the set of auxiliary parameters for the first phase (s0) 
- (1 terrestrial plots affected by deletion)
 Warning messages:
 1: In threephase(formula.s0 = tvol ~ mean, formula.s1 = tvol ~ mean +  :
   Sample design not nested: for 1 terrestrial plots at least one auxiliary parameter 
-  of the second phase (s1) is missing
+  of the first phase (s1) is missing
 2: In threephase(formula.s0 = tvol ~ mean, formula.s1 = tvol ~ mean +  :
   Sample design not nested: for 1 terrestrial plots at least one auxiliary parameter 
-  of the first phase (s0) is missing
+  of the zero phase (s0) is missing
+3: In threephase(formula.s0 = tvol ~ mean, formula.s1 = tvol ~ mean +  :
+  1 rows deleted due to missingness in the set of auxiliary parameters for the zero phase (s0)
+  (1 terrestrial plots affected by deletion)
 \end{Sinput}
 \end{Schunk}
 \end{small}
@@ -186,13 +178,14 @@ R> threephase(formula.s0 = tvol ~ mean,
 +             data = grisons,
 +             phase_id = list(phase.col="phase_id_3p", s1.id = 1, terrgrid.id = 2),
 +             boundary_weights = "boundary_weights")
-Changed the phase_id for 1 rows to the first phase (s0) due to missingness in the set of 
-  auxiliary parameters for the second phase (s1) (1 terrestrial information no longer usable
-  by this change)
-Warning message:
-In threephase(formula.s0 = tvol ~ mean, formula.s1 = tvol ~ mean +  :
+Warning messages:
+1: In threephase(formula.s0 = tvol ~ mean, formula.s1 = tvol ~ mean +  :
   Sample design not nested: for 1 terrestrial plots at least one auxiliary parameter 
-  of the second phase (s1) is missing
+  of the first phase (s1) is missing
+2: In threephase(formula.s0 = tvol ~ mean, formula.s1 = tvol ~ mean +  :
+  Changed the phase_id for 1 rows to the zero phase (s0) due to missingness in the set of
+  auxiliary parameters for the first phase (s1) (1 terrestrial information no longer usable 
+  by this change)
 \end{Sinput}
 \end{Schunk}
 \end{small}
@@ -230,8 +223,10 @@ R> threephase(formula.s0 = tvol ~ mean,
 +             data = grisons,
 +             phase_id = list(phase.col="phase_id_3p", s1.id = 1, terrgrid.id = 2),
 +             boundary_weights = "boundary_weights")
-1 rows deleted due to missingness in the set of auxiliary parameters for the first phase (s0) 
- (0 terrestrial plots affected by deletion)
+Warning message:
+In threephase(formula.s0 = tvol ~ mean, formula.s1 = tvol ~ mean +  :
+  1 rows deleted due to missingness in the set of auxiliary parameters for the zero phase (s0) 
+  (0 terrestrial plots affected by deletion)
 \end{Sinput}
 \end{Schunk}
 \end{small}
@@ -258,7 +253,7 @@ R> twophase(formula = basal ~ stade + couver + melange,
 +           phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
 +           cluster = "cluster")
 Error in check.mandatoryInputs(formula, data, phase_id) : 
- Level '300' of factor variable 'stade' existing in s1(s0)- but not in s2 sample. 
+ Level '300' of factor variable 'stade' existing in s1(s0)- but not in s2 sample.
  Calculation of coefficient not feasible.
 \end{Sinput}
 \end{Schunk}
