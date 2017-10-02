@@ -22,45 +22,18 @@
 \subsubsection{Mathematical Background}
 
 
-The the vector of regression coefficients for the \textbf{\textit{reduced model}} using the \textit{reduced set of explanatory variables} $\pmb{Z}^{(0)}(x)$ available at all sample locations $x \in s_0$ is derived by solving the normal equation
+Solving the sample based normal equations, the vector of regression coefficients $\hat{\pmb{\alpha}}_{s_2}$ for the \textbf{\textit{reduced model}}, i.e. using the \textit{reduced set of explanatory variables} $\pmb{Z}^{(0)}(x)$ available at $x \in s_0$, and likewise the vector of regression coefficients $\hat{\pmb{\beta}}_{s_2}$ for the \textbf{\textit{full model}}, i.e. using the \textit{full set of explanatory variables} $\pmb{Z}^t(x)=(\pmb{Z}^{(0)t}(x),\pmb{Z}^{(1)t}(x))$ available only at a subset $x \in s_1 \subset s_0$, are derived as
 
-\begin{eqnarray}\label{eq:normequ_redmod}
-\hat{\pmb{\alpha}}_{s_2} &=& \Big(\frac{1}{n_2}\sum_{x\in{s}_2}\pmb{Z}^{(0)}(x)\pmb{Z}^{(0)t}(x)
-\Big)^{-1}\frac{1}{n_2}\sum_{x\in{s}_2}Y(x)\pmb{Z}^{(0)}(x)
-\end{eqnarray}
-
-and likewise the vector of regression coefficients for the \textbf{\textit{full model}} using the \textit{full set of explanatory variables} $\pmb{Z}^t(x)=(\pmb{Z}^{(0)t}(x),\pmb{Z}^{(1)t}(x))$ available only at a subset of all sample locations $x \in s_1 \subset s_0$:
-
-\begin{eqnarray}\label{eq:normequ_redmod}
-\hat{\pmb{\beta}}_{{s_2}}&=&\Big(\frac{1}{n_2}\sum_{x\in{s}_2}\pmb{Z}(x)\pmb{Z}^t(x)
-\Big)^{-1}\frac{1}{n_2}\sum_{x\in{s}_2}Y(x)\pmb{Z}(x)
-\end{eqnarray}
-
-The variance-covariance matrices of the regression coefficients are thus defined as
-
-\begin{subequations}\label{eq:covar3p}
+\begin{subequations}\label{eq:normequ_3p}
 \begin{align}
-  \hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}_{s_2}}=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}^{(0)}(x)\pmb{Z}^{(0)t}(x) \Big)^{-1}
-  \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}_{0}^2(x)\pmb{Z}^{(0)}(x)\pmb{Z}^{(0)t}(x)\Big)
-  \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}^{(0)}(x)\pmb{Z}^{(0)t}(x) \Big)^{-1} \label{eq:covar_alpha} \\
-  \hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}(x)\pmb{Z}^t(x) \Big)^{-1}
-  \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}^2(x)\pmb{Z}(x)\pmb{Z}^t(x)\Big)
-  \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}(x)\pmb{Z}^t(x) \Big)^{-1} \label{eq:covar_beta}
+\hat{\pmb{\alpha}}_{s_2}&=\Big(\frac{1}{n_2}\sum_{x\in{s}_2}\pmb{Z}^{(0)}(x)\pmb{Z}^{(0)t}(x)
+\Big)^{-1}\frac{1}{n_2}\sum_{x\in{s}_2}Y(x)\pmb{Z}^{(0)}(x)  \label{eq:normequ_redmod} \\
+\hat{\pmb{\beta}}_{s_2}&=\Big(\frac{1}{n_2}\sum_{x\in{s}_2}\pmb{Z}(x)\pmb{Z}^t(x)
+\Big)^{-1}\frac{1}{n_2}\sum_{x\in{s}_2}Y(x)\pmb{Z}(x) \label{eq:normequ_fullmod}
 \end{align}
 \end{subequations}
 
-with the full model residuals ${R}(x)=Y(x)-\pmb{Z}^t(x)\hat{\beta}_{s_2}$ and the reduced model residuals ${R}_{0}(x)=Y(x)-\pmb{Z}^{(0)t}\hat{\alpha}_{s_2}$ derived under the reduced and the full regression model respectively.
-
-Likewise the two-phase estimation (section \ref{sec:twophase_and_appl}), also the three-phase estimation can be applied under \textit{non-exhaustive} and \textit{exhaustive} derivation of the explanatory variables at the $s_0$ phase. 
-
-In the \textbf{non-exhaustive case}, we use the \textit{estimated} means of $\pmb{Z}^{(0)}(x)$ over both the $s_0$ and $s_1$ phase, as well as the \textit{estimated} mean of $\pmb{Z}(x)$ over the $s_1$ phase (equation \ref{meanvalues3pnex}). If the explanatory variables used in the reduced model are exhaustively derived (\textbf{exhaustive case}), the estimated mean $\hat{\bar{\pmb{Z}}}^{(0)}_0$ is simply replaced by the exact mean $\bar{\pmb{Z}}^{(0)}_0$. Note that in case of applied boundary adjustment (section \ref{sec:twophase_and_appl}), the simple mean is again replaced by the weighted mean analogous to equation \ref{eq:wmeanZ}.
-
-\begin{equation}\label{meanvalues3pnex}
-\hat{\bar{\pmb{Z}}}^{(0)}_0=\frac{1}{n_0}\sum_{x\in{s_0}} \pmb{Z}^{(0)}(x), \quad \hat{\bar{\pmb{Z}}}^{(0)}_1=\frac{1}{n_1}\sum_{x\in{s}_1}\pmb{Z}^{(0)}(x) ,
-\quad \hat{\bar{\pmb{Z}}}_1=\frac{1}{n_1}\sum_{x\in{s}_1}\pmb{Z}(x)
-\end{equation}
-
-The internal model case again insures the zero mean residual property over $F$, and the \textbf{point estimates} are thus calculated as 
+The package allows for the calculation of \textbf{point estimates} under exhaustive and non-exhaustive use of the auxiliary information in the $s_0$ phase. Staying in the internal model approach again insures the zero mean residual property over $F$.
 
 \begin{subequations}\label{reg3p}
 \begin{align}
@@ -71,9 +44,16 @@ The internal model case again insures the zero mean residual property over $F$, 
 \end{align}
 \end{subequations}
 
-Equations \ref{eq:reg3p_nex} and \ref{eq:reg3p_ex} nicely demonstrate the philosophy of the three-phase estimation approach. Without the first term, the equations exactly equal the one of two-phase estimator where the estimated means in $\hat{\bar{\pmb{Z}}}_1$ are based on the $s_1$ sample and are transformed into predictions $\hat{Y}(x)$ of the local density $Y(x)$. The difference however is that we can now derive a more precise mean $\hat{\bar{\pmb{Z}}}^{(0)}_0$ (or even the exact mean $\bar{\pmb{Z}}^{(0)}_0$) over $s_0$ for a subset $\pmb{Z}^{(0)}(x) \in \pmb{Z}(x)$. The first term of equation \ref{eq:reg3p_nex} and \ref{eq:reg3p_ex} can thus be interpreted as a correction term that transforms the difference to the more precise / exact mean of $\pmb{Z}^{(0)}(x)$ into a residual of $Y(x)$ and adds it to the second term, thus making the point estimate more precise. 
+In the \textit{non-exhaustive case}, the \textit{estimated} means of $\pmb{Z}^{(0)}(x)$ over both the $s_0$ and $s_1$ phase, as well as the \textit{estimated} mean of $\pmb{Z}(x)$ over the $s_1$ phase are calculated according to \ref{meanvalues3pnex}. If the exact mean over $s_0$ is known, the estimated mean $\hat{\bar{\pmb{Z}}}^{(0)}_0$ can simply be replaced by the exact mean $\bar{\pmb{Z}}^{(0)}_0$. Note that in case of applied boundary adjustment (section \ref{sec:twophase_and_appl}), the simple mean is again replaced by the weighted mean analogous to equation \ref{eq:wmeanZ}.
 
-The \textbf{design-based variance} is then calculated as
+\begin{equation}\label{meanvalues3pnex}
+\hat{\bar{\pmb{Z}}}^{(0)}_0=\frac{1}{n_0}\sum_{x\in{s_0}} \pmb{Z}^{(0)}(x), \quad \hat{\bar{\pmb{Z}}}^{(0)}_1=\frac{1}{n_1}\sum_{x\in{s}_1}\pmb{Z}^{(0)}(x) ,
+\quad \hat{\bar{\pmb{Z}}}_1=\frac{1}{n_1}\sum_{x\in{s}_1}\pmb{Z}(x)
+\end{equation}
+
+An intuitive interpretation of \ref{eq:reg3p_ex} and \ref{eq:reg3p_nex} is a follows: Likewise in the twophase approach, the estimated means in $\hat{\bar{\pmb{Z}}}_1$ based on the $s_1$ sample are transformed into predictions $\hat{Y}(x)$ of the local density $Y(x)$. The difference between the estimated means $\hat{\bar{\pmb{Z}}}^{(0)}_1$ and their more precise or even exact counterparts $\hat{\bar{\pmb{Z}}}^{(0)}_0$ and $\bar{\pmb{Z}}^{(0)}_0$ based on the larger or infinite $s_0$ sample is then added as a residual term that expresses the lack of model precision due to varying sample sizes behind the estimated auxilary means. 
+
+The package again provides the g-weight and external variances. The \textbf{g-weight variance} formulation is
 
 \begin{subequations}\label{eq:dbvar_reg3p}
 \begin{align}
@@ -86,17 +66,23 @@ The \textbf{design-based variance} is then calculated as
 \end{align}
 \end{subequations}
 
-with the variance-covariance matrix $\hat{\Sigma}_{\hat{\bar{\pmb{Z}}}^{(0)}_0}$:
+with the variance-covariance matrix of $\hat{\bar{\pmb{Z}}}^{(0)}_0$ and the variance-covariance matrices of the regression coefficients $\hat{\pmb{\alpha}}_{s_2}$ and $\hat{\pmb{\beta}}_{s_2}$:
 
-\begin{equation}\label{estvarcovaux3p}
-\hat{\Sigma}_{\hat{\bar{\pmb{Z}}}^{(0)}_0}=
-\frac{1}{n_{0}(n_{0}-1)}\sum_{x\in{s_{0}}}
-(\pmb{Z}^{(0)}(x)-\hat{\bar{\pmb{Z}}}^{(0)}_{0})(\pmb{Z}^{(0)}(x)-\hat{\bar{\pmb{Z}}}^{(0)}_{0})^t
-\end{equation}
+\begin{subequations}\label{eq:covar3p}
+\begin{align}
+  \hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{Z}}}^{(0)}_0}&=
+  \frac{1}{n_{0}(n_{0}-1)}\sum_{x\in{s_{0}}}
+  (\pmb{Z}^{(0)}(x)-\hat{\bar{\pmb{Z}}}^{(0)}_{0})(\pmb{Z}^{(0)}(x)-\hat{\bar{\pmb{Z}}}^{(0)}_{0})^t \\
+  \hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}_{s_2}}&=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}^{(0)}(x)\pmb{Z}^{(0)t}(x) \Big)^{-1}
+  \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}_{0}^2(x)\pmb{Z}^{(0)}(x)\pmb{Z}^{(0)t}(x)\Big)
+  \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}^{(0)}(x)\pmb{Z}^{(0)t}(x) \Big)^{-1} \label{eq:covar_alpha} \\
+  \hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}&=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}(x)\pmb{Z}^t(x) \Big)^{-1}
+  \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}^2(x)\pmb{Z}(x)\pmb{Z}^t(x)\Big)
+  \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}(x)\pmb{Z}^t(x) \Big)^{-1} \label{eq:covar_beta}
+\end{align}
+\end{subequations}
 
-We see that equation \ref{eq:dbvar_reg3p_ex} (exhaustive case) and \ref{eq:dbvar_reg3p_nex} (non-exhaustive case) differ by the term $\hat{\pmb{\alpha}}_{s_2}^t\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{Z}}}^{(0)}_0}\hat{\pmb{\alpha}}_2$ which is exactly the variance of the prediction $\hat{Y}_{0}(x)$ of the reduced model in the $s_0$ phase. This term can be made very small by chosing a large sample size $n_0$ for $s_0$ \citep{mandallaz2013techb}.
-
-The package also gives the \textbf{external variance} defined as
+Note that ${R}(x)=Y(x)-\pmb{Z}^t(x)\hat{\beta}_{s_2}$ denotes the residuals of the full model, whereas ${R}_{0}(x)=Y(x)-\pmb{Z}^{(0)t}\hat{\alpha}_{s_2}$ denotes the residuals of the reduced model. The \textbf{external variance} form under linear regression models is defined as
 
 \begin{subequations}\label{eq:extvar_reg3p}
 \begin{align}
@@ -109,21 +95,13 @@ The package also gives the \textbf{external variance} defined as
 \end{subequations}
 
 
+% We see that equation \ref{eq:dbvar_reg3p_ex} (exhaustive case) and \ref{eq:dbvar_reg3p_nex} (non-exhaustive case) differ by the term $\hat{\pmb{\alpha}}_{s_2}^t\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{Z}}}^{(0)}_0}\hat{\pmb{\alpha}}_2$ which is exactly the variance of the prediction $\hat{Y}_{0}(x)$ of the reduced model in the $s_0$ phase. This term can be made very small by chosing a large sample size $n_0$ for $s_0$ \citep{mandallaz2013techb}.
+
 
 % ------------------------------------- %
 \subsubsection{Application}
 
-Note that the \code{grisons} inventory data set originally corresponds to a classical two-phase sample design, i.e. the full set of explanatory variables is available at all sample locations in the inventory area. To demonstrate the three-phase estimation procedure, we provide an artificial three-phase scenario by recoding the phase indicators in the data set (column \code{phase_id_3p}). The values for indicating the phases (\code{0,1,2}) follow the terminology used in this article ($s_0$, $s_1$, $s_2$).
-
-We can use the \code{table()} function to see the sample sizes of all phases for the three-phase scenario:
-
-\begin{small}
-<<>>=
-table(grisons$phase_id_3p)
-@
-\end{small}
-
-We see that in the three-phase example, we now have 40 terrestrial sample locations providing the timber volume per hectare (\code{tvol}). The large phase $s_0$ comprises $178 + 88 + 40 = 306$ sample locations, since $s_2 \subset s_1 \subset s_0$. We now assume that at sample locations $x \in s_0$, only the mean canopy height (\code{mean}) is available, whereas at sample locations $x \in s_1$ we additionally have the explanatory variables \code{stddev}, \code{max} and \code{q75} at hand. We can now define the reduced and full regression model formulas that we will use in the \code{threephase()} function. Note that the models are nested.
+In order to demonstrate the three-phase estimators in the package, we created an artificial three-phase scenario by recoding the phase indicators in the \code{grisons} data set (column \code{phase_id_3p}) according to the terminology used in this article (\code{0} for $s_0$, \code{1} for $s_1$, \code{2} for $s_2$). We now assume that the mean canopy height (\code{mean}) is available at all 306 sample locations $x \in s_0$, whereas we have the explanatory variables \code{stddev}, \code{max} and \code{q75} only at 128 subsamples $s_1$ of $s_0$. At 40 further subsamples $s_2$ we have the observations $Y(x)$ from the field inventory. Based on this setup, we can now define the reduced and full regression model formulas to be used in the \code{threephase()} function (note that the models are nested).
 
 \begin{small}
 <<>>=
@@ -132,7 +110,7 @@ formula.fm <- tvol ~ mean + stddev + max + q75 # full model applied to s1 phase
 @
 \end{small}
 
-Note that compared to the \code{twophase()}-function, we now have to specify two regression models, i.e. the nested reduced (\code{formula.s0}) and full (\code{formula.s1}) regression model. In addition, we also have to specify the indication of the $s_1$ phase (\code{s1.id}) in the argument \code{phase_id}. The global three-phase estimation can thus be applied by
+Compared to the \code{twophase()}-function, we now have to specify two regression models, i.e. the nested reduced (\code{formula.s0}) and full (\code{formula.s1}) regression model. In addition, we also have to specify the indication of the $s_1$ phase (\code{s1.id}) in the argument \code{phase_id}. The global three-phase estimation can thus be applied by
 
 
 <<echo=FALSE>>=
@@ -155,23 +133,9 @@ summary(reg3p_nex)
 @
 \end{small}
 
-The \code{summary()} of a \code{threephase()}-function recalls both regression model formulas and also gives the coefficients of determination $R^2$ for both the reduced (\code{r.squared_reduced}) and the full (\code{r.squared_full}) regression model. The set of sample sizes have also been extented by the $s_0$ phase (\code{n0}). In order to compare the results to the respective two-phase estimation, we assume that we have the mean canopy height as the only explanatory variable at all 306 sample locations:
+The \code{summary()} of a \code{threephase()}-function now recalls \textit{both} regression model formulas and also gives the coefficients of determination $R^2$ for both the reduced (\code{r.squared_reduced}) and the full (\code{r.squared_full}) regression model. We are told that including \code{stddev}, \code{max} and \code{q75} besides \code{mean} yields a 20 \% improvement in R$^2$. If we used \code{mean} as the only auxiliary variable at all sample locations (two-phase approach), we would see that the three-phase extention led to a considerable reduction in variance.
 
-\begin{small}
-<<>>=
-reg2p_nex<- twophase(formula = formula.rm, data = grisons,
-                       phase_id = list(phase.col="phase_id_2p", terrgrid.id = 2),
-                       boundary_weights = "boundary_weights")
-@
-\end{small}
 
-\begin{small}
-<<>>=
-reg2p_nex$estimation
-@
-\end{small}
-
-Comparing the $R^2$s of the three and two-phase result, it becomes obvious that the incorporation of the additional explanatory variables \code{stddev}, \code{max} and \code{q75} led to a 20\% increase in explained variance in the regression model. While the more precise regression model was only applied at 40\% of all 306 sample locations (\textit{sampling fraction}), it was possible to considerably reduce the two-phase variance and thus achieve a higher estimation precision. 
 
 %--------------------------------------------------------------------------------------------------%
 % ################################################################################################ %
@@ -184,32 +148,30 @@ Comparing the $R^2$s of the three and two-phase result, it becomes obvious that 
 % ------------------------------------- %
 \subsubsection{Mathematical Background}
 
-The 3 small area estimators under three-phase sampling provided by the package extend the two-phase small area estimator of section \ref{sec:twophase_sae} to the three-phase case. Note that the general principle stays the same, i.e. all information used is restricted to the small area $G$, with exception of retrieving the regession coefficients of the reduced and full model and their variance-covariance matrices.
+The three two-phase small area estimators described in section \ref{sec:twophase_sae} can also be extended to the three-phase scenario. The general principle thereby stays the same, i.e. the regession coefficients of the reduced and full model and their variance-covariance matrices are calculated on the entire $s_2$ sample according to equations \ref{eq:normequ_redmod}, \ref{eq:normequ_fullmod}, \ref{eq:covar_alpha} and \ref{eq:covar_beta}, and are subsequently used to make predictions for sample locations restricted to small area $G$.
 
-We first define the estimated means of the explanatory variables within the small area $G$:
-
-\begin{equation}\label{meanvalues3psaenext}
-\hat{\bar{\pmb{Z}}}^{(0)}_{0,G}=\frac{1}{n_{0,G}}\sum_{x\in{s_{0,G}}} \pmb{Z}^{(0)}(x), \quad \hat{\bar{\pmb{Z}}}^{(0)}_{1,G}=\frac{1}{n_{1,G}}\sum_{x\in{s}_{1,G}}\pmb{Z}^{(0)}(x) ,
-\quad \hat{\bar{\pmb{Z}}}_{1,G}=\frac{1}{n_{1,G}}\sum_{x\in{s}_{1,G}}\pmb{Z}(x)
-\end{equation}
+% We first define the estimated means of the explanatory variables within the small area $G$:
+% 
+% \begin{equation}\label{meanvalues3psaenext}
+% \hat{\bar{\pmb{Z}}}^{(0)}_{0,G}=\frac{1}{n_{0,G}}\sum_{x\in{s_{0,G}}} \pmb{Z}^{(0)}(x), \quad \hat{\bar{\pmb{Z}}}^{(0)}_{1,G}=\frac{1}{n_{1,G}}\sum_{x\in{s}_{1,G}}\pmb{Z}^{(0)}(x) ,
+% \quad \hat{\bar{\pmb{Z}}}_{1,G}=\frac{1}{n_{1,G}}\sum_{x\in{s}_{1,G}}\pmb{Z}(x)
+% \end{equation}
 
 %----------------------------------------------- %
 % \textbf{Small and Pseudo Small Area Estimator}\par
 
-The \textbf{small} (\textit{small}) and \textbf{pseudo small area estimator} (\textit{psmall}) follow the same principle as in the two-phase case, i.e. applying the globally derived reduced and full regression model to the small area means of the explanatory variables, and then correcting for a potential model bias by adding the residual mean of the full model, which is not zero in general, to the point estimate (equations \ref{eq:pe_3p_small} and \ref{eq:pe_3p_psmall}). Note that the difference between the mean $\hat{\bar{\pmb{Z}}}^{(0)}_{1,G}$ derived in the $s_1$ phase and the more precise mean $\hat{\bar{\pmb{Z}}}^{(0)}_{0,G}$ or exact mean $\bar{\pmb{Z}}^{(0)}_{0,G}$ derived in the $s_0$ phase is again considered as a residual term likewise in the global estimation (equation \ref{eq:reg3p_ex} and \ref{eq:reg3p_nex}).
-
-The \textbf{point estimates} are unbiased and given by:
+The unbiased \textbf{point estimates} of the \textbf{small} (\textit{small}) and \textbf{pseudo small area estimator} (\textit{psmall}) are calculated by applying the globally derived reduced and full regression model coefficients to the small area means of the explanatory variables, and then correcting for a potential model bias in $G$ by adding the small area mean of the full model residuals, i.e. ${R}_{G}(x)=Y_G(x)-\pmb{Z}_G^t(x)\hat{\beta}_{s_2}$, to the point estimate. The difference between the mean $\hat{\bar{\pmb{Z}}}^{(0)}_{1,G}$ and the more precise or exact mean $\hat{\bar{\pmb{Z}}}^{(0)}_{0,G}$ and $\bar{\pmb{Z}}^{(0)}_{0,G}$ is again considered as a residual term likewise in the global estimation (equation \ref{eq:reg3p_ex} and \ref{eq:reg3p_nex}).
 
 \begin{subequations}\label{eq:pest_3p_small_psmall}
 \begin{align}
 \hat{Y}_{G,small,3p}&=(\bar{\pmb{Z}}^{(0)}_{0,G}-\hat{\bar{\pmb{Z}}}^{(0)}_{1,G})^t\hat{\pmb{\alpha}}_{s_2} +
-\hat{\bar{\pmb{Z}}}^t_{1,G}\hat{\pmb{\beta}}_{s_2}+\frac{1}{n_{2,G}}\bar{\hat{R}}_{G}(x) \label{eq:pe_3p_small} \\
+\hat{\bar{\pmb{Z}}}^t_{1,G}\hat{\pmb{\beta}}_{s_2}+\frac{1}{n_{2,G}}\hat{R}_{G}(x) \label{eq:pe_3p_small} \\
 \hat{Y}_{G,psmall,3p}&=(\hat{\bar{\pmb{Z}}}^{(0)}_{0,G}-\hat{\bar{\pmb{Z}}}^{(0)}_{1,G})^t\hat{\pmb{\alpha}}_{s_2} +
-\hat{\bar{\pmb{Z}}}^t_{1,G}\hat{\pmb{\beta}}_{s_2}+\frac{1}{n_{2,G}}\bar{\hat{R}}_{G}(x) \label{eq:pe_3p_psmall}
+\hat{\bar{\pmb{Z}}}^t_{1,G}\hat{\pmb{\beta}}_{s_2}+\frac{1}{n_{2,G}}\hat{R}_{G}(x) \label{eq:pe_3p_psmall}
 \end{align}
 \end{subequations}
 
-with ${R}_{G}(x)=Y_G(x)-\pmb{Z}_G^t(x)\hat{\beta}_{s_2}$ being the full model residuals in small area $G$. The \textbf{design-based variance} is then calculated as
+The \textbf{g-weight variance} is then calculated as
 
 \begin{subequations}\label{eq:var_3p_small_psmall}
 \begin{flalign}
@@ -254,17 +216,12 @@ with $\hat{Y}_{0}(x)=\pmb{Z}^{(0)t}(x)\hat{\pmb{\alpha}}_{s_2}$ being the reduce
 
 The \textbf{synthetic} (\textit{synth}) and \textbf{pseudo synthetic estimator} (\textit{psynth}) can be applied if no terrestrial samples are available in the small area, i.e. $n_{2,G}=0$. Consequently, the residual correction and the residual variation term of the full model can no longer be applied and drops from the point (equation \ref{eq:pe_3p_synth} and \ref{eq:pe_3p_psynth}) and design-based variance (equation \ref{eq:var_3p_reg_synth} and \ref{eq:var_3p_reg_psynth}) formulas. The point estimates are again potentially biased since the zero mean residual property $\int_G R(x)dx=0$ of the full model can not be insured within the small area $G$. Also the variance will be small but to the cost of ignoring the model uncertainties. Note that there is again no external variance formula for the synthetic and pseudo synthetic estimation.
 
-\begin{subequations}\label{eq:pest_3p_synth_psynth}
+\begin{subequations}\label{eq:3p_synth_psynth}
 \begin{align}
 \hat{Y}_{G,synth,3p}&=(\bar{\pmb{Z}}^{(0)}_{0,G}-\hat{\bar{\pmb{Z}}}^{(0)}_{1,G})^t\hat{\pmb{\alpha}}_2 +
 \hat{\bar{\pmb{Z}}}^t_{1,G}\hat{\pmb{\beta}}_{s_2} \label{eq:pe_3p_synth} \\
 \hat{Y}_{G,psynth,3p}&=(\hat{\bar{\pmb{Z}}}^{(0)}_{0,G}-\hat{\bar{\pmb{Z}}}^{(0)}_{1,G})^t\hat{\pmb{\alpha}}_2 +
-\hat{\bar{\pmb{Z}}}^t_{1,G}\hat{\pmb{\beta}}_{s_2}\label{eq:pe_3p_psynth}
-\end{align}
-\end{subequations}
-
-\begin{subequations}\label{eq:var_3p_synth_psynth}
-\begin{align}
+\hat{\bar{\pmb{Z}}}^t_{1,G}\hat{\pmb{\beta}}_{s_2}\label{eq:pe_3p_psynth} \\
 \hat{\var}(\hat{Y}_{G,synth,3p})& =\frac{n_2}{n_1}\bar{\pmb{Z}}^{(0)t}_{0,G}\hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}_{s_2}}
 \bar{\pmb{Z}}^{(0)}_{0,G}+(1-\frac{n_2}{n_1})\hat{\bar{\pmb{Z}}}_{1,G}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}
 \hat{\bar{\pmb{Z}}}_{1,G} \label{eq:var_3p_reg_synth}\\
@@ -275,53 +232,47 @@ The \textbf{synthetic} (\textit{synth}) and \textbf{pseudo synthetic estimator} 
 \end{align}
 \end{subequations}
 
+% \begin{subequations}\label{eq:var_3p_synth_psynth}
+% \begin{align}
+% \hat{\var}(\hat{Y}_{G,synth,3p})& =\frac{n_2}{n_1}\bar{\pmb{Z}}^{(0)t}_{0,G}\hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}_{s_2}}
+% \bar{\pmb{Z}}^{(0)}_{0,G}+(1-\frac{n_2}{n_1})\hat{\bar{\pmb{Z}}}_{1,G}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}
+% \hat{\bar{\pmb{Z}}}_{1,G} \label{eq:var_3p_reg_synth}\\
+% \hat{\var}(\hat{Y}_{G,psynth,3p})& = \hat{\pmb{\alpha}}_2^t\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{Z}}}^{(0)}_{0,G}}\hat{\pmb{\alpha}}_2 +
+% \frac{n_2}{n_1}\hat{\bar{\pmb{Z}}}^{(0)t}_{0,G}\hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}_{s_2}}
+% \hat{\bar{\pmb{Z}}}^{(0)}_{0,G}+(1-\frac{n_2}{n_1})\hat{\bar{\pmb{Z}}}_{1,G}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}
+% \hat{\bar{\pmb{Z}}}_{1,G} \label{eq:var_3p_reg_psynth}
+% \end{align}
+% \end{subequations}
+
 
 %------------------------------------------------------------- %
 % \textbf{Extended Synthetic and Extended Pseudo Synthetic Estimator}\par
 
-The \textbf{extended synthetic} (\textit{extsynth}) and \textbf{extended pseudo synthetic estimator} (\textit{extpsynth}) insures that the residuals of the full model over both the entire inventory area $F$ and the small area $G$ are zero at the same time, i.e. $\int_F R(x)dx=\int_G R(x)dx=0$. This is again realized by extending the vector of explanatory variables by a binary categorical indicator variable $I_G(x)$ which takes the value 1 if the observation lies inside the small area $G$ and is otherwise set to 0. The extended auxiliary vector is thus defined as $\pmb{\mathbb{Z}}^t(x)=(\pmb{\mathbb{Z}}^{(0)t}(x),\pmb{\mathbb{Z}}^{t}(x))$, where $\pmb{\mathbb{Z}}^{(0)t}(x)=(\pmb{Z}^{(1)t}(x), I_G^t(x))$ and $\pmb{\mathbb{Z}}^{t}(x)=\pmb{Z}^{t}(x)$. This practically means that we have to specify the binary indicator variable for \textit{all} observations in the data frame that is passed to the package-functions.
-
-We first recalculate the regression coefficients $\hat{\pmb{\gamma}}_{s_2}$ and $\hat{\pmb{\theta}}_{s_2}$, and their variance-covarianve matrices $\hat{\pmb{\Sigma}}_{\hat{\pmb{\gamma}}_{s_2}}$ and $\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}$ under the extended auxiliary vector as
+The \textbf{extended synthetic} (\textit{extsynth}) and \textbf{extended pseudo synthetic estimator} (\textit{extpsynth}) insures that the residuals of the full model over both the entire inventory area $F$ and the small area $G$ are zero at the same time, i.e. $\int_F R(x)dx=\int_G R(x)dx=0$. This is again realized by extending the vector of explanatory variables by a binary categorical indicator variable $I_G(x)$ which takes the value 1 if the observation lies inside the small area $G$ and is otherwise set to 0. The extended auxiliary vector is thus defined as $\pmb{\mathbb{Z}}^t(x)=(\pmb{\mathbb{Z}}^{(0)t}(x),\pmb{\mathbb{Z}}^{t}(x))$, where $\pmb{\mathbb{Z}}^{(0)t}(x)=(\pmb{Z}^{(1)t}(x), I_G^t(x))$ and $\pmb{\mathbb{Z}}^{t}(x)=\pmb{Z}^{t}(x)$. This practically means that we have to specify the binary indicator variable for \textit{all} observations in the data frame that is passed to the package-functions. The regression coefficients $\hat{\pmb{\gamma}}_{s_2}$ and $\hat{\pmb{\theta}}_{s_2}$, and their variance-covarianve matrices $\hat{\pmb{\Sigma}}_{\hat{\pmb{\gamma}}_{s_2}}$ and $\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}$ under the extended auxiliary vector are thus recalculated as
 
 \begin{subequations}\label{eq:normequ_redmod_ext}
 \begin{align}
 \hat{\pmb{\gamma}}_{s_2} &= \Big(\frac{1}{n_2}\sum_{x\in{s}_2}\pmb{\mathbb{Z}}^{(0)}(x)\pmb{\mathbb{Z}}^{(0)t}(x)
 \Big)^{-1}\frac{1}{n_2}\sum_{x\in{s}_2}Y(x)\pmb{\mathbb{Z}}^{(0)}(x) \\
 \hat{\pmb{\theta}}_{{s_2}}&=\Big(\frac{1}{n_2}\sum_{x\in{s}_2}\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x)
-\Big)^{-1}\frac{1}{n_2}\sum_{x\in{s}_2}Y(x)\pmb{\mathbb{Z}}(x)
-\end{align}
-\end{subequations}
-
-and
-
-\begin{subequations}\label{eq:covar3p_ext}
-\begin{align}
-  \hat{\pmb{\Sigma}}_{\hat{\pmb{\gamma}}_{s_2}}=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}^{(0)}(x)\pmb{\mathbb{Z}}^{(0)t}(x) \Big)^{-1}
+\Big)^{-1}\frac{1}{n_2}\sum_{x\in{s}_2}Y(x)\pmb{\mathbb{Z}}(x) \\
+  \hat{\pmb{\Sigma}}_{\hat{\pmb{\gamma}}_{s_2}}&=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}^{(0)}(x)\pmb{\mathbb{Z}}^{(0)t}(x) \Big)^{-1}
   \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}_{0}^2(x)\pmb{\mathbb{Z}}^{(0)}(x)\pmb{\mathbb{Z}}^{(0)t}(x)\Big)
   \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}^{(0)}(x)\pmb{\mathbb{Z}}^{(0)t}(x) \Big)^{-1} \\
-  \hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x) \Big)^{-1}
+  \hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}&=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x) \Big)^{-1}
   \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}^2(x)\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x)\Big)
   \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x) \Big)^{-1}
 \end{align}
 \end{subequations}
 
-
-After computing the auxiliary means $\hat{\bar{\pmb{Z}}}^{(0)}_{0,G}=\frac{1}{n_{0,G}}\sum_{x\in{s_{0,G}}} \pmb{Z}^{(0)}(x)$, $\hat{\bar{\pmb{Z}}}^{(0)}_{1,G}=\frac{1}{n_{1,G}}\sum_{x\in{s}_{1,G}}\pmb{Z}^{(0)}(x)$, and $\hat{\bar{\pmb{Z}}}_{1,G}=\frac{1}{n_{1,G}}\sum_{x\in{s}_{1,G}}\pmb{Z}(x)$, we can calculate the \textbf{point estimate} as
-
+With the auxliary means and their variance-covariance matrices following the same notational change, the \textbf{point estimate} and \textbf{g-weight variance} are derived as
 
 \begin{subequations}\label{eq:pest_3p_synth_psynth_ext}
 \begin{align}
 \hat{Y}_{G,extsynth,3p}&=(\bar{\pmb{\mathbb{Z}}}^{(0)}_{0,G}-\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{1,G})^t\hat{\pmb{\gamma}}_2 +
 \hat{\bar{\pmb{\mathbb{Z}}}}^t_{1,G}\hat{\pmb{\theta}}_{s_2} \label{eq:pe_3p_extsynth} \\
 \hat{Y}_{G,extpsynth,3p}&=(\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{0,G}-\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{1,G})^t\hat{\pmb{\gamma}}_2 +
-\hat{\bar{\pmb{\mathbb{Z}}}}^t_{1,G}\hat{\pmb{\theta}}_{s_2}\label{eq:pe_3p_extpsynth}
-\end{align}
-\end{subequations}
-
-and the \textbf{design-based variance} defined as
-
-\begin{subequations}\label{eq:var_synth_psynth_ext}
-\begin{align}
+\hat{\bar{\pmb{\mathbb{Z}}}}^t_{1,G}\hat{\pmb{\theta}}_{s_2}\label{eq:pe_3p_extpsynth} \\
 \hat{\var}(\hat{Y}_{G,extsynth,3p})& =\frac{n_2}{n_1}\bar{\pmb{\mathbb{Z}}}^{(0)t}_{0,G}\hat{\pmb{\Sigma}}_{\hat{\pmb{\gamma}}_{s_2}}
 \bar{\pmb{Z}}^{(0)}_{0,G}+(1-\frac{n_2}{n_1})\hat{\bar{\pmb{\mathbb{Z}}}}_{1,G}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}
 \hat{\bar{\pmb{\mathbb{Z}}}}_{1,G} \label{eq:var_3p_reg_extsynth}\\
@@ -331,13 +282,6 @@ and the \textbf{design-based variance} defined as
 \end{align}
 \end{subequations}
 
-with 
-
-\begin{equation}\label{estvarcovaux3pG_ext}
-\hat{\Sigma}_{\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{0,G}}=
-\frac{1}{n_{0,G}(n_{0,G}-1)}\sum_{x\in{s_{0,G}}}
-(\pmb{\mathbb{Z}}^{(0)}(x)-\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{0,G})(\pmb{\mathbb{Z}}^{(0)}(x)-\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{0,G})^t
-\end{equation}
 
 The package also returns the \textbf{external variance} which is defined as
 
@@ -438,7 +382,7 @@ extpsynth_3p$estimation
 \end{small}
 
 
-Finally note that in practice, there are basically \textit{three scenarios} how a two-phase sample design might be extended to a three-phase estimation procedure. In the first scenario, more precise auxiliary information becomes available at a subset of the allready existing and used sample locations. In this case, one simply reclassifies the existing sample locations $x \in s_1$ into $s_0$ sample locations and assigns the $s_1$ indicator to those points where the new variables are available. In the second scenario, the auxiliary information is available at all sample locations $x \in s_1$, but the computation of some of the explanatory variables is computationally expensive. In this case, a considerable time saving could be realized by restricing their computation to a subset of all $s_1$ sample locations, which consequently leads to a three-phase scenario that is handeled likewise the first scenario. A respective example is given in \citet{mandallaz2013b} and \citet{mandallaz2013c}. In both the first and second scenario, the original sample size of the two-phase inventory remains unchanged, but the $s_1$ sample locations are splitted into $s_0$ and $s_1$ locations. In the third and last scenario, one has already used a set of explanatory variables at $s_1$ sample locations for a time before additional, less precise information becomes available in a much larger quantity over the inventory area. It still might yield an increase in estimation precision if this information is considered in the estimation in a much larger sample size than the more precise information (sample fraction). In this case, one creates a new phase $s_0$ by densifying the allready existing $s_1$ sample locations (which in practice are often arranged in regular grids) such that $n_0 >> n_1$ and $s_1 \in s_0$.
+% Finally note that in practice, there are basically \textit{three scenarios} how a two-phase sample design might be extended to a three-phase estimation procedure. In the first scenario, more precise auxiliary information becomes available at a subset of the allready existing and used sample locations. In this case, one simply reclassifies the existing sample locations $x \in s_1$ into $s_0$ sample locations and assigns the $s_1$ indicator to those points where the new variables are available. In the second scenario, the auxiliary information is available at all sample locations $x \in s_1$, but the computation of some of the explanatory variables is computationally expensive. In this case, a considerable time saving could be realized by restricing their computation to a subset of all $s_1$ sample locations, which consequently leads to a three-phase scenario that is handeled likewise the first scenario. A respective example is given in \citet{mandallaz2013b} and \citet{mandallaz2013c}. In both the first and second scenario, the original sample size of the two-phase inventory remains unchanged, but the $s_1$ sample locations are splitted into $s_0$ and $s_1$ locations. In the third and last scenario, one has already used a set of explanatory variables at $s_1$ sample locations for a time before additional, less precise information becomes available in a much larger quantity over the inventory area. It still might yield an increase in estimation precision if this information is considered in the estimation in a much larger sample size than the more precise information (sample fraction). In this case, one creates a new phase $s_0$ by densifying the allready existing $s_1$ sample locations (which in practice are often arranged in regular grids) such that $n_0 >> n_1$ and $s_1 \in s_0$.
 
 \newpage
 

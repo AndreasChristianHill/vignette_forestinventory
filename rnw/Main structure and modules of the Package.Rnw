@@ -12,7 +12,7 @@ Most forest inventories gather the field information by randomly or systematical
 \begin{figure}[htb]
 \centering
 \resizebox{0.42\hsize}{!}{\includegraphics{fig/localdensity_final-01.eps}}
-\caption{Artificial representation of a local density surface. The spatial distribution of a hypothetical density function for every point in a forested area is represented as wavy piecewise constant green surface.  Sample plots (white dots) inform the inventorist of the value of the density function at that point.}
+\caption{Artificial representation of a local density surface. The spatial distribution of a hypothetical density function for every point in a forested area is represented as a wavy piecewise constant green surface.  Sample plots (white dots) inform the inventorist of the value of the density function at that point.}
 \label{fig:inf_pop_apr}
 \end{figure}
 
