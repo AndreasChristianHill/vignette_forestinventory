@@ -111,7 +111,7 @@ extpsmall.clust$estimation
 @
 \end{small}
 
-Comparing the \textit{extpsynth} and \textit{psmall} estimates, we see that in this particular case the point estimates are close and more important, the external as well as the design-based variances only differ marginally. This can be taken as evidence that the violation of the zero mean residual property can here expected to be negligible.
+Comparing the \textit{extpsynth} and \textit{psmall} estimates, we see that in this particular case the point estimates are close and more important, the external as well as the g-weight variances only differ marginally. This can be taken as evidence that the violation of the zero mean residual property can here expected to be negligible.
 
 % --------------------------------------------------------------------- %
 \subsection{Violation of Nesting in Sample Design}

@@ -209,12 +209,12 @@ The \textbf{external variance} is defined as:
 \end{flalign}
 \end{subequations}
 
-with $\hat{Y}_{0}(x)=\pmb{Z}^{(0)t}(x)\hat{\pmb{\alpha}}_{s_2}$ being the reduced model predictions and $\hat{R}_{0}=Y(x)-\hat{Y}_{0}$ being the reduced model residuals. Likewise the design-based variance, the difference between the exhaustive and non-exhaustive form is the variance of the predictions $\hat{Y}_{0}(x)$ within the $s_{0,G}$ phase.
+with $\hat{Y}_{0}(x)=\pmb{Z}^{(0)t}(x)\hat{\pmb{\alpha}}_{s_2}$ being the reduced model predictions and $\hat{R}_{0}=Y(x)-\hat{Y}_{0}$ being the reduced model residuals. Likewise the g-weight variance, the difference between the exhaustive and non-exhaustive form is the variance of the predictions $\hat{Y}_{0}(x)$ within the $s_{0,G}$ phase.
 
 %------------------------------------------------------------- %
 % \textbf{Synthetic and Pseudo Synthetic Estimator}\par
 
-The \textbf{synthetic} (\textit{synth}) and \textbf{pseudo synthetic estimator} (\textit{psynth}) can be applied if no terrestrial samples are available in the small area, i.e. $n_{2,G}=0$. Consequently, the residual correction and the residual variation term of the full model can no longer be applied and drops from the point (equation \ref{eq:pe_3p_synth} and \ref{eq:pe_3p_psynth}) and design-based variance (equation \ref{eq:var_3p_reg_synth} and \ref{eq:var_3p_reg_psynth}) formulas. The point estimates are again potentially biased since the zero mean residual property $\int_G R(x)dx=0$ of the full model can not be insured within the small area $G$. Also the variance will be small but to the cost of ignoring the model uncertainties. Note that there is again no external variance formula for the synthetic and pseudo synthetic estimation.
+The \textbf{synthetic} (\textit{synth}) and \textbf{pseudo synthetic estimator} (\textit{psynth}) can be applied if no terrestrial samples are available in the small area, i.e. $n_{2,G}=0$. Consequently, the residual correction and the residual variation term of the full model can no longer be applied and drops from the point (equation \ref{eq:pe_3p_synth} and \ref{eq:pe_3p_psynth}) and g-weight variance (equation \ref{eq:var_3p_reg_synth} and \ref{eq:var_3p_reg_psynth}) formulas. The point estimates are again potentially biased since the zero mean residual property $\int_G R(x)dx=0$ of the full model can not be insured within the small area $G$. Also the variance will be small but to the cost of ignoring the model uncertainties. Note that there is again no external variance formula for the synthetic and pseudo synthetic estimation.
 
 \begin{subequations}\label{eq:3p_synth_psynth}
 \begin{align}
@@ -325,7 +325,6 @@ extsynth_3p <- threephase(formula.rm, formula.fm, data = grisons,
                                    unbiased = TRUE),
                   exhaustive = truemeans.G, 
                   boundary_weights = "boundary_weights")
-
 @
 \end{small}
 
@@ -371,7 +370,6 @@ extpsynth_3p <- threephase(formula.rm, formula.fm, data = grisons,
                   small_area = list(sa.col = "smallarea", areas = c("A", "B"),
                                    unbiased = TRUE),
                   boundary_weights = "boundary_weights")
-
 @
 \end{small}
 
