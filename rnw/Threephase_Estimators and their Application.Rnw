@@ -357,8 +357,7 @@ synth_3p$estimation
 @
 \end{small}
 
-We see that the \code{threephase()}-function returns the sample sizes in the entire inventory area as well as within each small area. The value \code{Inf} for \code{n0G} indicates that the explanatory variables at $s_0$ sample locations used in the reduced model were in our case derived exhaustively. If we compare the two results, we see that the synthetic estimation again yields a much smaller variance than the extended synthetic estimation, but to the cost of ignoring the model uncertainties.
-
+We see that the \code{threephase()}-function returns the sample sizes in the entire inventory area as well as within each small area. The value \code{Inf} for \code{n0G} indicates that the explanatory variables at $s_0$ sample locations used in the reduced model were in our case derived exhaustively. If we compare the two results, we see that the synthetic estimation again yields a much smaller variance than the extended synthetic estimation, but at the cost of ignoring the model uncertainties.
 
 We can also analyse how the exhaustive derivation of \code{mean} performed compared to the case where \code{mean} is non-exhaustively available but at a very large $s_0$ phase with $n_{0,G}>>n_{1,G}$. To do this, we additionally compute the \textbf{extended pseudo synthetic} estimates. As we can see, the exhaustive derivation of \code{mean} only yielded a slightly smaller variance.
 
@@ -379,8 +378,6 @@ extpsynth_3p$estimation
 @
 \end{small}
 
-
-% Finally note that in practice, there are basically \textit{three scenarios} how a two-phase sample design might be extended to a three-phase estimation procedure. In the first scenario, more precise auxiliary information becomes available at a subset of the allready existing and used sample locations. In this case, one simply reclassifies the existing sample locations $x \in s_1$ into $s_0$ sample locations and assigns the $s_1$ indicator to those points where the new variables are available. In the second scenario, the auxiliary information is available at all sample locations $x \in s_1$, but the computation of some of the explanatory variables is computationally expensive. In this case, a considerable time saving could be realized by restricing their computation to a subset of all $s_1$ sample locations, which consequently leads to a three-phase scenario that is handeled likewise the first scenario. A respective example is given in \citet{mandallaz2013b} and \citet{mandallaz2013c}. In both the first and second scenario, the original sample size of the two-phase inventory remains unchanged, but the $s_1$ sample locations are splitted into $s_0$ and $s_1$ locations. In the third and last scenario, one has already used a set of explanatory variables at $s_1$ sample locations for a time before additional, less precise information becomes available in a much larger quantity over the inventory area. It still might yield an increase in estimation precision if this information is considered in the estimation in a much larger sample size than the more precise information (sample fraction). In this case, one creates a new phase $s_0$ by densifying the allready existing $s_1$ sample locations (which in practice are often arranged in regular grids) such that $n_0 >> n_1$ and $s_1 \in s_0$.
 
 \newpage
 

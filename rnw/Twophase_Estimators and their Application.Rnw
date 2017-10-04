@@ -108,15 +108,17 @@ Note that there are few cases where the exact mean can also be precisely calcula
 \begin{figure}[htb]
 	\begin{subfigure}[t]{0.5\textwidth}
 		\centering
-    \resizebox{1.12\hsize}{!}{\includegraphics{fig/exh_and_boundweights(2).PNG}}%
+    %\resizebox{1.12\hsize}{!}{\includegraphics{fig/exh_and_boundweights(2).PNG}}%
+    \resizebox{0.85\hsize}{!}{\includegraphics{fig/boundaryweight_graphic(left).eps}}%
 		\caption{} \label{fig:exh_nexh_and_boundweights_a}
 		\end{subfigure}
 	\begin{subfigure}[t]{0.5\textwidth}
 		\centering
-   \resizebox{0.77\hsize}{!}{\includegraphics{fig/nexh_and_boundweights.PNG}}%
+   %\resizebox{0.77\hsize}{!}{\includegraphics{fig/nexh_and_boundweights.PNG}}%
+   \resizebox{0.85\hsize}{!}{\includegraphics{fig/boundaryweight_graphic(right).eps}}%
 		\caption{} \label{fig:exh_nexh_and_boundweights_b}
 	\end{subfigure}
-\caption{Concept of exhaustive, see \textbf{(a)}, and non-exhaustive, see \textbf{(b)}, calculation of explanatory variables including boundary adjustment at the support level. Auxiliary data are in both cases available over the entire inventory area marked by the large rectangle. A set $\pmb{Z}$ of $p$ explanatory variables $x_{1},...,x_{p}$ is calculated within the small squares at each sample location $x$ (points) that falls into the forest area (green underlying polygon). w: weights used for calculating the weighted mean of each explanatory variable. Dotted circles indicate terrestrial sample plots.}
+\caption{Concept of exhaustive, see \textbf{(a)}, and non-exhaustive, see \textbf{(b)}, calculation of explanatory variables including boundary adjustment at the support level. Auxiliary data are in both cases available over the entire inventory area marked by the large rectangle. A vector of explanatory variables $\pmb{Z}(x)$ is calculated within the supports (small squares)  at each sample location $x$ (points) that falls into the forest area (green underlying polygon). w: weights used for calculating the weighted mean of each explanatory variable. Dotted circles indicate terrestrial sample plots.}
 \label{fig:exh_nexh_bw}
 \end{figure}
 
@@ -311,10 +313,6 @@ The \textbf{synthetic estimator} (\textit{synth}) and \textbf{pseudo synthetic e
 \begin{align}
   \hat{Y}_{G,synth,2p} & =\bar{\pmb{Z}}_G^t\hat{\pmb{\beta}}_{s_2} \label{eq:pointest_2p_reg_synth} \\
   \hat{Y}_{G,psynth,2p} & =\hat{\bar{\pmb{Z}}}_G^t\hat{\pmb{\beta}}_{s_2} \label{eq:pointest_2p_reg_psynth} \\
-% \end{align}
-% \end{subequations}
-% \begin{subequations}\label{eq:var_2p_synth_psynth}
-% \begin{align}
   \hat{\var}(\hat{Y}_{G,synth,2p}) & = \bar{\pmb{Z}}_G^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}\bar{\pmb{Z}}_G \label{eq:var_2p_reg_synth} \\
   \hat{\var}(\hat{Y}_{G,psynth,2p}) & = \hat{\bar{\pmb{Z}}}_G^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}\hat{\bar{\pmb{Z}}}_G
   + \hat{\pmb{\beta}}_{s_2}^t\hat{\Sigma}_{\hat{\bar{\pmb{Z}}}_G}\hat{\pmb{\beta}}_{s_2}  \label{eq:var_2p_reg_psynth}
@@ -331,7 +329,7 @@ where the variance-covariance matrix of the auxiliary vector $\hat{\bar{\pmb{Z}}
 %------------------------------------------------------------- %
 % \textbf{Extended Synthetic and Extended Pseudo Synthetic Estimator}\par
 
-The synthetic estimators, \textit{synth} and \textit{psynth}, have attractively compact formulas but come with the downside of potential bias in their point estimates as well as unreliably small variances. The \textit{small} and \textit{psmall} estimators overcome this issue by using a bias correction term, i.e. $\frac{1}{n_{2,G}}\sum_{x \in s_{2,G}}\hat{R}(x)$. The motivation behind the \textbf{\textit{extended}} \textbf{synthetic} and \textbf{\textit{extended}} \textbf{pseudo synthetic estimator} (\textit{extsynth} and \textit{extpsynth}) is to use the same mathematically elegant formulas of the (pseudo) synthetic estimators while at the same time ensuring that the prediction model residuals over the entire area $F$ and the small area $G$ are by definition both zero at the same time, i.e. $\int_F R(x)dx=\int_G R(x)dx=0$. This is accomplished by extending the vector of auxiliary information $\pmb{Z}(x)$ by a binary categorical indicator variable $I_G(x)$ which takes the value 1 if the sample location $x$ lies inside the target small area $G$ and is otherwise set to 0. Recalling that linear models fit using OLS have zero mean residuals property by construction, this leads to unbiased point estimates and is also true if categorical variables are included in the model. The new \textit{extended} auxiliary vector thus becomes $\pmb{\mathbb{Z}}^t(x)=(\pmb{Z}^t(x),I_G(x))$ and can be used to replace its non-extended counterpart $\pmb{Z}^t(x)$ whereever it is used in Equations \ref{eq:pest_2p_synth_psynth}, \ref{eq:var_2p_synth_psynth} and  \ref{estvarcovaux_G}. Note that the package functions internally extent the data set by the indicator variable if the \textit{extsynth} or \textit{extpsynth} estimator is called.
+The synthetic estimators, \textit{synth} and \textit{psynth}, have attractively compact formulas but come with the downside of potential bias in their point estimates as well as unreliably small variances. The \textit{small} and \textit{psmall} estimators overcome this issue by using a bias correction term, i.e. $\frac{1}{n_{2,G}}\sum_{x \in s_{2,G}}\hat{R}(x)$. The motivation behind the \textbf{\textit{extended}} \textbf{synthetic} and \textbf{\textit{extended}} \textbf{pseudo synthetic estimator} (\textit{extsynth} and \textit{extpsynth}) is to use the same mathematically elegant formulas of the (pseudo) synthetic estimators while at the same time ensuring that the prediction model residuals over the entire area $F$ and the small area $G$ are by definition both zero at the same time, i.e. $\int_F R(x)dx=\int_G R(x)dx=0$. This is accomplished by extending the vector of auxiliary information $\pmb{Z}(x)$ by a binary categorical indicator variable $I_G(x)$ which takes the value 1 if the sample location $x$ lies inside the target small area $G$ and is otherwise set to 0. Recalling that linear models fit using OLS have zero mean residuals property by construction, this leads to unbiased point estimates and is also true if categorical variables are included in the model. The new \textit{extended} auxiliary vector thus becomes $\pmb{\mathbb{Z}}^t(x)=(\pmb{Z}^t(x),I_G(x))$ and can be used to replace its non-extended counterpart $\pmb{Z}^t(x)$ whereever it is used in Equations \ref{eq:pest_2p_synth_psynth} and \ref{estvarcovaux_G}. Note that the package functions internally extent the data set by the indicator variable if the \textit{extsynth} or \textit{extpsynth} estimator is called.
 
 Not every equation needs to be re-written here, but to give an example of the notational change, the regression coefficient under extended model approach becomes
 

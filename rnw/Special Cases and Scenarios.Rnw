@@ -236,7 +236,7 @@ Note that that all the automatic data adjustments (deletion, recoding) have to b
 
 \subsubsection*{Violation 4}
 
-If a categorical variable is used in the regression model(s) and the terrestrial sample $s_2$ is considerably small compared to the $s_1$ phase, it might occur that a category is only present in the $s_1 \not\in s_2$ sample, and thus missing in the $s_2$ sample. Conclusively, an internal regression model can not be calculated and the function \textbf{stops} with the following error message:
+If a categorical variable is used in the regression model(s) and the terrestrial sample $s_2$ is considerably small compared to the $s_1$ phase, it might occur that a category level is only present in the $s_1 \backslash s_2$ sample, and thus missing in the $s_2$ sample. Conclusively, an internal regression model can not be calculated and the function \textbf{stops} with the following error message:
 
 \begin{small}
 <<eval=FALSE>>=
