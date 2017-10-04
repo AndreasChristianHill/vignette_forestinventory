@@ -119,7 +119,7 @@ options(width=10000)
 
 \begin{small}
 <<>>=
-reg3p_nex<- threephase(formula.s0 = formula.rm, 
+reg3p_nex <- threephase(formula.s0 = formula.rm, 
                   formula.s1 = formula.fm, data = grisons,
                   phase_id = list(phase.col="phase_id_3p", s1.id = 1, 
                                   terrgrid.id = 2),

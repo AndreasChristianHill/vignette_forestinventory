@@ -20,7 +20,7 @@ To demonstrate \textit{poststratification}, we first create an artificial catego
 
 \begin{small}
 <<>>=
-grisons$stage<- as.factor(kmeans(grisons$mean, centers = 3)$cluster)
+grisons$stage <- as.factor(kmeans(grisons$mean, centers = 3)$cluster)
 @
 \end{small}
 
@@ -66,7 +66,7 @@ For small area applications, the scenario might occur where the points of a clus
 
 In oder to keep track of such cases, the package \pkg{forestinventory} tells the user to do so by returning a warning message:
 <<echo=FALSE>>=
-extpsynth.clust<- twophase(formula = basal ~ stade + couver + melange, data=zberg,
+extpsynth.clust <- twophase(formula = basal ~ stade + couver + melange, data=zberg,
                      phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
                       cluster = "cluster",
                       small_area = list(sa.col = "ismallold", areas = c("1"),
@@ -75,7 +75,7 @@ extpsynth.clust<- twophase(formula = basal ~ stade + couver + melange, data=zber
 \begin{small}
 \begin{Schunk}
 \begin{Sinput}
-R> extpsynth.clust<- twophase(formula = basal ~ stade + couver + melange, data=zberg,
+R> extpsynth.clust <- twophase(formula = basal ~ stade + couver + melange, data=zberg,
 +                      phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
 +                      cluster = "cluster",
 +                      small_area = list(sa.col = "ismallold", areas = c("1"),
@@ -90,7 +90,7 @@ Check mean_Rc_x_hat_G and consider alternative estimator 'psmall'
 
 \begin{small}
 <<>>=
-extpsmall.clust<- twophase(formula = basal ~ stade + couver + melange, data=zberg,
+extpsmall.clust <- twophase(formula = basal ~ stade + couver + melange, data=zberg,
                      phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
                       cluster = "cluster",
                       small_area = list(sa.col = "ismallold", areas = c("1"),
@@ -133,7 +133,7 @@ Based on the nesting rule $s_2 \in s_1 \in s_0$, each $s_2$ (i.e. terrestrially 
 \begin{small}
 <<eval=FALSE>>=
 ## delete "mean" value from an s2- (i.e. s1- and s0-) sample point:
-grisons[which(grisons$phase_id_3p==2)[1],"mean"]<- NA
+grisons[which(grisons$phase_id_3p==2)[1],"mean"] <- NA
 @
 \end{small}
 
@@ -166,7 +166,7 @@ However, if an $s_2$ and/or $s_1$ point misses a variable which is only used in 
 \begin{small}
 <<eval=FALSE>>=
 ## delete "q75" value from an s2-sample point:
-grisons[which(grisons$phase_id_3p==2)[1],"q75"]<- NA
+grisons[which(grisons$phase_id_3p==2)[1],"q75"] <- NA
 @
 \end{small}
 
@@ -211,7 +211,7 @@ If an $s_0$ point misses at least one of the explanatory variables used in the r
 \begin{small}
 <<eval=FALSE>>=
 ## delete "mean" value from an s0-sample point:
-grisons[which(grisons$phase_id_3p==0)[1],"mean"]<- NA
+grisons[which(grisons$phase_id_3p==0)[1],"mean"] <- NA
 @
 \end{small}
 
@@ -241,7 +241,7 @@ If a categorical variable is used in the regression model(s) and the terrestrial
 \begin{small}
 <<eval=FALSE>>=
 ## delete s2-points with "stade"-level '300'
-zberg<- zberg[-which(zberg.n$phase_id_2p == 2 & zberg.n$stade=="300"), ]
+zberg <- zberg[-which(zberg.n$phase_id_2p == 2 & zberg.n$stade=="300"), ]
 @
 \end{small}
 

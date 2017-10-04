@@ -37,13 +37,6 @@ psynth_3p<- threephase(formula.s0 = tvol ~ mean,
                       boundary_weights = "boundary_weights")
           
 
-
-grisons.sae.table.CI<- estTable(est.list = list(op, extpsynth_2p, psynth_2p,
-                                                extpsynth_3p, psynth_3p),
-                                sae = TRUE, 
-                                vartypes = c("variance", "g_variance",  "ext_variance"))
-
-
 grisons.sae.table<- estTable(est.list = list(op, extpsynth_2p, psynth_2p,
                                                 extpsynth_3p, psynth_3p),
                                 sae = TRUE, 
@@ -51,7 +44,7 @@ grisons.sae.table<- estTable(est.list = list(op, extpsynth_2p, psynth_2p,
 
 
 
-plot(grisons.sae.table.CI, ncol = 2, yvar = "estimate")
+plot(grisons.sae.table, ncol = 2, yvar = "estimate")
 
 ## save graphic for article:
 ggsave("plot_est_ci.png", 
@@ -69,7 +62,6 @@ ggsave("plot_est_ci.png",
 
 
 plot(grisons.sae.table, ncol = 2, yvar = "error")
-
 
 ## save graphic for article:
 ggsave("plot_error.png", 
