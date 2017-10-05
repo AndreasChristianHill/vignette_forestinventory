@@ -8,36 +8,6 @@
 \subsection{Global Estimators}
 \label{sec:twophase_globest}
 
-
-% NOTES:
-% - The package also allows for calculating estimates solely based on the terrestrial sample $s_2$ (so called \textit{onephase estimation})
-%   by the \code{onephase} function in \pkg{forestinventory}. This function can also be used to access the gain in efficiency of the mutliphase estimation procedures. 
-%
-% - we only use the non-cluster sampling here to illustrate:
-% a) reg-coef calculation, point estimates and two variances, important components
-% b) we introduce the boundary adjustments: explain why, give mathematical formula, mention that this is optional and can be left out, in which case the simple means of Z are used
-% c) exhaustive and non-exhaustive
-
-
-% Here, we give the \textbf{mathematical background} of:
-% \begin{itemize}
-%   \item the classical two-phase estimator, including:
-%     \item the external and g-weight variance. Explain the differences and pros for using the g-weight version
-%     \item the auxiliary components (Z) and covvar(Z) as well as their use in the point and variance estimator
-%   \item the boundary weight adjustment (mathematically: weighted means of Z) --> our extension to the already published stuff
-%   \item ...
-% \end{itemize}
-% 
-% 
-
-% 
-% Here, we give the \textbf{application} examples:
-% \begin{itemize}
-%   \item example for non-exhaustive case: use grison dataset
-%     \item with boundary adjustments, just mention that this is optional and can be left out, in which case the simple means of Z are used
-%   \item example for exhaustive case: use cluster set
-% \end{itemize}
-
 \subsubsection{Mathematical Background}
 
 The vector of regression coefficients of the OLS regression model is found by using the following solution to the sample-based normal equation:
