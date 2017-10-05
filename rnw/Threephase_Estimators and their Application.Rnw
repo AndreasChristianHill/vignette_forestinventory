@@ -33,7 +33,7 @@ Solving the sample based normal equations, the vector of regression coefficients
 \end{align}
 \end{subequations}
 
-The package allows for the calculation of \textbf{point estimates} under exhaustive and non-exhaustive use of the auxiliary information in the $s_0$ phase. Staying in the internal model approach again insures the zero mean residual property over $F$.
+The package allows for the calculation of \textbf{point estimates} under exhaustive and non-exhaustive use of the auxiliary information in the $s_0$ phase. Staying in the internal model approach again ensures the zero mean residual property over $F$.
 
 \begin{subequations}\label{reg3p}
 \begin{align}
@@ -95,9 +95,6 @@ Note that ${R}(x)=Y(x)-\pmb{Z}^t(x)\hat{\beta}_{s_2}$ denotes the residuals of t
 \end{subequations}
 
 
-% We see that equation \ref{eq:dbvar_reg3p_ex} (exhaustive case) and \ref{eq:dbvar_reg3p_nex} (non-exhaustive case) differ by the term $\hat{\pmb{\alpha}}_{s_2}^t\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{Z}}}^{(0)}_0}\hat{\pmb{\alpha}}_2$ which is exactly the variance of the prediction $\hat{Y}_{0}(x)$ of the reduced model in the $s_0$ phase. This term can be made very small by chosing a large sample size $n_0$ for $s_0$ \citep{mandallaz2013techb}.
-
-
 % ------------------------------------- %
 \subsubsection{Application}
 
@@ -133,7 +130,7 @@ summary(reg3p_nex)
 @
 \end{small}
 
-The \code{summary()} of a \code{threephase()}-function now recalls \textit{both} regression model formulas and also gives the coefficients of determination $R^2$ for both the reduced (\code{r.squared_reduced}) and the full (\code{r.squared_full}) regression model. We are told that including \code{stddev}, \code{max} and \code{q75} besides \code{mean} yields a 20 \% improvement in R$^2$. If we used \code{mean} as the only auxiliary variable at all sample locations (two-phase approach), we would see that the three-phase extention led to a considerable reduction in variance.
+The \code{summary()} of a \code{threephase()}-function now recalls \textit{both} regression model formulas and also gives the $R^2$ for both the reduced (\code{r.squared_reduced}) and the full (\code{r.squared_full}) models. We are told that including \code{stddev}, \code{max} and \code{q75} yields a 20 \% improvement in R$^2$. If we used \code{mean} as the only auxiliary variable at all sample locations (two-phase approach), we would see that the three-phase extention led to a considerable reduction in variance.
 
 
 
@@ -148,14 +145,8 @@ The \code{summary()} of a \code{threephase()}-function now recalls \textit{both}
 % ------------------------------------- %
 \subsubsection{Mathematical Background}
 
-The three two-phase small area estimators described in section \ref{sec:twophase_sae} can also be extended to the three-phase scenario. The general principle thereby stays the same, i.e. the regession coefficients of the reduced and full model and their variance-covariance matrices are calculated on the entire $s_2$ sample according to equations \ref{eq:normequ_redmod}, \ref{eq:normequ_fullmod}, \ref{eq:covar_alpha} and \ref{eq:covar_beta}, and are subsequently used to make predictions for sample locations restricted to small area $G$.
+The three two-phase small area estimators described in Section \ref{sec:twophase_sae} can also be extended to the three-phase scenario. The general principle thereby stays the same, i.e. the regession coefficients of the reduced and full model and their variance-covariance matrices are calculated on the entire $s_2$ sample according to equations \ref{eq:normequ_redmod}, \ref{eq:normequ_fullmod}, \ref{eq:covar_alpha} and \ref{eq:covar_beta}, and are subsequently used to make predictions for sample locations restricted to small area $G$.
 
-% We first define the estimated means of the explanatory variables within the small area $G$:
-% 
-% \begin{equation}\label{meanvalues3psaenext}
-% \hat{\bar{\pmb{Z}}}^{(0)}_{0,G}=\frac{1}{n_{0,G}}\sum_{x\in{s_{0,G}}} \pmb{Z}^{(0)}(x), \quad \hat{\bar{\pmb{Z}}}^{(0)}_{1,G}=\frac{1}{n_{1,G}}\sum_{x\in{s}_{1,G}}\pmb{Z}^{(0)}(x) ,
-% \quad \hat{\bar{\pmb{Z}}}_{1,G}=\frac{1}{n_{1,G}}\sum_{x\in{s}_{1,G}}\pmb{Z}(x)
-% \end{equation}
 
 %----------------------------------------------- %
 % \textbf{Small and Pseudo Small Area Estimator}\par
@@ -297,7 +288,7 @@ The package also returns the \textbf{external variance} which is defined as
 \end{flalign}
 \end{subequations}
 
-with $\hat{Y}_{0}(x)=\pmb{\mathbb{Z}}^{(0)t}(x)\hat{\pmb{\gamma}}_{s_2}$ being the reduced model predictions and $\hat{\mathbb{R}}_{0}=Y(x)-\hat{Y}_{0}$ being the reduced model residuals. The equations for the point estimate and variances again look similar to the synthetic and pseudo synthetic form given in equation \ref{eq:pe_3p_synth}, \ref{eq:pe_3p_psynth}, \ref{eq:var_3p_reg_synth} and \ref{eq:var_3p_reg_psynth}. Note that they are however design-unbiased since the residual correction term is included in the regression coefficient vector $\hat{\pmb{\theta}}_{s_2}$.
+with $\hat{Y}_{0}(x)=\pmb{\mathbb{Z}}^{(0)t}(x)\hat{\pmb{\gamma}}_{s_2}$ being the reduced model predictions and $\hat{\mathbb{R}}_{0}=Y(x)-\hat{Y}_{0}$ being the reduced model residuals. The equations for the point estimate and variances again look similar to the synthetic and pseudo synthetic form given in Eq. \ref{eq:pe_3p_synth}, \ref{eq:pe_3p_psynth}, \ref{eq:var_3p_reg_synth} and \ref{eq:var_3p_reg_psynth}. Note that they are however design-unbiased since the residual correction term is included in the regression coefficient vector $\hat{\pmb{\theta}}_{s_2}$.
 
 
 %------------------------------------------------------------- %
