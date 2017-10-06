@@ -22,7 +22,7 @@
 \subsubsection{Mathematical Background}
 
 
-Solving the sample based normal equations, the vector of regression coefficients $\hat{\pmb{\alpha}}_{s_2}$ for the \textbf{\textit{reduced model}}, i.e. using the \textit{reduced set of explanatory variables} $\pmb{Z}^{(0)}(x)$ available at $x \in s_0$, and likewise the vector of regression coefficients $\hat{\pmb{\beta}}_{s_2}$ for the \textbf{\textit{full model}}, i.e. using the \textit{full set of explanatory variables} $\pmb{Z}^t(x)=(\pmb{Z}^{(0)t}(x),\pmb{Z}^{(1)t}(x))$ available only at a subset $x \in s_1 \subset s_0$, are derived as
+Solving the sample-based normal equations, the vector of regression coefficients $\hat{\pmb{\alpha}}_{s_2}$ for the \textbf{\textit{reduced model}}, i.e. using the \textit{reduced set of explanatory variables} $\pmb{Z}^{(0)}(x)$ available at $x \in s_0$, and likewise the vector of regression coefficients $\hat{\pmb{\beta}}_{s_2}$ for the \textbf{\textit{full model}}, i.e. using the \textit{full set of explanatory variables} $\pmb{Z}^t(x)=(\pmb{Z}^{(0)t}(x),\pmb{Z}^{(1)t}(x))$ available only at a subset $x \in s_1 \subset s_0$, are derived as
 
 \begin{subequations}\label{eq:normequ_3p}
 \begin{align}
@@ -33,7 +33,7 @@ Solving the sample based normal equations, the vector of regression coefficients
 \end{align}
 \end{subequations}
 
-The package allows for the calculation of \textbf{point estimates} under exhaustive and non-exhaustive use of the auxiliary information in the $s_0$ phase. Staying in the internal model approach again ensures the zero mean residual property over $F$.
+The package allows for the calculation of \textbf{point estimates} under exhaustive and non-exhaustive use of the auxiliary information in the $s_0$ phase. Fitting the model using $s_2$ (i.e. \textit{internally}) ensures the zero mean residual property over $F$.
 
 \begin{subequations}\label{reg3p}
 \begin{align}
@@ -44,7 +44,7 @@ The package allows for the calculation of \textbf{point estimates} under exhaust
 \end{align}
 \end{subequations}
 
-In the \textit{non-exhaustive case}, the \textit{estimated} means of $\pmb{Z}^{(0)}(x)$ over both the $s_0$ and $s_1$ phase, as well as the \textit{estimated} mean of $\pmb{Z}(x)$ over the $s_1$ phase are calculated according to \ref{meanvalues3pnex}. If the exact mean over $s_0$ is known, the estimated mean $\hat{\bar{\pmb{Z}}}^{(0)}_0$ can simply be replaced by the exact mean $\bar{\pmb{Z}}^{(0)}_0$. Note that in case of applied boundary adjustment (section \ref{sec:twophase_and_appl}), the simple mean is again replaced by the weighted mean analogous to equation \ref{eq:wmeanZ}.
+In the \textit{non-exhaustive case}, the \textit{estimated} means of $\pmb{Z}^{(0)}(x)$ over both the $s_0$ and $s_1$ phase, as well as the \textit{estimated} mean of $\pmb{Z}(x)$ over the $s_1$ phase are calculated according to Eq. \ref{meanvalues3pnex}. If the exact mean over $s_0$ is known, the estimated mean $\hat{\bar{\pmb{Z}}}^{(0)}_0$ can simply be replaced by the exact mean $\bar{\pmb{Z}}^{(0)}_0$. Note that in case of applied boundary adjustment (Section \ref{sec:twophase_and_appl}), the simple mean is again replaced by the weighted mean analogous to Eq. \ref{eq:wmeanZ}.
 
 \begin{equation}\label{meanvalues3pnex}
 \hat{\bar{\pmb{Z}}}^{(0)}_0=\frac{1}{n_0}\sum_{x\in{s_0}} \pmb{Z}^{(0)}(x), \quad \hat{\bar{\pmb{Z}}}^{(0)}_1=\frac{1}{n_1}\sum_{x\in{s}_1}\pmb{Z}^{(0)}(x) ,
@@ -82,17 +82,16 @@ with the variance-covariance matrix of $\hat{\bar{\pmb{Z}}}^{(0)}_0$ and the var
 \end{align}
 \end{subequations}
 
-Note that ${R}(x)=Y(x)-\pmb{Z}^t(x)\hat{\beta}_{s_2}$ denotes the residuals of the full model, whereas ${R}_{0}(x)=Y(x)-\pmb{Z}^{(0)t}\hat{\alpha}_{s_2}$ denotes the residuals of the reduced model. The \textbf{external variance} form under linear regression models is defined as
+Note that $\hat{R}(x)=Y(x)-\pmb{Z}^t(x)\hat{\beta}_{s_2}$ denotes the residuals of the full model, whereas $\hat{R}_{0}(x)=Y(x)-\pmb{Z}^{(0)t}\hat{\alpha}_{s_2}$ denotes the residuals of the reduced model. The \textbf{external variance} form under linear regression models is defined as
 
 \begin{subequations}\label{eq:extvar_reg3p}
 \begin{align}
-\hat{\var}(\hat{Y}_{reg3p,ex})&=\frac{1}{n_1}\frac{1}{n_2}\sum_{x\in{s_2}}\hat{R}_{0}^2(x))
-+ (1-\frac{n_2}{n_1})\frac{1}{n^2_2}\sum_{x\in{s_2}}\hat{R}^2(x) \label{eq:extvar_reg3p_ex} \\
-\hat{\var}_{ext}(\hat{Y}_{reg3p,nex})&=\frac{1}{n_0}\frac{\sum_{x\in{s_0}}(\hat{Y}_0(x)-\hat{\bar{Y}}_0)^2}{n_0-1} 
-+\frac{1}{n_1}\frac{1}{n_2-1}\sum_{x\in{s}_2}(\hat{R}_0(x)-\bar{\hat{R_0}})^2 \nonumber\\
-&+(1-\frac{n_2}{n_1})\frac{1}{n_2(n_2-1)}\sum_{x\in{s}_2}(\hat{R}(x)-\bar{\hat{R}})^2 \label{eq:extvar_reg3p_nex}
+\hat{\var}_{ext}(\hat{Y}_{reg3p,ex})&=\frac{1}{n_1}\hat{\var}_{s_2}(\hat{R}_{0}(x)) + (1-\frac{n_2}{n_1})\frac{1}{n_2}\hat{\var}_{s_2}(\hat{R}(x))\label{eq:extvar_reg3p_ex} \\
+\hat{\var}_{ext}(\hat{Y}_{reg3p,nex})&=\frac{1}{n_0}\hat{\var}_{s_0}(\hat{Y}_{0}(x))
++\frac{1}{n_1}\hat{\var}_{s_2}(\hat{R}_{0}(x)) + (1-\frac{n_2}{n_1})\frac{1}{n_2}\hat{\var}_{s_2}(\hat{R}(x)) \label{eq:extvar_reg3p_nex}
 \end{align}
 \end{subequations}
+where $\hat{\var}_{s_0}$ indicates taking the sample variance over $s_0$.
 
 
 % ------------------------------------- %
@@ -145,13 +144,13 @@ The \code{summary()} of a \code{threephase()}-function now recalls \textit{both}
 % ------------------------------------- %
 \subsubsection{Mathematical Background}
 
-The three two-phase small area estimators described in Section \ref{sec:twophase_sae} can also be extended to the three-phase scenario. The general principle thereby stays the same, i.e. the regession coefficients of the reduced and full model and their variance-covariance matrices are calculated on the entire $s_2$ sample according to equations \ref{eq:normequ_redmod}, \ref{eq:normequ_fullmod}, \ref{eq:covar_alpha} and \ref{eq:covar_beta}, and are subsequently used to make predictions for sample locations restricted to small area $G$.
+The three two-phase small area estimators described in Section \ref{sec:twophase_sae} can also be extended to the three-phase scenario. The general principle thereby stays the same, i.e. the regession coefficients of the reduced and full model and their variance-covariance matrices are calculated on the entire $s_2$ sample according to Eq. \ref{eq:normequ_redmod}, \ref{eq:normequ_fullmod}, \ref{eq:covar_alpha} and \ref{eq:covar_beta}, and are subsequently used to make predictions for sample locations restricted to small area $G$.
 
 
 %----------------------------------------------- %
 % \textbf{Small and Pseudo Small Area Estimator}\par
 
-The unbiased \textbf{point estimates} of the \textbf{small} (\textit{small}) and \textbf{pseudo small area estimator} (\textit{psmall}) are calculated by applying the globally derived reduced and full regression model coefficients to the small area means of the explanatory variables, and then correcting for a potential model bias in $G$ by adding the small area mean of the full model residuals, i.e. ${R}_{G}(x)=Y_G(x)-\pmb{Z}_G^t(x)\hat{\beta}_{s_2}$, to the point estimate. The difference between the mean $\hat{\bar{\pmb{Z}}}^{(0)}_{1,G}$ and the more precise or exact mean $\hat{\bar{\pmb{Z}}}^{(0)}_{0,G}$ and $\bar{\pmb{Z}}^{(0)}_{0,G}$ is again considered as a residual term likewise in the global estimation (equation \ref{eq:reg3p_ex} and \ref{eq:reg3p_nex}).
+The unbiased \textbf{point estimates} of the \textbf{small} (\textit{small}) and \textbf{pseudo small area estimator} (\textit{psmall}) are calculated by applying the globally derived reduced and full regression model coefficients to the small area means of the explanatory variables, and then correcting for a potential model bias in $G$ by adding the small area mean of the full model residuals, i.e. ${R}_{G}(x)=Y_G(x)-\pmb{Z}_G^t(x)\hat{\beta}_{s_2}$, to the point estimate. The difference between the mean $\hat{\bar{\pmb{Z}}}^{(0)}_{1,G}$ and the more precise or exact mean $\hat{\bar{\pmb{Z}}}^{(0)}_{0,G}$ and $\bar{\pmb{Z}}^{(0)}_{0,G}$ is again considered as a residual term likewise in the global estimation (Eq. \ref{eq:reg3p_ex} and \ref{eq:reg3p_nex}).
 
 \begin{subequations}\label{eq:pest_3p_small_psmall}
 \begin{align}
@@ -190,17 +189,13 @@ The \textbf{external variance} is defined as:
 
 \begin{subequations}\label{eq:pest_3p_small_psmall}
 \begin{flalign}
-\hat{\var}_{ext}(\hat{Y}_{G,small,3p})&= \frac{1}{n_{1,G}(n_{2,G}-1)}\sum_{x\in{s}_{2,G}}
- (\hat{R}_0(x)-\hat{\bar{R}}_{0,G})^2 + 
- (1-\frac{n_{2,G}}{n_{1,G}})\frac{1}{n_{2,G}(n_{2,G}-1)}\sum_{x\in{s_{2,G}}}(\hat{R}(x)-\bar{\hat{R}}_G)^2 \label{eq:var_3p_reg_small}&\\
-\hat{\var}_{ext}(\hat{Y}_{G,psmall,3p})&= \frac{1}{n_{0,G}(n_{0,G}-1)}\sum_{x\in{s_{0,G}}}(\hat{Y}_0(x)-\hat{\bar{Y}}_{0,G})^2 + 
-{\frac{1}{n_{1,G}(n_{2,G}-1)}\sum_{x\in{s}_{2,G}}}
- (\hat{R}_0(x)-\bar{\hat{R}}_{0,G})^2 \nonumber &\\
- &+ (1-\frac{n_{2,G}}{n_{1,G}})\frac{1}{n_{2,G}(n_{2,G}-1)}\sum_{x\in{s_{2,G}}}(\hat{R}(x)-\bar{\hat{R}}_G)^2 \label{eq:var_3p_reg_psmall}
+\hat{\var}_{ext}(\hat{Y}_{G,small,3p})&= \frac{1}{n_{1,G}}\hat{\var}_{s_{2,G}}(\hat{R}_{0}(x)) + 
+ (1-\frac{n_{2,G}}{n_{1,G}})\frac{1}{n_{2,G}}\hat{\var}_{s_{2,G}}(\hat{R}(x)) \label{eq:var_3p_reg_small}&\\
+\hat{\var}_{ext}(\hat{Y}_{G,psmall,3p})&= \frac{1}{n_{0,G}}\hat{\var}_{s_{2,G}}(Y(x)) + (1-\frac{n_{1,G}}{n_{0,G}}) \frac{1}{n_{1,G}}\hat{\var}_{s_{2,G}}(\hat{R}_{0}(x)) \nonumber &\\
+ &+ (1-\frac{n_{2,G}}{n_{1,G}})\frac{1}{n_{2,G}}\hat{\var}_{s_{2,G}}(\hat{R}(x)) \label{eq:var_3p_reg_psmall}
 \end{flalign}
 \end{subequations}
-
-with $\hat{Y}_{0}(x)=\pmb{Z}^{(0)t}(x)\hat{\pmb{\alpha}}_{s_2}$ being the reduced model predictions and $\hat{R}_{0}=Y(x)-\hat{Y}_{0}$ being the reduced model residuals. Likewise the g-weight variance, the difference between the exhaustive and non-exhaustive form is the variance of the predictions $\hat{Y}_{0}(x)$ within the $s_{0,G}$ phase.
+where $\hat{R}_{0}(x)=Y(x)-\hat{Y}_{0}(x)$ with $\hat{Y}_{0}(x)=\pmb{Z}^{(0)t}(x)\hat{\pmb{\alpha}}_{s_2}$. Likewise the g-weight variance, the difference between the exhaustive and non-exhaustive form is the variance of the predictions $\hat{Y}_{0}(x)$ within the $s_{0,G}$ phase.
 
 %------------------------------------------------------------- %
 % \textbf{Synthetic and Pseudo Synthetic Estimator}\par
@@ -278,17 +273,14 @@ The package also returns the \textbf{external variance} which is defined as
 
 \begin{subequations}\label{eq:pest_3p_synth_psynth_ext}
 \begin{flalign}
-\hat{\var}_{ext}(\hat{Y}_{G,extsynth,3p})&= \frac{1}{n_{1,G}(n_{2,G}-1)}\sum_{x\in{s}_{2,G}}
- (\hat{\mathbb{R}}_0(x)-\hat{\bar{\mathbb{R}}}_{0,G})^2 + 
- (1-\frac{n_{2,G}}{n_{1,G}})\frac{1}{n_{2,G}(n_{2,G}-1)}\sum_{x\in{s_{2,G}}}(\hat{\mathbb{R}}(x)-\bar{\hat{\mathbb{R}}}_G)^2 \label{eq:var_3p_reg_extsynth}&\\
-\hat{\var}_{ext}(\hat{Y}_{G,extpsynth,3p})&= \frac{1}{n_{0,G}(n_{0,G}-1)}\sum_{x\in{s_{0,G}}}(\hat{Y}_0(x)-\hat{\bar{Y}}_{0,G})^2 + 
-{\frac{1}{n_{1,G}(n_{2,G}-1)}\sum_{x\in{s}_{2,G}}}
- (\hat{\mathbb{R}}_0(x)-\bar{\hat{\mathbb{R}}}_{0,G})^2 \nonumber &\\
- &+ (1-\frac{n_{2,G}}{n_{1,G}})\frac{1}{n_{2,G}(n_{2,G}-1)}\sum_{x\in{s_{2,G}}}(\hat{\mathbb{R}}(x)-\bar{\hat{\mathbb{R}}}_G)^2 \label{eq:var_3p_reg_extpsynth}
+\hat{\var}_{ext}(\hat{Y}_{G,extsynth,3p})&= \frac{1}{n_{1,G}}\hat{\var}_{s_{2,G}}(\hat{\mathbb{R}}_{0}(x)) + 
+ (1-\frac{n_{2,G}}{n_{1,G}})\frac{1}{n_{2,G}}\hat{\var}_{s_{2,G}}(\hat{\mathbb{R}}(x)) \label{eq:var_3p_reg_extsynth}&\\
+\hat{\var}_{ext}(\hat{Y}_{G,extpsynth,3p})&= \frac{1}{n_{0,G}}\hat{\var}_{s_{2,G}}(Y(x)) + (1-\frac{n_{1,G}}{n_{0,G}}) \frac{1}{n_{1,G}}\hat{\var}_{s_{2,G}}(\hat{\mathbb{R}}_{0}(x)) \nonumber & \\
+ &+ (1-\frac{n_{2,G}}{n_{1,G}})\frac{1}{n_{2,G}}\hat{\var}_{s_{2,G}}(\hat{\mathbb{R}}(x)) \label{eq:var_3p_reg_extpsynth}
 \end{flalign}
 \end{subequations}
+where $\hat{\mathbb{R}}_{0}=Y(x)-\hat{\mathbb{Y}}_{0}(x)$ with $\hat{\mathbb{Y}}_{0}(x)=\pmb{\mathbb{Z}}^{(0)t}(x)\hat{\pmb{\gamma}}_{s_2}$. The equations for the point estimate and variances again look similar to the synthetic and pseudo synthetic form given in Eq. \ref{eq:pe_3p_synth}, \ref{eq:pe_3p_psynth}, \ref{eq:var_3p_reg_synth} and \ref{eq:var_3p_reg_psynth}. Just as in the two-phase context, they are design-unbiased since the residual correction term is included in the regression coefficient vector $\hat{\pmb{\theta}}_{s_2}$.
 
-with $\hat{Y}_{0}(x)=\pmb{\mathbb{Z}}^{(0)t}(x)\hat{\pmb{\gamma}}_{s_2}$ being the reduced model predictions and $\hat{\mathbb{R}}_{0}=Y(x)-\hat{Y}_{0}$ being the reduced model residuals. The equations for the point estimate and variances again look similar to the synthetic and pseudo synthetic form given in Eq. \ref{eq:pe_3p_synth}, \ref{eq:pe_3p_psynth}, \ref{eq:var_3p_reg_synth} and \ref{eq:var_3p_reg_psynth}. Note that they are however design-unbiased since the residual correction term is included in the regression coefficient vector $\hat{\pmb{\theta}}_{s_2}$.
 
 
 %------------------------------------------------------------- %
