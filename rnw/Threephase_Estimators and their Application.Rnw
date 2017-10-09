@@ -8,15 +8,6 @@
 \subsection{Global Estimators}
 \label{sec:glob_est_3p}
 
-% - Merge Mathematical Background and Application
-% - Quite Likely, we cannot go through all estimators ...
-%   Idea: --> maybe only for non-exhaustive case, and then demonstrate with one example how the exhaustive can be applied in general
-%
-% 
-% NOTES:
-% - mention that the exhaustive 3phase was originally called "2phase with partially exhaustive info"
-% - clarify terminology "full" and "reduced"
-%
 
 % ------------------------------------- %
 \subsubsection{Mathematical Background}
@@ -51,7 +42,7 @@ In the \textit{non-exhaustive case}, the \textit{estimated} means of $\pmb{Z}^{(
 \quad \hat{\bar{\pmb{Z}}}_1=\frac{1}{n_1}\sum_{x\in{s}_1}\pmb{Z}(x)
 \end{equation}
 
-An intuitive interpretation of \ref{eq:reg3p_ex} and \ref{eq:reg3p_nex} is a follows: Likewise in the twophase approach, the estimated means in $\hat{\bar{\pmb{Z}}}_1$ based on the $s_1$ sample are transformed into predictions $\hat{Y}(x)$ of the local density $Y(x)$. The difference between the estimated means $\hat{\bar{\pmb{Z}}}^{(0)}_1$ and their more precise or even exact counterparts $\hat{\bar{\pmb{Z}}}^{(0)}_0$ and $\bar{\pmb{Z}}^{(0)}_0$ based on the larger or infinite $s_0$ sample is then added as a residual term that expresses the lack of model precision due to varying sample sizes behind the estimated auxilary means. 
+An intuitive interpretation of \ref{eq:reg3p_ex} and \ref{eq:reg3p_nex} is a follows: Likewise in the twophase approach, the estimated means in $\hat{\bar{\pmb{Z}}}_1$ based on the $s_1$ sample are transformed into predictions $\hat{Y}(x)$ of the local density $Y(x)$. The difference between the estimated means $\hat{\bar{\pmb{Z}}}^{(0)}_1$ and their more precise or even exact counterparts $\hat{\bar{\pmb{Z}}}^{(0)}_0$ and $\bar{\pmb{Z}}^{(0)}_0$ based on the larger or infinite $s_0$ sample is then added as a residual term that expresses the lack of precision in the point estimate due to varying sample sizes behind the estimated auxilary means. 
 
 The package again provides the g-weight and external variances. The \textbf{g-weight variance} formulation is
 
@@ -97,7 +88,7 @@ where $\hat{\var}_{s_0}$ indicates taking the sample variance over $s_0$.
 % ------------------------------------- %
 \subsubsection{Application}
 
-In order to demonstrate the three-phase estimators in the package, we created an artificial three-phase scenario by recoding the phase indicators in the \code{grisons} data set (column \code{phase_id_3p}) according to the terminology used in this article (\code{0} for $s_0$, \code{1} for $s_1$, \code{2} for $s_2$). We now assume that the mean canopy height (\code{mean}) is available at all 306 sample locations $x \in s_0$, whereas we have the explanatory variables \code{stddev}, \code{max} and \code{q75} only at 128 subsamples $s_1$ of $s_0$. At 40 further subsamples $s_2$ we have the observations $Y(x)$ from the field inventory. Based on this setup, we can now define the reduced and full regression model formulas to be used in the \code{threephase()} function (note that the models are nested).
+In order to demonstrate the three-phase estimators in the package, we created an artificial three-phase scenario by recoding the phase indicators in the \code{grisons} data set (column \code{phase_id_3p}) according to the terminology used in this article (\code{0} for $s_0$, \code{1} for $s_1$, \code{2} for $s_2$). We now assume that the mean canopy height (\code{mean}) is available at all 306 sample locations $x \in s_0$, whereas we have the explanatory variables \code{stddev}, \code{max} and \code{q75} only at 128 subsamples $s_1$ of $s_0$. At 40 further subsamples $s_2$ we have the observations $Y(x)$ from the field inventory. Based on this setup, we can now define the reduced and full regression model formulas to be used in the \code{threephase()} function (note that the models are nested):
 
 \begin{small}
 <<>>=
@@ -129,7 +120,7 @@ summary(reg3p_nex)
 @
 \end{small}
 
-The \code{summary()} of a \code{threephase()}-function now recalls \textit{both} regression model formulas and also gives the $R^2$ for both the reduced (\code{r.squared_reduced}) and the full (\code{r.squared_full}) models. We are told that including \code{stddev}, \code{max} and \code{q75} yields a 20 \% improvement in R$^2$. If we used \code{mean} as the only auxiliary variable at all sample locations (two-phase approach), we would see that the three-phase extention led to a considerable reduction in variance.
+The \code{summary()} of a \code{threephase()}-function now recalls \textit{both} regression model formulas and also gives the $R^2$ for both the reduced (\code{r.squared_reduced}) and the full (\code{r.squared_full}) models. We are told that including \code{stddev}, \code{max} and \code{q75} yields a 20 \% improvement in R$^2$. If we used \code{mean} as the only auxiliary variable at all sample locations (two-phase approach), we would see that the three-phase extention here leads to a considerable reduction in variance.
 
 
 
@@ -200,7 +191,7 @@ where $\hat{R}_{0}(x)=Y(x)-\hat{Y}_{0}(x)$ with $\hat{Y}_{0}(x)=\pmb{Z}^{(0)t}(x
 %------------------------------------------------------------- %
 % \textbf{Synthetic and Pseudo Synthetic Estimator}\par
 
-The \textbf{synthetic} (\textit{synth}) and \textbf{pseudo synthetic estimator} (\textit{psynth}) can be applied if no terrestrial samples are available in the small area, i.e. $n_{2,G}=0$. Consequently, the residual correction and the residual variation term of the full model can no longer be applied and drops from the point (equation \ref{eq:pe_3p_synth} and \ref{eq:pe_3p_psynth}) and g-weight variance (equation \ref{eq:var_3p_reg_synth} and \ref{eq:var_3p_reg_psynth}) formulas. The point estimates are again potentially biased since the zero mean residual property $\int_G R(x)dx=0$ of the full model can not be insured within the small area $G$. Also the variance will be small but to the cost of ignoring the model uncertainties. Note that there is again no external variance formula for the synthetic and pseudo synthetic estimation.
+The \textbf{synthetic} (\textit{synth}) and \textbf{pseudo synthetic estimator} (\textit{psynth}) can be applied if no terrestrial samples are available in the small area, i.e. $n_{2,G}=0$. Consequently, the residual correction and the residual variation term of the full model can no longer be applied and drops from the point (Eq. \ref{eq:pe_3p_synth} and \ref{eq:pe_3p_psynth}) and g-weight variance (Eq. \ref{eq:var_3p_reg_synth} and \ref{eq:var_3p_reg_psynth}) formulas. The point estimates are again potentially biased since the zero mean residual property $\int_G R(x)dx=0$ of the full model can not be insured within the small area $G$. Also the variance will be small but to the cost of ignoring the model uncertainties. Note that there is again no external variance formula for the synthetic and pseudo synthetic estimation.
 
 \begin{subequations}\label{eq:3p_synth_psynth}
 \begin{align}
@@ -218,23 +209,11 @@ The \textbf{synthetic} (\textit{synth}) and \textbf{pseudo synthetic estimator} 
 \end{align}
 \end{subequations}
 
-% \begin{subequations}\label{eq:var_3p_synth_psynth}
-% \begin{align}
-% \hat{\var}(\hat{Y}_{G,synth,3p})& =\frac{n_2}{n_1}\bar{\pmb{Z}}^{(0)t}_{0,G}\hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}_{s_2}}
-% \bar{\pmb{Z}}^{(0)}_{0,G}+(1-\frac{n_2}{n_1})\hat{\bar{\pmb{Z}}}_{1,G}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}
-% \hat{\bar{\pmb{Z}}}_{1,G} \label{eq:var_3p_reg_synth}\\
-% \hat{\var}(\hat{Y}_{G,psynth,3p})& = \hat{\pmb{\alpha}}_2^t\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{Z}}}^{(0)}_{0,G}}\hat{\pmb{\alpha}}_2 +
-% \frac{n_2}{n_1}\hat{\bar{\pmb{Z}}}^{(0)t}_{0,G}\hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}_{s_2}}
-% \hat{\bar{\pmb{Z}}}^{(0)}_{0,G}+(1-\frac{n_2}{n_1})\hat{\bar{\pmb{Z}}}_{1,G}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}
-% \hat{\bar{\pmb{Z}}}_{1,G} \label{eq:var_3p_reg_psynth}
-% \end{align}
-% \end{subequations}
-
 
 %------------------------------------------------------------- %
 % \textbf{Extended Synthetic and Extended Pseudo Synthetic Estimator}\par
 
-The \textbf{extended synthetic} (\textit{extsynth}) and \textbf{extended pseudo synthetic estimator} (\textit{extpsynth}) insures that the residuals of the full model over both the entire inventory area $F$ and the small area $G$ are zero at the same time, i.e. $\int_F R(x)dx=\int_G R(x)dx=0$. This is again realized by extending the vector of explanatory variables by a binary categorical indicator variable $I_G(x)$ which takes the value 1 if the observation lies inside the small area $G$ and is otherwise set to 0. The extended auxiliary vector is thus defined as $\pmb{\mathbb{Z}}^t(x)=(\pmb{\mathbb{Z}}^{(0)t}(x),\pmb{\mathbb{Z}}^{t}(x))$, where $\pmb{\mathbb{Z}}^{(0)t}(x)=(\pmb{Z}^{(1)t}(x), I_G^t(x))$ and $\pmb{\mathbb{Z}}^{t}(x)=\pmb{Z}^{t}(x)$. This practically means that we have to specify the binary indicator variable for \textit{all} observations in the data frame that is passed to the package-functions. The regression coefficients $\hat{\pmb{\gamma}}_{s_2}$ and $\hat{\pmb{\theta}}_{s_2}$, and their variance-covarianve matrices $\hat{\pmb{\Sigma}}_{\hat{\pmb{\gamma}}_{s_2}}$ and $\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}$ under the extended auxiliary vector are thus recalculated as
+The \textbf{extended synthetic} (\textit{extsynth}) and \textbf{extended pseudo synthetic estimator} (\textit{extpsynth}) insures that the residuals of the full model over both the entire inventory area $F$ and the small area $G$ are zero at the same time, i.e. $\int_F R(x)dx=\int_G R(x)dx=0$. This is again realized by extending the vector of explanatory variables by a binary categorical indicator variable $I_G(x)$ which takes the value 1 if the observation lies inside the small area $G$ and is otherwise set to 0. The extended auxiliary vector is thus defined as $\pmb{\mathbb{Z}}^t(x)=(\pmb{\mathbb{Z}}^{(0)t}(x),\pmb{Z}^{(1)t}(x))$, where $\pmb{\mathbb{Z}}^{(0)t}(x)=(\pmb{Z}^{(0)t}(x), I_G^t(x))$. This practically means that we have to specify the binary indicator variable for \textit{all} observations in the data frame that is passed to the package-functions. The regression coefficients $\hat{\pmb{\gamma}}_{s_2}$ and $\hat{\pmb{\theta}}_{s_2}$, and their variance-covarianve matrices $\hat{\pmb{\Sigma}}_{\hat{\pmb{\gamma}}_{s_2}}$ and $\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}$ under the extended auxiliary vector are thus recalculated as
 
 \begin{subequations}\label{eq:normequ_redmod_ext}
 \begin{align}
@@ -287,7 +266,7 @@ where $\hat{\mathbb{R}}_{0}=Y(x)-\hat{\mathbb{Y}}_{0}(x)$ with $\hat{\mathbb{Y}}
 \subsubsection{Application}
 
 
-We will demonstrate the use of three-phase small area estimation in the package \pkg{forestinventory} by applying the \textbf{extended synthetic} and the \textbf{synthetic} estimator to the \code{grisons} data set. The setup is thus exactly the same as in the example for global three-phase estimation (section \ref{sec:glob_est_3p}). However, this time will use the exact auxiliary mean of the mean canopy height variable (\code{mean}) and assume that we do not know the exact means of the remaining explanatory variables \code{stddev}, \code{max} and \code{q75}. We thus first define the true means for each small area likewise we did in the \code{twophase()} example (section \ref{sec:twophase_sae}):
+We will demonstrate the use of three-phase small area estimation in the package \pkg{forestinventory} by applying the \textbf{extended synthetic} and the \textbf{synthetic} estimator to the \code{grisons} data set. The setup is thus exactly the same as in the example for global three-phase estimation (Section \ref{sec:glob_est_3p}). However, this time will use the exact auxiliary mean of the mean canopy height variable (\code{mean}) and assume that we do not know the exact means of the remaining explanatory variables \code{stddev}, \code{max} and \code{q75}. We thus first define the true means for each small area likewise we did in the \code{twophase()} example (Section \ref{sec:twophase_sae}):
 
 \begin{small}
 <<>>=

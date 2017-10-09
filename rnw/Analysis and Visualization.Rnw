@@ -3,15 +3,6 @@
 \section{Analysis and Visualization}
 \label{sec:anal_and_vis}
 
-% include:
-% - estTable()-function demo
-% - mphase.gain()-function demo
-% - plot.esttable()-function demo
-% - 3-4 pages max
-% - pronounce that "it is crucial to quantify the potential benefit of the mphase procedures
-%   compared to the onephase procedure --> allows to calculate the financial benefit --> rel.eff
-
-
 The package \pkg{forestinventory} also provides methods for \textit{analyzing} and \textit{visualizing} the estimation results created by the \code{onephase()}, \code{twophase()} and \code{threephase()} functions. 
 
 \subsection{Analysis}
@@ -105,7 +96,7 @@ Note that \code{estTable()} also returns the \textbf{\textit{estimation error}} 
 \end{equation}
 
 
-As mentioned in the introduction (section \ref{sec:intro}), the application of multi-phase estimation techniques in forest practice have two main \textbf{goals}:  
+As mentioned in the introduction (Section \ref{sec:intro}), the application of multi-phase estimation techniques in forest practice have two main \textbf{goals}:  
 \begin{enumerate}
   \item \textit{\textbf{maintaining}} the one-phase estimation precision under reduced costs, i.e. reduced $s_2$ sample size
   \item \textit{\textbf{increasing}} the estimation precision at identical costs, i.e. without increasing the $s_2$ sample size
