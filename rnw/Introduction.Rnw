@@ -13,7 +13,7 @@ Despite the broad range of methodological literature and case studies, freely av
 
 The objectives of this article are to \textbf{a)} establish the link between the mathematical description of the estimators and their implementation in our package, \textbf{b)} illustrate their application to real-world inventory data sets and \textbf{c)} address special cases and demonstrate how the package-functions handle them.
 
-
+\newpage
 
 
 % what is the motivation of the package: - to make the broad range of Mandallaz-estimators

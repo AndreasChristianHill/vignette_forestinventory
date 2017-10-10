@@ -8,5 +8,5 @@ The \pkg{forestinventory} package currently provides a fairly well-rounded toolk
 \begin{itemize}
 \item Implement parallel procedures for efficiently calculating many small areas.
 \item Allow functions to accept objects of class \code{data.table} from the \pkg{data.table} package to improve memory efficiency.
-\item Enable the user to choose other types of models than linear regressions fit with OLS.
+\item Enable the user to choose other types of models than linear regressions fitted with OLS.
 \end{itemize}

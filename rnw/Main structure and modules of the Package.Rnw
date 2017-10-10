@@ -1,6 +1,5 @@
 % !Rnw root = JStatSoft_forestinventory_master.Rnw
 
-%\section{Methods and Structure of the Package}
 \section{Methods and Structure of the Package}
 \label{sec:str_and_mod}
 
@@ -12,7 +11,7 @@ Most forest inventories gather terrestrial information by sending field crews to
 \begin{figure}[htb]
 \centering
 \resizebox{0.42\hsize}{!}{\includegraphics{fig/localdensity_final-01.eps}}
-\caption{Artificial representation of a local density surface. The spatial distribution of a hypothetical density function for every point in a forested area is represented as a wavy piecewise constant green surface.  Sample plots (white dots) inform the inventorist of the value of the density function at that point.}
+\caption{Artificial representation of a local density surface. The spatial distribution of a hypothetical density function for every point in a forested area is represented as a wavy piecewise constant green surface.  Sample plots (white dots) inform the inventorist of the value of the density function at that point. Note that the plateaus of constant $Y(x)$ values here have the shape of squares whereas in reality they are likely to be formed by the intersection of circles around trees.}
 \label{fig:inf_pop_apr}
 \end{figure}
 
@@ -44,7 +43,7 @@ Three-phase estimators extend the principle of two-phase sampling and use invent
 
 \subsection{Small Area Estimation}
 
-Small area estimation does not necessarily refer to small spatial areas but rather to areas that contain little or no terrestrial sample. To formulate this mathematically, we want to make an estimate for a subregion $G$ of the entire inventory area $F$ (Fig. \ref{fig:concmphase_and_sae_b}). As the sample size in the small area, $n_{2,G}$, is usually too small to provide sufficient estimation precision, multi-phase estimation can be efficient. However, $n_{2,G}$ may also be too small to justify fitting a separate regression model just for that area because the estimates produce undesirably large confidence intervals. The idea is then to \textit{borrow strength} from the entire terrestrial sample $s_2$ of $F$ and to apply this model to the small area. The potential bias of applying that model in $G$ is then corrected for by using the model residuals derived from that small area. If there are no terrestrial plots in $G$ (i.e. $n_{2,G}=0$), one cannot correct for a potential model bias in $G$ and has to accept a potential bias in the estimator. These are called \textit{synthetic} estimates and despite their potential bias, it is usually still possible to calculate their design-based variance.
+Small area estimation does not necessarily refer to small spatial areas but rather to areas that contain little or no terrestrial sample. To formulate this mathematically, we want to make an estimate for a subregion $G$ of the entire inventory area $F$ (Fig. \ref{fig:concmphase_and_sae_b}). As the sample size in the small area, $n_{2,G}$, is usually too small to provide sufficient estimation precision, multi-phase estimation can be efficient. However, $n_{2,G}$ may also be too small to justify fitting a separate regression model just for that area because the estimates produce undesirably large confidence intervals. The idea is then to \textit{borrow strength} from the entire terrestrial sample $s_2$ of $F$ and to apply this model to the small area. The potential bias of applying that model in $G$ is then corrected for by using the empirical model residuals derived from that small area. If there are no terrestrial plots in $G$ (i.e. $n_{2,G}=0$), one cannot correct for a potential model bias in $G$ and has to accept a potential bias in the estimator. These are called \textit{synthetic} estimates and despite their potential bias, it is usually still possible to calculate their design-based variance.
 
 
 \subsection{Design-Based vs. Model-Dependent Approach}
