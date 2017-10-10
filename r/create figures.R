@@ -48,7 +48,7 @@ plot(grisons.sae.table, ncol = 2, yvar = "estimate")
 
 ## save graphic for article:
 ggsave("plot_est_ci.png", 
-       plot(grisons.sae.table.CI, ncol = 2, yvar = "estimate") +
+       plot(grisons.sae.table, ncol = 2, yvar = "estimate") +
          ylab("Timber Volume [m3/ha]") +
          theme(axis.title.x =element_text(size=rel(6)), # size of axis-labels text
                axis.title.y =element_text(size=rel(6)),
@@ -57,7 +57,7 @@ ggsave("plot_est_ci.png",
                axis.text.y = element_text(size=rel(6)),
                legend.title=element_text(size=rel(7)),
                legend.text=element_text(size=rel(6))),
-       width = 27, height = 17, dpi = 300)
+       width = 27, height = 14, dpi = 300)
 
 
 
@@ -73,5 +73,4 @@ ggsave("plot_error.png",
                axis.text.y = element_text(size=rel(6)),
                legend.title=element_text(size=rel(7)),
                legend.text=element_text(size=rel(6))),
-       width = 27, height = 17, dpi = 300)
-
+       width = 27, height = 14, dpi = 300)

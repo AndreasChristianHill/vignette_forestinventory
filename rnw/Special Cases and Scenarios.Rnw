@@ -3,20 +3,12 @@
 \section{Special Cases and Scenarios}
 \label{sec:speccas_and_scen}
 
-% include:
-% - categorical variables (zberg) and interaction terms (not so clear to everyone)
-% - [mention that especially in the case of postratification, the g-weight variance is the preferred type because ...]
-% - !!! cluster sampling and differences between (p)small and extended (p)small if cluster is not completely inside small area
-% - !!! violation of nested sample design + error handling / data adjustments / printed warnings
-% - !!! missing factor levels in s2-sample that occur in s1 / s0 sample + error warning
-%
-
 % --------------------------------------------------------- %
-\subsection{Poststratification}
+\subsection{Post-Stratification}
 
-A special case of multi-phase regression estimators is \textit{poststratification}, which can further be divided into the case of \textit{multi-phase sampling for stratification} and \textit{multi-phase sampling for regression within strata}. Both imply the use of one or more categorical variables in the regression model(s), leading to classical ANOVA and ANCOVA models.
+A special case of multi-phase regression estimators is \textit{post-stratification}, which can further be divided into the cases of \textit{multi-phase sampling for stratification} and \textit{multi-phase sampling for regression within strata}. Both imply the use of one or more categorical variables in the regression model(s), leading to classical ANOVA and ANCOVA models.
 
-To demonstrate \textit{poststratification}, we first create an artificial categorical variable \textit{developement stage} (\code{stage}) by clustering the mean canopy heights of the \code{grisons} data set into 3 height classes:
+To demonstrate \textit{post-stratification}, we first create an artificial categorical variable \textit{developement stage} (\code{stage}) by clustering the mean canopy heights of the \code{grisons} data set into 3 height classes:
 
 \begin{small}
 <<>>=
@@ -24,7 +16,7 @@ grisons$stage <- as.factor(kmeans(grisons$mean, centers = 3)$cluster)
 @
 \end{small}
 
-\textit{Two-phase sampling for stratification} is now applied if we only use categorical variables in the model, in this case the factor variable \code{stage} (i.e. we have an ANOVA model). It basically means that the model predictions are the means of terrestrial response values within each development stage (within-strata means).
+\textit{Two-phase sampling for stratification} is applied if the model only contains categorical variables, in this case the factor variable \code{stage}. Linear regression models only fit with categorical variables produce ANOVA models, which when used in multi-phase regression estimators is equivalent to post-stratification. For our example, this means that the model predictions are simply the means of the terrestrial response values within each development stage (within-strata means).
 
 \begin{small}
 <<eval=FALSE>>=
@@ -36,7 +28,7 @@ twophase(formula=tvol ~ stage,
 @
 \end{small}
 
-\textit{Two-phase sampling for regression within strata} implies the combination of continuous and categorical variables within the model (i.e. we have an ANCOVA model). If an interaction term is not present between categorical and continuous variables, the regression lines within the strata will have the same slope but different intercepts. If an interaction term is present, both the intercept and the slope are allowed to vary within the strata. Note that one can actually use the entire range of OLS regression techniques in the multi-phase estimators, including higher order terms and transformations. 
+\textit{Two-phase sampling for regression within strata} implies the combination of continuous and categorical variables within the model (i.e. we have an ANCOVA model). If an interaction term is not present between categorical and continuous variables, the regression lines within the strata will have the same slope but different intercepts. If an interaction term is present, both the intercept and the slope are allowed to vary within the strata. Note that one can actually use the entire range of OLS regression techniques in the multi-phase estimators, including higher order terms and transformations of the explanatory variables, which makes then very flexible.
 
 \begin{small}
 <<eval=FALSE>>=
@@ -48,17 +40,16 @@ twophase(formula=tvol ~ mean + stddev + max + q75 + stage,
 @
 \end{small}
 
-The overall variance of estimators under poststratification will mainly depend on the between and within-strata variation of the model residuals and can therefore be reduced by minimizing the within strata residual square sum. In case of poststratification, the g-weight variance estimator has the advantage that the strata weights are estimated from the large sample, whereas the external variance calculates them solely based on the terrestrial sample $s_2$.
-
+The variance of all model-assisted estimators included in \pkg{forestinventory} can be decreased by reducing the sum of square residuals of the regression model. In case of post-stratification, this particularly implies minimizing the within strata residual square sum. Also, for post-stratification, the g-weight variance should be trusted over the external variance because it has the advantage that the strata weights are estimated from the large sample rather than the terrestrial sample $s_2$.
 
 % --------------------------------------------------------- %
 \subsection{Small Area Estimation under Cluster Sampling}
 
-As mentioned in Section \ref{sec:packstruc}, \textit{cluster sampling} is a special case of sample designs where the sample unit does no longer consist of one, but multiple spatially agglomerated sample points. One still randomly places the sample location $x$ in the inventory area likewise in the simple sampling design, but then creates $M-1$ additional sample locations $x_2,...,x_M$ close to the cluster origin $x$ by adding a fixed set of spatial vectors $e_2,...,e_M$ to $x$. The idea of cluster sampling is to increase the amount of information without increasing the travelling costs of the terrestrial campaign. Note however that the information gathered at all sub-locations of a cluster is then averaged on the cluster level, and that this average value is again referred to exactly one point, i.e. the cluster origin $x$, in the frame of the infinite population approach. Without going into too much mathematical detail, the estimators under simple sampling are thus extended in a way that all parameters (local density, mean vector of explanatory variables, mean model residuals) have to be calculated as the weighted cluster means with $M(x)$ being the cluster weights. Whereas the geometric form and the number of sample locations per cluster $M$ is fixed (i.e. defined by the inventorist), the actual number of points $M(x)$ falling into the forest area $F$ at sample location $x$ is random because the cluster origin $x$ is random. The package functions of \pkg{forstinventory} also allow to consider cluster-structures by specifying a unique cluster identification (cluster ID) for each cluster in an additional column whose column name is passed to the argument \code{cluster} in the \code{twophase()} and \code{threephase()} function calls.
+As mentioned in Section \ref{sec:packstruc}, \textit{cluster sampling} is a special case of sample designs where the sample consists of more than one spatially agglomerated sample points. One randomly places the sample location $x$ in the inventory area as in the simple sampling design, but then $M-1$ additional sample locations $x_2,...,x_M$ are created close to the cluster origin $x$ by adding a fixed set of spatial vectors $e_2,...,e_M$ to $x$. The idea of cluster sampling is to increase the amount of information without increasing the travelling costs of the terrestrial campaign. However, the information gathered at all sub-locations of a cluster is then averaged on the cluster level, and this average value then references exactly one point, i.e. the cluster origin $x$. Without going into too much mathematical detail, the estimators under simple sampling are thus extended in a way that all parameters (local density, mean vector of explanatory variables, mean model residuals) have to be calculated as the weighted cluster means with $M(x)$ being the cluster weights. Whereas the geometric form and the number of sample locations per cluster $M$ is fixed (i.e. defined by the inventorist), the actual number of points $M(x)$ falling into the forest area $F$ at sample location $x$ is random because the cluster origin $x$ is random. The \pkg{forstinventory} package identifies clusters via a unique cluster ID that is assigned to a column in the input data set. Its column name is passed to the argument \code{cluster} in the \code{twophase()} and \code{threephase()} function calls.
 
-For small area applications, the scenario might occur where the points of a cluster at sample locations $x$ spread over more than one small area, i.e. only a subset $M_{G}(x) < M(x)$ is included in the small area of interest. In this case, the zero mean residual property within the small area $\int_{G}M(x)R_{c}(x)d(x)=0$ is no longer insured when using the \textbf{extended} and \textbf{pseudo extended synthetic estimator} (\textit{extsynth} and \textit{extpsynth}) which extends the set of explanatory variables by an indicator variable for the small area (see Section \ref{sec:twophase_sae} and \ref{sec:threephase_sae}). In this case, one should additionally calculate the \textbf{(pseudo) small area estimator} (\textit{psmall}) where the zero mean residual property is still insured under this scenario.
+For small area applications, the scenario might occur where the points of a cluster at sample locations $x$ spread over more than one small area, i.e. only a subset $M_{G}(x) < M(x)$ is included in the small area of interest. In this case, the zero mean residual property within the small area $\int_{G}M(x)R_{c}(x)d(x)=0$ is no longer guaranteed when using the \textbf{extended} and \textbf{pseudo extended synthetic estimator} (see \textit{extsynth} and \textit{extpsynth} in Sections \ref{sec:twophase_sae} and \ref{sec:threephase_sae}). In this case, it is adviseable to use the \textbf{(pseudo) small area estimator} (\textit{psmall}) where the zero mean residual property is still ensured.
 
-In oder to keep track of such cases, the package \pkg{forestinventory} tells the user to do so by returning a warning message:
+In order to keep track of such cases, \pkg{forestinventory} tells the user to do so by returning a warning message:
 <<echo=FALSE>>=
 extpsynth.clust <- twophase(formula = basal ~ stade + couver + melange, data=zberg,
                      phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
@@ -105,16 +96,16 @@ extpsmall.clust$estimation
 @
 \end{small}
 
-Comparing the \textit{extpsynth} and \textit{psmall} estimates, we see that in this particular case the point estimates are close and more important, the external as well as the g-weight variances only differ marginally. This can be taken as evidence that the violation of the zero mean residual property can here expected to be negligible.
+Comparing the \textit{extpsynth} and \textit{psmall} estimates, we see that in this particular case the point estimates are close and more important, the external as well as the g-weight variances only differ marginally. This can be taken as evidence that the violation of the zero mean residual property can here be expected to have negligible consequences.
 
 % --------------------------------------------------------------------- %
 \subsection{Violation of Nesting in Sample Design}
 
-As explained in Section \ref{sec:str_and_mod}, a basis principle and prerequisite of the multi-phase estimation methods and estimators is that the sample phases ($s_0$, $s_1$, $s_2$) are \textit{nested} in each other. The correct nesting thereby concerns the spatial arrangement of the sample phases (Fig. \ref{fig:concmphase_and_sae_a}) as well as the availability of terrestrial and auxiliary information per phase and sample location. For the latter, \pkg{forestinventory} runs validity checks in the background, provides warning and error messages and, if possible, applies first aid adjustments to the inventory data set to prevent the calculations from failing. We will shortly demonstrate possible nesting violations by applying the gobal three-phase estimator to the \code{grisons} and \code{zberg} data sets.
+As explained in Section \ref{sec:str_and_mod}, a basic prerequisite for the application of multi-phase estimators is that the sample phases ($s_0$, $s_1$, $s_2$) are \textit{nested} in each other. The correct nesting thereby concerns the spatial arrangement of the sample phases (Fig. \ref{fig:concmphase_and_sae_a}) as well as the availability of terrestrial and auxiliary information per phase and sample location. For the latter, \pkg{forestinventory} runs validity checks in the background, provides warning and error messages and, if possible, applies first-aid adjustments to the inventory data set to prevent the calculations from failing. We will demonstrate possible nesting violations by applying the global three-phase estimator to the \code{grisons} and \code{zberg} data sets.
 
 \subsubsection*{Violation 1}
 
-Based on the nesting rule $s_2 \in s_1 \in s_0$, each $s_2$ (i.e. terrestrially surveyed) and $s_1$ sample location \textit{must} have all explanatory variables available that are used in the full (and thus reduced) regression model. If e.g. an $s_2$ and/or $s_1$ point misses a variable which is used in the full \textit{\textbf{and}} reduced model (here: \code{mean}), the function will \textbf{delete} this sample point from the dataset and produce the following messages:  
+Based on the nesting rule, $s_2 \in s_1 \in s_0$, each $s_2$ and $s_1$ sample location \textit{must} have all explanatory variables available that are used in the full (and thus reduced) regression model. If e.g. an $s_2$ and/or $s_1$ point misses a variable which is used in the full \textit{\textbf{and}} reduced model (in this case \code{mean}), the function will \textbf{delete} this sample point from the dataset and produce the following messages:  
 
 \begin{small}
 <<eval=FALSE>>=
@@ -145,9 +136,9 @@ Warning messages:
 \end{Schunk}
 \end{small}
 
-\subsubsection*{Violation 2} % 2) and 3)
+\subsubsection*{Violation 2}
 
-However, if an $s_2$ and/or $s_1$ point misses a variable which is only used in the full regression model (here \code{q75}), the function will \textbf{recode} the phase indicator of that point to $s_0$, since the point still provides the required information for the reduced model. If this concerns an $s_2$ sample location, the associated response variable can no longer be used.
+However, if an $s_2$ and/or $s_1$ point misses a variable which is only used in the full regression model (in this example \code{q75}), the function will \textbf{recode} the phase indicator of that point to $s_0$, since the point still provides the required information for the reduced model. If this concerns an $s_2$ sample location, the associated response variable can no longer be used.
 
 \begin{small}
 <<eval=FALSE>>=
@@ -176,23 +167,10 @@ Warning messages:
 \end{Schunk}
 \end{small}
 
-% # Violation:
-% # each s2-point muss have the complete set of s1-auxvars (s1-info) available
-% 
-% # error message:
-% # missing expl.variable in s1-aux.set at 1 s2-plot.
-% 
-% # error handling:
-% # since there is still the complete set of s0 available, the phase-id has been changed
-% # to s0 (by this, we could keep the plot); but we thereby can no longer use the available
-% # terrestrial info from this plot --> could hamper sae estimation)
-% 
-% # NOTE: This could violate the "randomness" assumption.
-% #       Be sure that we you have a "completely missing at random" case!!!
 
 \subsubsection*{Violation 3}
 
-If an $s_0$ point misses at least one of the explanatory variables used in the reduced model, the sample locations is \textbf{deleted} from the data set.
+If an $s_0$ point misses at least one of the explanatory variables used in the reduced model, the sample locations are \textbf{deleted} from the data set.
 
 \begin{small}
 <<eval=FALSE>>=
@@ -217,12 +195,12 @@ In threephase(formula.s0 = tvol ~ mean, formula.s1 = tvol ~ mean +  :
 \end{Schunk}
 \end{small}
 
-Note that that all the automatic data adjustments (deletion, recoding) have to be accepted with caution. Recapitulating, the unbiasedness of estimators in the design-based framework is based on the randomization of the sample locations. This means that every possible location within the forest area $F$ has an inclusion probability greater zero. Whereas this is already violated in practice by the use of regular grids, one can still expect that these grids do not exclude specific forest structures. If any information should be missing at any sample locations, one should clearify the reason for this and make sure that the information is \textit{completely missing at random}.
+Note that all the automatic data adjustments (deletion, recoding) have to be accepted with caution. Recapitulating, the unbiasedness of estimators in the design-based framework is based on the uniform and independent randomization of the sample locations. This means that every possible location within the forest area $F$, as well as pair of locations, have inclusion and joint inclusion probabilities greater than zero. Whereas this is already violated in practice by the use of regular grids, one can still expect that these grids do not exclude specific forest structures. If any information should be missing at the sample locations, one should clarify the reason for this and make sure that the information can reasonably be assumed to be \textit{completely missing at random}.
 
 
 \subsubsection*{Violation 4}
 
-If a categorical variable is used in the regression model(s) and the terrestrial sample $s_2$ is considerably small compared to the $s_1$ phase, it might occur that a category level is only present in the $s_1 \backslash s_2$ sample, and thus missing in the $s_2$ sample. Conclusively, an internal regression model can not be calculated and the function \textbf{stops} with the following error message:
+If a categorical variable is used in the regression model(s) and the terrestrial sample $s_2$ is considerably small compared to the $s_1$ phase, it might occur that a category is only present in the $s_1 \backslash s_2$ sample, and thus missing in the $s_2$ sample. Conclusively, an internal regression model cannot be calculated and the function \textbf{stops} with the following error message:
 
 \begin{small}
 <<eval=FALSE>>=
@@ -244,7 +222,6 @@ Error in check.mandatoryInputs(formula, data, phase_id) :
 \end{Sinput}
 \end{Schunk}
 \end{small}
-
 
 
 \newpage

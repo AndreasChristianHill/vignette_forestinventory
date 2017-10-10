@@ -97,7 +97,7 @@ formula.fm <- tvol ~ mean + stddev + max + q75 # full model applied to s1 phase
 @
 \end{small}
 
-Compared to the \code{twophase()}-function, we now have to specify two regression models, i.e. the nested reduced (\code{formula.s0}) and full (\code{formula.s1}) regression model. In addition, we also have to specify the indication of the $s_1$ phase (\code{s1.id}) in the argument \code{phase_id}. The global three-phase estimation can thus be applied by
+Compared to the \code{twophase()}-function, we now have to specify two regression models, i.e. the nested reduced (\code{formula.s0}) and full (\code{formula.s1}) regression model. In addition, we also have to specify the indication of the $s_1$ phase (\code{s1.id}) in the argument \code{phase_id} (note that \pkg{forestinventory} implicitly assumes that all other rows in the input data set belong to $s_0$). The global three-phase estimation can thus be applied by
 
 
 <<echo=FALSE>>=
@@ -120,8 +120,7 @@ summary(reg3p_nex)
 @
 \end{small}
 
-The \code{summary()} of a \code{threephase()}-function now recalls \textit{both} regression model formulas and also gives the $R^2$ for both the reduced (\code{r.squared_reduced}) and the full (\code{r.squared_full}) models. We are told that including \code{stddev}, \code{max} and \code{q75} yields a 20 \% improvement in R$^2$. If we used \code{mean} as the only auxiliary variable at all sample locations (two-phase approach), we would see that the three-phase extention here leads to a considerable reduction in variance.
-
+The \code{summary()} of a \code{threephase()}-function now recalls \textit{both} regression model formulas and also gives the $R^2$ for both the reduced (\code{r.squared_reduced}) and the full (\code{r.squared_full}) models. We are told that including \code{stddev}, \code{max} and \code{q75} yields a 20 \% improvement in R$^2$. Compared to using only \code{mean} under a two-phase approach, we would see a considerable reduction in variance by the three-phase extension.
 
 
 %--------------------------------------------------------------------------------------------------%
@@ -213,52 +212,54 @@ The \textbf{synthetic} (\textit{synth}) and \textbf{pseudo synthetic estimator} 
 %------------------------------------------------------------- %
 % \textbf{Extended Synthetic and Extended Pseudo Synthetic Estimator}\par
 
-The \textbf{extended synthetic} (\textit{extsynth}) and \textbf{extended pseudo synthetic estimator} (\textit{extpsynth}) insures that the residuals of the full model over both the entire inventory area $F$ and the small area $G$ are zero at the same time, i.e. $\int_F R(x)dx=\int_G R(x)dx=0$. This is again realized by extending the vector of explanatory variables by a binary categorical indicator variable $I_G(x)$ which takes the value 1 if the observation lies inside the small area $G$ and is otherwise set to 0. The extended auxiliary vector is thus defined as $\pmb{\mathbb{Z}}^t(x)=(\pmb{\mathbb{Z}}^{(0)t}(x),\pmb{Z}^{(1)t}(x))$, where $\pmb{\mathbb{Z}}^{(0)t}(x)=(\pmb{Z}^{(0)t}(x), I_G^t(x))$. This practically means that we have to specify the binary indicator variable for \textit{all} observations in the data frame that is passed to the package-functions. The regression coefficients $\hat{\pmb{\gamma}}_{s_2}$ and $\hat{\pmb{\theta}}_{s_2}$, and their variance-covarianve matrices $\hat{\pmb{\Sigma}}_{\hat{\pmb{\gamma}}_{s_2}}$ and $\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}$ under the extended auxiliary vector are thus recalculated as
+The \textbf{extended synthetic} (\textit{extsynth}) and \textbf{extended pseudo synthetic estimator} (\textit{extpsynth}) insures that the residuals of the full model over both the entire inventory area $F$ and the small area $G$ are zero at the same time, i.e. $\int_F R(x)dx=\int_G R(x)dx=0$. This is again realized by extending the vector of explanatory variables by a binary categorical indicator variable $I_G(x)$ which takes the value 1 if the observation lies inside the small area $G$ and is otherwise set to 0. The extended auxiliary vector is thus defined as $\pmb{\mathbb{Z}}^t(x)=(\pmb{\mathbb{Z}}^{(0)t}(x),\pmb{Z}^{(1)t}(x))$, where $\pmb{\mathbb{Z}}^{(0)t}(x)=(\pmb{Z}^{(0)t}(x), I_G^t(x))$. In other words, when extended option is chosen, \pkg{forestinventory} automatically adds the binary indicator variable for the desired small area for \textit{all} observations in the input data frame (i.e. $s_0$). The regression coefficients, point estimates and variance estimates are calculated by replacing $\pmb{Z}$ with $\pmb{\mathbb{Z}}$ (and likewise $\pmb{Z}^{(0)}$ with $\pmb{\mathbb{Z}}^{(0)}$) into Eq. \ref{eq:normequ_3p}, \ref{eq:covar3p}, \ref{eq:pest_3p_small_psmall} and \ref{eq:3p_synth_psynth}. Just as in the two-phase case, the resulting point estimates are now unbiased and have an associated g-weight variance that accounts for the variability of the regression coefficents resulting from the random sample $s_2$.
 
-\begin{subequations}\label{eq:normequ_redmod_ext}
-\begin{align}
-\hat{\pmb{\gamma}}_{s_2} &= \Big(\frac{1}{n_2}\sum_{x\in{s}_2}\pmb{\mathbb{Z}}^{(0)}(x)\pmb{\mathbb{Z}}^{(0)t}(x)
-\Big)^{-1}\frac{1}{n_2}\sum_{x\in{s}_2}Y(x)\pmb{\mathbb{Z}}^{(0)}(x) \\
-\hat{\pmb{\theta}}_{{s_2}}&=\Big(\frac{1}{n_2}\sum_{x\in{s}_2}\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x)
-\Big)^{-1}\frac{1}{n_2}\sum_{x\in{s}_2}Y(x)\pmb{\mathbb{Z}}(x) \\
-  \hat{\pmb{\Sigma}}_{\hat{\pmb{\gamma}}_{s_2}}&=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}^{(0)}(x)\pmb{\mathbb{Z}}^{(0)t}(x) \Big)^{-1}
-  \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}_{0}^2(x)\pmb{\mathbb{Z}}^{(0)}(x)\pmb{\mathbb{Z}}^{(0)t}(x)\Big)
-  \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}^{(0)}(x)\pmb{\mathbb{Z}}^{(0)t}(x) \Big)^{-1} \\
-  \hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}&=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x) \Big)^{-1}
-  \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}^2(x)\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x)\Big)
-  \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x) \Big)^{-1}
-\end{align}
-\end{subequations}
-
-With the auxliary means and their variance-covariance matrices following the same notational change, the \textbf{point estimate} and \textbf{g-weight variance} are derived as
-
-\begin{subequations}\label{eq:pest_3p_synth_psynth_ext}
-\begin{align}
-\hat{Y}_{G,extsynth,3p}&=(\bar{\pmb{\mathbb{Z}}}^{(0)}_{0,G}-\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{1,G})^t\hat{\pmb{\gamma}}_2 +
-\hat{\bar{\pmb{\mathbb{Z}}}}^t_{1,G}\hat{\pmb{\theta}}_{s_2} \label{eq:pe_3p_extsynth} \\
-\hat{Y}_{G,extpsynth,3p}&=(\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{0,G}-\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{1,G})^t\hat{\pmb{\gamma}}_2 +
-\hat{\bar{\pmb{\mathbb{Z}}}}^t_{1,G}\hat{\pmb{\theta}}_{s_2}\label{eq:pe_3p_extpsynth} \\
-\hat{\var}(\hat{Y}_{G,extsynth,3p})& =\frac{n_2}{n_1}\bar{\pmb{\mathbb{Z}}}^{(0)t}_{0,G}\hat{\pmb{\Sigma}}_{\hat{\pmb{\gamma}}_{s_2}}
-\bar{\pmb{Z}}^{(0)}_{0,G}+(1-\frac{n_2}{n_1})\hat{\bar{\pmb{\mathbb{Z}}}}_{1,G}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}
-\hat{\bar{\pmb{\mathbb{Z}}}}_{1,G} \label{eq:var_3p_reg_extsynth}\\
-\hat{\var}(\hat{Y}_{G,extpsynth,3p})& = \hat{\pmb{\gamma}}_{s_2}^t\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{0,G}}\hat{\pmb{\gamma}}_{s_2} + \frac{n_2}{n_1}\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)t}_{0,G}\hat{\pmb{\Sigma}}_{\hat{\pmb{\gamma}}_{s_2}}
-\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{0,G}+(1-\frac{n_2}{n_1})\hat{\bar{\pmb{\mathbb{Z}}}}_{1,G}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}
-\hat{\bar{\pmb{\mathbb{Z}}}}_{1,G} \label{eq:var_3p_reg_extpsynth}
-\end{align}
-\end{subequations}
-
-
-The package also returns the \textbf{external variance} which is defined as
-
-\begin{subequations}\label{eq:pest_3p_synth_psynth_ext}
-\begin{flalign}
-\hat{\var}_{ext}(\hat{Y}_{G,extsynth,3p})&= \frac{1}{n_{1,G}}\hat{\var}_{s_{2,G}}(\hat{\mathbb{R}}_{0}(x)) + 
- (1-\frac{n_{2,G}}{n_{1,G}})\frac{1}{n_{2,G}}\hat{\var}_{s_{2,G}}(\hat{\mathbb{R}}(x)) \label{eq:var_3p_reg_extsynth}&\\
-\hat{\var}_{ext}(\hat{Y}_{G,extpsynth,3p})&= \frac{1}{n_{0,G}}\hat{\var}_{s_{2,G}}(Y(x)) + (1-\frac{n_{1,G}}{n_{0,G}}) \frac{1}{n_{1,G}}\hat{\var}_{s_{2,G}}(\hat{\mathbb{R}}_{0}(x)) \nonumber & \\
- &+ (1-\frac{n_{2,G}}{n_{1,G}})\frac{1}{n_{2,G}}\hat{\var}_{s_{2,G}}(\hat{\mathbb{R}}(x)) \label{eq:var_3p_reg_extpsynth}
-\end{flalign}
-\end{subequations}
-where $\hat{\mathbb{R}}_{0}=Y(x)-\hat{\mathbb{Y}}_{0}(x)$ with $\hat{\mathbb{Y}}_{0}(x)=\pmb{\mathbb{Z}}^{(0)t}(x)\hat{\pmb{\gamma}}_{s_2}$. The equations for the point estimate and variances again look similar to the synthetic and pseudo synthetic form given in Eq. \ref{eq:pe_3p_synth}, \ref{eq:pe_3p_psynth}, \ref{eq:var_3p_reg_synth} and \ref{eq:var_3p_reg_psynth}. Just as in the two-phase context, they are design-unbiased since the residual correction term is included in the regression coefficient vector $\hat{\pmb{\theta}}_{s_2}$.
+% The \textbf{extended synthetic} (\textit{extsynth}) and \textbf{extended pseudo synthetic estimator} (\textit{extpsynth}) insures that the residuals of the full model over both the entire inventory area $F$ and the small area $G$ are zero at the same time, i.e. $\int_F R(x)dx=\int_G R(x)dx=0$. This is again realized by extending the vector of explanatory variables by a binary categorical indicator variable $I_G(x)$ which takes the value 1 if the observation lies inside the small area $G$ and is otherwise set to 0. The extended auxiliary vector is thus defined as $\pmb{\mathbb{Z}}^t(x)=(\pmb{\mathbb{Z}}^{(0)t}(x),\pmb{Z}^{(1)t}(x))$, where $\pmb{\mathbb{Z}}^{(0)t}(x)=(\pmb{Z}^{(0)t}(x), I_G^t(x))$. This practically means that we have to specify the binary indicator variable for \textit{all} observations in the data frame that is passed to the package-functions. The regression coefficients $\hat{\pmb{\gamma}}_{s_2}$ and $\hat{\pmb{\theta}}_{s_2}$, and their variance-covarianve matrices $\hat{\pmb{\Sigma}}_{\hat{\pmb{\gamma}}_{s_2}}$ and $\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}$ under the extended auxiliary vector are thus recalculated as
+% 
+% \begin{subequations}\label{eq:normequ_redmod_ext}
+% \begin{align}
+% \hat{\pmb{\gamma}}_{s_2} &= \Big(\frac{1}{n_2}\sum_{x\in{s}_2}\pmb{\mathbb{Z}}^{(0)}(x)\pmb{\mathbb{Z}}^{(0)t}(x)
+% \Big)^{-1}\frac{1}{n_2}\sum_{x\in{s}_2}Y(x)\pmb{\mathbb{Z}}^{(0)}(x) \\
+% \hat{\pmb{\theta}}_{{s_2}}&=\Big(\frac{1}{n_2}\sum_{x\in{s}_2}\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x)
+% \Big)^{-1}\frac{1}{n_2}\sum_{x\in{s}_2}Y(x)\pmb{\mathbb{Z}}(x) \\
+%   \hat{\pmb{\Sigma}}_{\hat{\pmb{\gamma}}_{s_2}}&=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}^{(0)}(x)\pmb{\mathbb{Z}}^{(0)t}(x) \Big)^{-1}
+%   \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}_{0}^2(x)\pmb{\mathbb{Z}}^{(0)}(x)\pmb{\mathbb{Z}}^{(0)t}(x)\Big)
+%   \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}^{(0)}(x)\pmb{\mathbb{Z}}^{(0)t}(x) \Big)^{-1} \\
+%   \hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}&=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x) \Big)^{-1}
+%   \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}^2(x)\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x)\Big)
+%   \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{\mathbb{Z}}(x)\pmb{\mathbb{Z}}^t(x) \Big)^{-1}
+% \end{align}
+% \end{subequations}
+% 
+% With the auxliary means and their variance-covariance matrices following the same notational change, the \textbf{point estimate} and \textbf{g-weight variance} are derived as
+% 
+% \begin{subequations}\label{eq:pest_3p_synth_psynth_ext}
+% \begin{align}
+% \hat{Y}_{G,extsynth,3p}&=(\bar{\pmb{\mathbb{Z}}}^{(0)}_{0,G}-\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{1,G})^t\hat{\pmb{\gamma}}_2 +
+% \hat{\bar{\pmb{\mathbb{Z}}}}^t_{1,G}\hat{\pmb{\theta}}_{s_2} \label{eq:pe_3p_extsynth} \\
+% \hat{Y}_{G,extpsynth,3p}&=(\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{0,G}-\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{1,G})^t\hat{\pmb{\gamma}}_2 +
+% \hat{\bar{\pmb{\mathbb{Z}}}}^t_{1,G}\hat{\pmb{\theta}}_{s_2}\label{eq:pe_3p_extpsynth} \\
+% \hat{\var}(\hat{Y}_{G,extsynth,3p})& =\frac{n_2}{n_1}\bar{\pmb{\mathbb{Z}}}^{(0)t}_{0,G}\hat{\pmb{\Sigma}}_{\hat{\pmb{\gamma}}_{s_2}}
+% \bar{\pmb{Z}}^{(0)}_{0,G}+(1-\frac{n_2}{n_1})\hat{\bar{\pmb{\mathbb{Z}}}}_{1,G}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}
+% \hat{\bar{\pmb{\mathbb{Z}}}}_{1,G} \label{eq:var_3p_reg_extsynth}\\
+% \hat{\var}(\hat{Y}_{G,extpsynth,3p})& = \hat{\pmb{\gamma}}_{s_2}^t\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{0,G}}\hat{\pmb{\gamma}}_{s_2} + \frac{n_2}{n_1}\hat{\bar{\pmb{\mathbb{Z}}}}^{(0)t}_{0,G}\hat{\pmb{\Sigma}}_{\hat{\pmb{\gamma}}_{s_2}}
+% \hat{\bar{\pmb{\mathbb{Z}}}}^{(0)}_{0,G}+(1-\frac{n_2}{n_1})\hat{\bar{\pmb{\mathbb{Z}}}}_{1,G}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}
+% \hat{\bar{\pmb{\mathbb{Z}}}}_{1,G} \label{eq:var_3p_reg_extpsynth}
+% \end{align}
+% \end{subequations}
+% 
+% 
+% The package also returns the \textbf{external variance} which is defined as
+% 
+% \begin{subequations}\label{eq:pest_3p_synth_psynth_ext}
+% \begin{flalign}
+% \hat{\var}_{ext}(\hat{Y}_{G,extsynth,3p})&= \frac{1}{n_{1,G}}\hat{\var}_{s_{2,G}}(\hat{\mathbb{R}}_{0}(x)) +
+%  (1-\frac{n_{2,G}}{n_{1,G}})\frac{1}{n_{2,G}}\hat{\var}_{s_{2,G}}(\hat{\mathbb{R}}(x)) \label{eq:var_3p_reg_extsynth}&\\
+% \hat{\var}_{ext}(\hat{Y}_{G,extpsynth,3p})&= \frac{1}{n_{0,G}}\hat{\var}_{s_{2,G}}(Y(x)) + (1-\frac{n_{1,G}}{n_{0,G}}) \frac{1}{n_{1,G}}\hat{\var}_{s_{2,G}}(\hat{\mathbb{R}}_{0}(x)) \nonumber & \\
+%  &+ (1-\frac{n_{2,G}}{n_{1,G}})\frac{1}{n_{2,G}}\hat{\var}_{s_{2,G}}(\hat{\mathbb{R}}(x)) \label{eq:var_3p_reg_extpsynth}
+% \end{flalign}
+% \end{subequations}
+% where $\hat{\mathbb{R}}_{0}=Y(x)-\hat{\mathbb{Y}}_{0}(x)$ with $\hat{\mathbb{Y}}_{0}(x)=\pmb{\mathbb{Z}}^{(0)t}(x)\hat{\pmb{\gamma}}_{s_2}$. The equations for the point estimate and variances again look similar to the synthetic and pseudo synthetic form given in Eq. \ref{eq:pe_3p_synth}, \ref{eq:pe_3p_psynth}, \ref{eq:var_3p_reg_synth} and \ref{eq:var_3p_reg_psynth}. Just as in the two-phase context, they are design-unbiased since the residual correction term is included in the regression coefficient vector $\hat{\pmb{\theta}}_{s_2}$.
 
 
 

@@ -1,0 +1,12 @@
+% !Rnw root = JStatSoft_forestinventory_master.Rnw
+
+\section{Future Plans}
+\label{sec:future}
+
+The \pkg{forestinventory} package currently provides a fairly well-rounded toolkit for forestry inventorists to integrate auxiliary information into their estimates using the model-assisted methods under the design-based approach.  Although 32 combinations of inventory scenarios, estimators and sample designs are covered, there are still potential improvements planned for the future. As this is an open-source project, everyone is encouraged to give feedback and/or make contributions on the package's development page on GitHub. Currently planned extensions include:
+
+\begin{itemize}
+\item Implement parallel procedures for efficiently calculating many small areas.
+\item Allow functions to accept objects of class \code{data.table} from the \pkg{data.table} package to improve memory efficiency.
+\item Enable the user to choose other types of models than linear regressions fit with OLS.
+\end{itemize}

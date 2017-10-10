@@ -43,7 +43,7 @@ Forest inventories provide reliable evidence-based information to assess the sta
   E-mail: \email{andreas.hill@usys.ethz.ch}\\
   Telephone: +41/44/632 32 36\\
   
-  Alexander Massey\\
+  \noindent Alexander Massey\\
   Department of Environmental Systems Science\\
   Chair of Landuse Engineering\\
   ETH Z\"urich\\
@@ -152,6 +152,12 @@ library(forestinventory)
 % ----------------------------- Visualization and Analysis of Estimation Results --------------- %
 
 \SweaveInput{rnw/Analysis and Visualization.Rnw}
+
+
+%------------------------------------------------------------------------------------------------%
+% ---------------------------------------- Future Plans---- ------------------------------------ %
+
+\SweaveInput{rnw/Future Plans.Rnw}
 
 
 %------------------------------------------------------------------------------------------------%
