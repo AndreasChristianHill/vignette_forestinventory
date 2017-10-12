@@ -138,7 +138,7 @@ Warning messages:
 
 \subsubsection*{Violation 2}
 
-However, if an $s_2$ and/or $s_1$ point misses a variable which is only used in the full regression model (in this example \code{q75}), the function will \textbf{recode} the phase indicator of that point to $s_0$, since the point still provides the required information for the reduced model. If this concerns an $s_2$ sample location, the associated response variable can no longer be used.
+However, if an $s_2$ and/or $s_1$ point misses a variable which is only used in the full regression model (in this example \code{q75}), the function will \textbf{recode} the phase indicator of that point to $s_0$, since the point still provides the required information for the reduced model. If this concerns an $s_2$ sample location, the associated value of the response variable can no longer be used.
 
 \begin{small}
 <<eval=FALSE>>=
