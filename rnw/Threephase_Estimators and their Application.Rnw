@@ -78,7 +78,7 @@ with the variance-covariance matrix of $\hat{\bar{\pmb{Z}}}^{(0)}_0$ and the var
   \frac{1}{n_{0}(n_{0}-1)}\sum_{x\in{s_{0}}}
   (\pmb{Z}^{(0)}(x)-\hat{\bar{\pmb{Z}}}^{(0)}_{0})(\pmb{Z}^{(0)}(x)-\hat{\bar{\pmb{Z}}}^{(0)}_{0})^t \\
   \hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}_{s_2}}&=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}^{(0)}(x)\pmb{Z}^{(0)t}(x) \Big)^{-1}
-  \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}_{0}^2(x)\pmb{Z}^{(0)}(x)\pmb{Z}^{(0)t}(x)\Big)
+  \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}^{(0)2}(x)\pmb{Z}^{(0)}(x)\pmb{Z}^{(0)t}(x)\Big)
   \Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}^{(0)}(x)\pmb{Z}^{(0)t}(x) \Big)^{-1} \label{eq:covar_alpha} \\
   \hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}&=\Big(\frac{1}{n_2}\sum_{x\in{s_2}}\pmb{Z}(x)\pmb{Z}^t(x) \Big)^{-1}
   \Big(\frac{1}{n_2^2}\sum_{x\in{s_2}}\hat{R}^2(x)\pmb{Z}(x)\pmb{Z}^t(x)\Big)
@@ -86,13 +86,13 @@ with the variance-covariance matrix of $\hat{\bar{\pmb{Z}}}^{(0)}_0$ and the var
 \end{align}
 \end{subequations}
 
-Note that $\hat{R}(x)=Y(x)-\pmb{Z}^t(x)\hat{\pmb{\beta}}_{s_2}$ denotes the empirical residuals of the full model, whereas $\hat{R}_{0}(x)=Y(x)-\pmb{Z}^{(0)t}\hat{\pmb{\alpha}}_{s_2}$ denotes the empirical residuals of the reduced model. The \textbf{external variance} form under linear regression models is defined as
+Note that $\hat{R}(x)=Y(x)-\pmb{Z}^t(x)\hat{\pmb{\beta}}_{s_2}$ denotes the empirical residuals of the full model, whereas $\hat{R}^{(0)}(x)=Y(x)-\pmb{Z}^{(0)t}\hat{\pmb{\alpha}}_{s_2}$ denotes the empirical residuals of the reduced model. The \textbf{external variance} form under linear regression models is defined as
 
 \begin{subequations}\label{eq:extvar_reg3p}
 \begin{align}
-\hat{\var}_{ext}(\hat{Y}_{reg3p,ex})&=\frac{1}{n_1}\hat{\var}_{s_2}(\hat{R}_{0}(x)) + (1-\frac{n_2}{n_1})\frac{1}{n_2}\hat{\var}_{s_2}(\hat{R}(x))\label{eq:extvar_reg3p_ex} \\
-\hat{\var}_{ext}(\hat{Y}_{reg3p,nex})&=\frac{1}{n_0}\hat{\var}_{s_0}(\hat{Y}_{0}(x))
-+\frac{1}{n_1}\hat{\var}_{s_2}(\hat{R}_{0}(x)) + (1-\frac{n_2}{n_1})\frac{1}{n_2}\hat{\var}_{s_2}(\hat{R}(x)) \label{eq:extvar_reg3p_nex}
+\hat{\var}_{ext}(\hat{Y}_{reg3p,ex})&=\frac{1}{n_1}\hat{\var}_{s_2}(\hat{R}^{(0)}(x)) + (1-\frac{n_2}{n_1})\frac{1}{n_2}\hat{\var}_{s_2}(\hat{R}(x))\label{eq:extvar_reg3p_ex} \\
+\hat{\var}_{ext}(\hat{Y}_{reg3p,nex})&=\frac{1}{n_0}\hat{\var}_{s_0}(\hat{Y}^{(0)}(x))
++\frac{1}{n_1}\hat{\var}_{s_2}(\hat{R}^{(0)}(x)) + (1-\frac{n_2}{n_1})\frac{1}{n_2}\hat{\var}_{s_2}(\hat{R}(x)) \label{eq:extvar_reg3p_nex}
 \end{align}
 \end{subequations}
 where $\hat{\var}_{s_0}$ indicates taking the sample variance over $s_0$.
@@ -192,13 +192,13 @@ The \textbf{external variance} is defined as:
 
 \begin{subequations}\label{eq:pest_3p_small_psmall}
 \begin{flalign}
-\hat{\var}_{ext}(\hat{Y}_{G,small,3p})&= \frac{1}{n_{1,G}}\hat{\var}_{s_{2,G}}(\hat{R}_{0}(x)) + 
+\hat{\var}_{ext}(\hat{Y}_{G,small,3p})&= \frac{1}{n_{1,G}}\hat{\var}_{s_{2,G}}(\hat{R}^{(0)}(x)) + 
  (1-\frac{n_{2,G}}{n_{1,G}})\frac{1}{n_{2,G}}\hat{\var}_{s_{2,G}}(\hat{R}(x)) \label{eq:var_3p_reg_small}&\\
-\hat{\var}_{ext}(\hat{Y}_{G,psmall,3p})&= \frac{1}{n_{0,G}}\hat{\var}_{s_{2,G}}(Y(x)) + (1-\frac{n_{1,G}}{n_{0,G}}) \frac{1}{n_{1,G}}\hat{\var}_{s_{2,G}}(\hat{R}_{0}(x)) \nonumber &\\
+\hat{\var}_{ext}(\hat{Y}_{G,psmall,3p})&= \frac{1}{n_{0,G}}\hat{\var}_{s_{2,G}}(Y(x)) + (1-\frac{n_{1,G}}{n_{0,G}}) \frac{1}{n_{1,G}}\hat{\var}_{s_{2,G}}(\hat{R}^{(0)}(x)) \nonumber &\\
  &+ (1-\frac{n_{2,G}}{n_{1,G}})\frac{1}{n_{2,G}}\hat{\var}_{s_{2,G}}(\hat{R}(x)) \label{eq:var_3p_reg_psmall}
 \end{flalign}
 \end{subequations}
-where $\hat{R}_{0}(x)=Y(x)-\hat{Y}_{0}(x)$ with $\hat{Y}_{0}(x)=\pmb{Z}^{(0)t}(x)\hat{\pmb{\alpha}}_{s_2}$.
+where $\hat{R}^{(0)}(x)=Y(x)-\hat{Y}^{(0)}(x)$ with $\hat{Y}^{(0)}(x)=\pmb{Z}^{(0)t}(x)\hat{\pmb{\alpha}}_{s_2}$.
 
 %------------------------------------------------------------- %
 % \textbf{Synthetic and Pseudo Synthetic Estimator}\par
