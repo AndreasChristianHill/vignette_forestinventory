@@ -35,7 +35,6 @@ Three-phase estimators extend the principle of two-phase sampling and use invent
 	\begin{subfigure}[t]{0.5\textwidth}
 		\centering
 	 \resizebox{0.58\hsize}{!}{\includegraphics{fig/sae_graphic.PNG}}%
-   %\resizebox{0.6\hsize}{!}{\includegraphics{fig/sae_graphic(new).eps}}%
 		\caption{} \label{fig:concmphase_and_sae_b}
 	\end{subfigure}
 \caption{\textbf{(a)} Concept of multiphase sampling. The square represents the forest area for which an inventory is being conducted. The points denote the sample locations $x$. Filled points indicate \textit{available} information. \textbf{(b)} Illustration of the Small Area Estimation problem}
@@ -62,7 +61,7 @@ In the \pkg{forestinventory} package, estimators for two-phase and three-phase s
 
 \begin{figure}[htb]
 \centering
-\resizebox{1\hsize}{!}{\includegraphics{fig/Package_structure_4.PNG}}
+\resizebox{1\hsize}{!}{\includegraphics{fig/Package_structure_5.PNG}}
 \caption{Structure of the multi-phase estimators in the \proglang{R} package \pkg{forestinventory}}
 \label{fig:struct_package}
 \end{figure}
