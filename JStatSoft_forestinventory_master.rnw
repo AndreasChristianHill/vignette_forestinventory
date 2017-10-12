@@ -1,6 +1,6 @@
 
-\documentclass[article]{jss}
-%\documentclass[nojss]{jss} % for creating the vignette
+%\documentclass[article]{jss}
+\documentclass[nojss]{jss} % for creating the vignette
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% declarations for jss.cls %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

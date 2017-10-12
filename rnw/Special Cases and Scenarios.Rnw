@@ -8,7 +8,7 @@
 
 A special case of multi-phase regression estimators is \textit{post-stratification}, which can further be divided into the cases of \textit{multi-phase sampling for stratification} and \textit{multi-phase sampling for regression within strata}. Both imply the use of one or more categorical variables in the regression model(s), leading to classical ANOVA and ANCOVA models.
 
-To demonstrate \textit{post-stratification}, we first create an artificial categorical variable \textit{developement stage} (\code{stage}) by clustering the mean canopy heights of the \code{grisons} data set into 3 height classes:
+To demonstrate \textit{post-stratification}, we first create an artificial categorical variable \textit{development stage} (\code{stage}) by clustering the mean canopy heights of the \code{grisons} data set into 3 height classes:
 
 \begin{small}
 <<>>=
@@ -16,7 +16,7 @@ grisons$stage <- as.factor(kmeans(grisons$mean, centers = 3)$cluster)
 @
 \end{small}
 
-\textit{Two-phase sampling for stratification} is applied if the model only contains categorical variables, in this case the factor variable \code{stage}. Linear regression models only fitted with categorical variables produce ANOVA models, which when used in multi-phase regression estimators is equivalent to post-stratification. For our example, this means that the model predictions are simply the means of the terrestrial response values within each development stage (within-strata means).
+\textit{Two-phase sampling for stratification} is applied if the model only contains categorical variables, in this case the factor variable \code{stage}. Linear regression models only fitted with categorical variables produce ANOVA models, which when used in multi-phase regression estimators, is equivalent to post-stratification. For our example, this means that the model predictions are simply the means of the terrestrial response values within each development stage (within-strata means).
 
 \begin{small}
 <<eval=FALSE>>=
@@ -45,7 +45,7 @@ The variance of all model-assisted estimators included in \pkg{forestinventory} 
 % --------------------------------------------------------- %
 \subsection{Small Area Estimation under Cluster Sampling}
 
-As mentioned in Section \ref{sec:packstruc}, \textit{cluster sampling} is a special case of sample designs where the sample consists of more than one spatially agglomerated sample points. One randomly places the sample location $x$ in the inventory area as in the simple sampling design, but then $M-1$ additional sample locations $x_2,...,x_M$ are created close to the cluster origin $x$ by adding a fixed set of spatial vectors $e_2,...,e_M$ to $x$. The idea of cluster sampling is to increase the amount of information without increasing the travelling costs of the terrestrial campaign. However, the information gathered at all sub-locations of a cluster is then averaged on the cluster level, and this average value then references exactly one point, i.e. the cluster origin $x$. Without going into too much mathematical detail, the estimators under simple sampling are thus extended in a way that all parameters (local density, mean vector of explanatory variables, mean model residuals) have to be calculated as the weighted cluster means with $M(x)$ being the cluster weights. Whereas the geometric form and the number of sample locations per cluster $M$ is fixed (i.e. defined by the inventorist), the actual number of points $M(x)$ falling into the forest area $F$ at sample location $x$ is random because the cluster origin $x$ is random. The \pkg{forstinventory} package identifies clusters via a unique cluster ID that is assigned to a column in the input data set. Its column name is passed to the argument \code{cluster} in the \code{twophase()} and \code{threephase()} function calls.
+As mentioned in Section \ref{sec:packstruc}, \textit{cluster sampling} is a special case of sample designs where the sample consists of more than one spatially agglomerated sample points. One randomly places the sample location $x$ in the inventory area as in the simple sampling design, but then $M-1$ additional sample locations $x_2,...,x_M$ are created close to the cluster origin $x$ by adding a fixed set of spatial vectors $e_2,...,e_M$ to $x$. The idea of cluster sampling is to increase the amount of information without increasing the travel costs of the terrestrial campaign. However, the information gathered at all sub-locations of a cluster is then averaged on the cluster level, and this average value then references exactly one point, i.e. the cluster origin $x$. Without going into too much mathematical detail, the estimators under simple sampling are thus extended in a way that all parameters (local density, mean vector of explanatory variables, mean model residuals) have to be calculated as the weighted cluster means with $M(x)$ being the cluster weights. Whereas the geometric form and the number of sample locations per cluster $M$ is fixed (i.e. defined by the inventorist), the actual number of points $M(x)$ falling into the forest area $F$ at sample location $x$ is random because the cluster origin $x$ is random. The \pkg{forstinventory} package identifies clusters via a unique cluster ID that is assigned to a column in the input data set. Its column name is passed to the argument \code{cluster} in the \code{twophase()} and \code{threephase()} function calls.
 
 For small area applications, the scenario might occur where the points of a cluster at sample locations $x$ spread over more than one small area, i.e. only a subset $M_{G}(x) < M(x)$ is included in the small area of interest. In this case, the zero mean residual property within the small area, $\frac{\sum_{x \in s_{2,G}}M(x)\hat{R}_{c}(x)}{\sum_{x \in s_{2,G}}M(x)}=0$, is no longer guaranteed when using the \textbf{extended} and \textbf{pseudo extended synthetic estimator} (see \textit{extsynth} and \textit{extpsynth} in Sections \ref{sec:twophase_sae} and \ref{sec:threephase_sae}). In this case, it is adviseable to use the \textbf{(pseudo) small area estimator} (\textit{psmall}) where the zero mean residual property is still ensured.
 
@@ -138,7 +138,7 @@ Warning messages:
 
 \subsubsection*{Violation 2}
 
-However, if an $s_2$ and/or $s_1$ point misses a variable which is only used in the full regression model (in this example \code{q75}), the function will \textbf{recode} the phase indicator of that point to $s_0$, since the point still provides the required information for the reduced model. If this concerns an $s_2$ sample location, the associated value of the response variable can no longer be used.
+However, if an $s_2$ and/or $s_1$ point is missing a variable which is only used in the full regression model (in this example \code{q75}), the function will \textbf{recode} the phase indicator of that point to $s_0$, since the point still provides the required information for the reduced model. If this concerns an $s_2$ sample location, the associated value of the response variable can no longer be used.
 
 \begin{small}
 <<eval=FALSE>>=
@@ -200,7 +200,7 @@ Note that all the automatic data adjustments (deletion, recoding) have to be acc
 
 \subsubsection*{Violation 4}
 
-If a categorical variable is used in the regression model(s) and the terrestrial sample $s_2$ is considerably small compared to the $s_1$ phase, it might occur that a category is only present in the $s_1 \backslash s_2$ sample, and thus missing in the $s_2$ sample. Conclusively, an internal regression model cannot be calculated and the function \textbf{stops} with the following error message:
+If a categorical variable is used in the regression model(s) and the terrestrial sample $s_2$ is considerably small compared to the $s_1$ phase, it might occur that a category is only present in the $s_1 \backslash s_2$ sample, and thus missing in the $s_2$ sample. Therefore, an internal regression model cannot be calculated and the function \textbf{stops} with the following error message:
 
 \begin{small}
 <<eval=FALSE>>=

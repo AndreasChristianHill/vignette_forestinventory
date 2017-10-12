@@ -22,30 +22,35 @@ grisons.n<- grisons
 grisons.n$stage<- as.factor(kmeans(grisons.n$mean, centers = 3)$cluster)
 
 ## plot:
+library(ggplot2)
 ggplot(data=grisons.n, aes(x = mean, y = tvol)) +
   geom_point(aes(colour = factor(stage)))
 
 
 ## apply 'double sampling for (post)stratification':
-twophase(formula=tvol ~ stage,
-         data=grisons.n,
-         phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 2),
-         boundary_weights = "boundary_weights")
+summary(
+  twophase(formula=tvol ~ stage,
+           data=grisons.n,
+           phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 2),
+           boundary_weights = "boundary_weights")
+)
 
 
 ## apply 'double sampling for regression':
-twophase(formula=tvol ~ mean + stddev + max + q75 + stage,
-         data=grisons.n,
-         phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 2),
-         boundary_weights = "boundary_weights")
-
+summary(
+  twophase(formula=tvol ~ mean + stddev + max + q75 + stage,
+           data=grisons.n,
+           phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 2),
+           boundary_weights = "boundary_weights")
+)
 
 ## apply 'double sampling for regression within (post)strata'":
-twophase(formula=tvol ~ mean + stddev + max + q75 + stage,
-         data=grisons.n,
-         phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 2),
-         boundary_weights = "boundary_weights")
-
+summary(
+  twophase(formula=tvol ~ mean + stddev + max + q75 + stage,
+           data=grisons.n,
+           phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 2),
+           boundary_weights = "boundary_weights")
+)
 
 
 #####################################################
@@ -211,7 +216,7 @@ tp<- threephase(formula.s0 = tvol ~ mean,
                 boundary_weights = "boundary_weights")
 
 # Violation:
-# s2 point misses expl.variable used (reduced model) at s1 sample points
+# s2 point misses expl.variable used in reduced model at s1 sample points
 
 # warning message:
 # s2 point misses expl.variable used in s1

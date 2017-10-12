@@ -1,12 +1,12 @@
-#---------------------------------------------------------------------------------- #
-#  Journal of Statistical Software                                                  #
-#  Design-Based Global and Small Area Estimations for Multiphase Forest Inventories #
-#  Andreas Hill & Alexander Massey                                                  #
-#                                                                                   #
-#  Code for running all examples given in                                           #
-#  Section 4  "Three-phase Estimators and their Application"                        #
-#                                                                                   #
-#---------------------------------------------------------------------------------- #
+#----------------------------------------------------------------------------------- #
+#  Journal of Statistical Software                                                   #
+#  Design-Based Global and Small Area Estimations for Multi-phase Forest Inventories #
+#  Andreas Hill & Alexander Massey                                                   #
+#                                                                                    #
+#  Code for running all examples given in                                            #
+#  Section 4  "Three-phase Estimators and their Application"                         #
+#                                                                                    #
+#----------------------------------------------------------------------------------- #
 
 library(forestinventory)
 

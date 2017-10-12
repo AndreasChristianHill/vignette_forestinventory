@@ -65,6 +65,10 @@ grisons.sae.table
 ## see structure:
 str(grisons.sae.table)
 
+## turn into data.frame:
+grisons.sae.df<- data.frame(grisons.sae.table)
+class(grisons.sae.df)
+
 
 #####################################################
 # ----- mphase.gain() ----------------------------- #
@@ -80,10 +84,11 @@ mphase.gain(grisons.sae.table, pref.vartype = "g_variance")
 #####################################################
 
 ## plot point estimates and confidence intervals:
-plot(grisons.sae.table, ncol = 2, yvar = "estimate") 
+plot(grisons.sae.table, ncol = 2, yvar = "estimate") +
+  ylab("Timber Volume [m3/ha]")
 
 ## plot estimation errors:
-plot(grisons.sae.table, ncol = 2, yvar = "error") 
+plot(grisons.sae.table, ncol = 2) 
 
 
 #######

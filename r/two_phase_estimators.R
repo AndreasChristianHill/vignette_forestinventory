@@ -1,12 +1,12 @@
-#---------------------------------------------------------------------------------- #
-#  Journal of Statistical Software                                                  #
-#  Design-Based Global and Small Area Estimations for Multiphase Forest Inventories #
-#  Andreas Hill & Alexander Massey                                                  #
-#                                                                                   #
-#  Code for running all examples given in                                           #
-#  Section 3  "Two-phase Estimators and their Application"                          #
-#                                                                                   #
-#---------------------------------------------------------------------------------- #
+#----------------------------------------------------------------------------------- #
+#  Journal of Statistical Software                                                   #
+#  Design-Based Global and Small Area Estimations for Multi-phase Forest Inventories #
+#  Andreas Hill & Alexander Massey                                                   #
+#                                                                                    #
+#  Code for running all examples given in                                            #
+#  Section 3  "Two-phase Estimators and their Application"                           #
+#                                                                                    #
+#----------------------------------------------------------------------------------- #
 
 library(forestinventory)
 
@@ -117,8 +117,7 @@ psynth_2p$estimation
 
 # --------------------------------- #
 ## extended synthetic estimator (extpsynth)
-#  with boundary weight adjustment
-
+# boundary adjustment was already applied when retrieving the exact means
 
 ## retrieve order of columnames that the lm()-function processes a formula object:
 #  --> actually the order they appear in the design-matrix ...

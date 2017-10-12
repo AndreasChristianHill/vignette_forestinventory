@@ -153,7 +153,7 @@ The three two-phase small area estimators described in Section \ref{sec:twophase
 %----------------------------------------------- %
 % \textbf{Small and Pseudo Small Area Estimator}\par
 
-The unbiased \textbf{point estimates} of the \textbf{small} (\textit{small}) and \textbf{pseudo small area estimator} (\textit{psmall}) are calculated by applying the globally derived reduced and full regression model coefficients to the small area means of the explanatory variables, and then correcting for a potential model bias in $G$ by adding the small area mean of the full model residuals, i.e. $\hat{R}_{G}(x)=Y_G(x)-\pmb{Z}_G^t(x)\hat{\pmb{\beta}}_{s_2}$, to the point estimate. The difference between the mean $\hat{\bar{\pmb{Z}}}^{(0)}_{1,G}$ and the more precise or exact mean $\hat{\bar{\pmb{Z}}}^{(0)}_{0,G}$ and $\bar{\pmb{Z}}^{(0)}_{0,G}$ is again considered as a correction term likewise in the global estimation (Eq. \ref{eq:reg3p}).
+The unbiased \textbf{point estimates} of the \textbf{small} (\textit{small}) and \textbf{pseudo small area estimator} (\textit{psmall}) are calculated by applying the globally derived reduced and full regression model coefficients to the small area means of the explanatory variables, and then corrected for a potential model bias in $G$ by adding the small area mean of the full model residuals, i.e. $\hat{R}_{G}(x)=Y_G(x)-\pmb{Z}_G^t(x)\hat{\pmb{\beta}}_{s_2}$, to the point estimate. The difference between the mean $\hat{\bar{\pmb{Z}}}^{(0)}_{1,G}$ and the more precise or exact mean $\hat{\bar{\pmb{Z}}}^{(0)}_{0,G}$ and $\bar{\pmb{Z}}^{(0)}_{0,G}$ is again considered as a correction term likewise in the global estimation (Eq. \ref{eq:reg3p}).
 
 \begin{subequations}\label{eq:pest_3p_small_psmall}
 \begin{align}
@@ -171,12 +171,11 @@ The \textbf{g-weight variance} is then calculated as
 \hat{\var}(\hat{Y}_{G,small,3p})& =\frac{n_2}{n_1}\bar{\pmb{Z}}^{(0)t}_{0,G}\hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}_{s_2}}
 \bar{\pmb{Z}}^{(0)}_{0,G}+(1-\frac{n_2}{n_1})\hat{\bar{\pmb{Z}}}_{1,G}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}
 \hat{\bar{\pmb{Z}}}_{1,G} + 
-\frac{1}{n_{2,G}}\frac{1}{n_{2,G}-1}\sum_{x \in s_{2,G}} \Big(\hat{R}_{G}(x)-\bar{\hat{R}}_{2,G}\Big)^2 \label{eq:var_3p_reg_small}&\\
+\frac{1}{n_{2,G}}\hat{\var}_{s_{2,G}}(\hat{R}(x)) \label{eq:var_3p_reg_small}&\\
 \hat{\var}(\hat{Y}_{G,psmall,3p})& = \hat{\pmb{\alpha}}_{s_2}^t\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{Z}}}^{(0)}_{0,G}}\hat{\pmb{\alpha}}_{s_2} +
 \frac{n_2}{n_1}\hat{\bar{\pmb{Z}}}^{(0)t}_{0,G}\hat{\pmb{\Sigma}}_{\hat{\pmb{\alpha}}_{s_2}}
 \hat{\bar{\pmb{Z}}}^{(0)}_{0,G}+(1-\frac{n_2}{n_1})\hat{\bar{\pmb{Z}}}_{1,G}^t\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}
-\hat{\bar{\pmb{Z}}}_{1,G} \nonumber &\\
-&+ \frac{1}{n_{2,G}}\frac{1}{n_{2,G}-1}\sum_{x \in s_{2,G}} \Big(\hat{R}_{G}(x)-\bar{\hat{R}}_{2,G}\Big)^2 \label{eq:var_3p_reg_psmall}
+\hat{\bar{\pmb{Z}}}_{1,G} + \frac{1}{n_{2,G}}\hat{\var}_{s_{2,G}}(\hat{R}(x)) \label{eq:var_3p_reg_psmall}
 \end{flalign}
 \end{subequations}
 
@@ -203,7 +202,7 @@ where $\hat{R}^{(0)}(x)=Y(x)-\hat{Y}^{(0)}(x)$ with $\hat{Y}^{(0)}(x)=\pmb{Z}^{(
 %------------------------------------------------------------- %
 % \textbf{Synthetic and Pseudo Synthetic Estimator}\par
 
-The \textbf{synthetic} (\textit{synth}) and \textbf{pseudo synthetic estimator} (\textit{psynth}) can be applied if no terrestrial samples are available in the small area, i.e. $n_{2,G}=0$. Consequently, the residual correction and the residual variation term of the full model can no longer be applied and drops from the point (Eq. \ref{eq:pe_3p_synth} and \ref{eq:pe_3p_psynth}) and g-weight variance (Eq. \ref{eq:var_3p_reg_synth} and \ref{eq:var_3p_reg_psynth}) formulas. The point estimates are again potentially biased since $\frac{1}{n_{2,G}}\sum_{x \in s_{2,G}}\hat{R}(x)=0$ for the full model residuals can not be ensured within small area $G$. Also the variance will be small but to the cost of ignoring the model uncertainties. Note that there is again no external variance formula for the synthetic and pseudo synthetic estimation.
+The \textbf{synthetic} (\textit{synth}) and \textbf{pseudo synthetic estimator} (\textit{psynth}) can be applied if no terrestrial samples are available in the small area, i.e. $n_{2,G}=0$. Consequently, the residual correction and the residual variation term of the full model can no longer be applied and drops from the point estimate (Eq. \ref{eq:pe_3p_synth} and \ref{eq:pe_3p_psynth}) and g-weight variance (Eq. \ref{eq:var_3p_reg_synth} and \ref{eq:var_3p_reg_psynth}) formulas. The point estimates are again potentially biased since $\frac{1}{n_{2,G}}\sum_{x \in s_{2,G}}\hat{R}(x)=0$ for the full model residuals can not be ensured within small area $G$. Also the variance will be small but to the cost of ignoring the model uncertainties. Note that there is again no external variance formula for the synthetic and pseudo synthetic estimation.
 
 \begin{subequations}\label{eq:3p_synth_psynth}
 \begin{align}
@@ -225,7 +224,7 @@ The \textbf{synthetic} (\textit{synth}) and \textbf{pseudo synthetic estimator} 
 %------------------------------------------------------------- %
 % \textbf{Extended Synthetic and Extended Pseudo Synthetic Estimator}\par
 
-The \textbf{extended synthetic} (\textit{extsynth}) and \textbf{extended pseudo synthetic estimator} (\textit{extpsynth}) insures that the residuals of the full model over both the entire inventory area $F$ and the small area $G$ are zero at the same time, i.e.$\frac{1}{n_{2}}\sum_{x \in s_{2}}\hat{R}(x) = \frac{1}{n_{2,G}}\sum_{x \in s_{2,G}}\hat{R}(x)=0$. This is again realized by extending the vector of explanatory variables by a binary categorical indicator variable $I_G(x)$ which takes the value 1 if the observation lies inside the small area $G$ and is otherwise set to 0. The extended auxiliary vector is thus defined as $\pmb{\mathbb{Z}}^t(x)=(\pmb{\mathbb{Z}}^{(0)t}(x),\pmb{Z}^{(1)t}(x))$, where $\pmb{\mathbb{Z}}^{(0)t}(x)=(\pmb{Z}^{(0)t}(x), I_G^t(x))$. In other words, when the \textit{extended} option is chosen, \pkg{forestinventory} automatically adds the binary indicator variable for the desired small area for \textit{all} observations in the input data frame (i.e. $s_0$). The regression coefficients, point estimates and variance estimates are calculated by replacing $\pmb{Z}$ with $\pmb{\mathbb{Z}}$ (and likewise $\pmb{Z}^{(0)}$ with $\pmb{\mathbb{Z}}^{(0)}$) into Eq. \ref{eq:normequ_3p}, \ref{eq:covar3p}, \ref{eq:pest_3p_small_psmall} and \ref{eq:3p_synth_psynth}. Just as in the two-phase case, the resulting point estimates are now unbiased and have an associated g-weight variance that accounts for the variability of the regression coefficients resulting from the random sample $s_2$.
+The \textbf{extended synthetic} (\textit{extsynth}) and \textbf{extended pseudo synthetic estimator} (\textit{extpsynth}) ensures that the residuals of the full model over both the entire inventory area $F$ and the small area $G$ are zero at the same time, i.e.$\frac{1}{n_{2}}\sum_{x \in s_{2}}\hat{R}(x) = \frac{1}{n_{2,G}}\sum_{x \in s_{2,G}}\hat{R}(x)=0$. This is again realized by extending the vector of explanatory variables by a binary categorical indicator variable $I_G(x)$ which takes the value 1 if the observation lies inside the small area $G$ and is otherwise set to 0. The extended auxiliary vector is thus defined as $\pmb{\mathbb{Z}}^t(x)=(\pmb{\mathbb{Z}}^{(0)t}(x),\pmb{Z}^{(1)t}(x))$, where $\pmb{\mathbb{Z}}^{(0)t}(x)=(\pmb{Z}^{(0)t}(x), I_G^t(x))$. In other words, when the \textit{extended} option is chosen, \pkg{forestinventory} automatically adds the binary indicator variable for the desired small area for \textit{all} observations in the input data frame (i.e. $s_0$). The regression coefficients, point estimates and variance estimates are calculated by replacing $\pmb{Z}$ with $\pmb{\mathbb{Z}}$ (and likewise $\pmb{Z}^{(0)}$ with $\pmb{\mathbb{Z}}^{(0)}$) into Eq. \ref{eq:normequ_3p}, \ref{eq:covar3p}, \ref{eq:pest_3p_small_psmall} and \ref{eq:3p_synth_psynth}. Just as in the two-phase case, the resulting point estimates are now unbiased and have an associated g-weight variance that accounts for the variability of the regression coefficients resulting from the random sample $s_2$.
 
 % The \textbf{extended synthetic} (\textit{extsynth}) and \textbf{extended pseudo synthetic estimator} (\textit{extpsynth}) insures that the residuals of the full model over both the entire inventory area $F$ and the small area $G$ are zero at the same time, i.e. $\int_F R(x)dx=\int_G R(x)dx=0$. This is again realized by extending the vector of explanatory variables by a binary categorical indicator variable $I_G(x)$ which takes the value 1 if the observation lies inside the small area $G$ and is otherwise set to 0. The extended auxiliary vector is thus defined as $\pmb{\mathbb{Z}}^t(x)=(\pmb{\mathbb{Z}}^{(0)t}(x),\pmb{Z}^{(1)t}(x))$, where $\pmb{\mathbb{Z}}^{(0)t}(x)=(\pmb{Z}^{(0)t}(x), I_G^t(x))$. This practically means that we have to specify the binary indicator variable for \textit{all} observations in the data frame that is passed to the package-functions. The regression coefficients $\hat{\pmb{\gamma}}_{s_2}$ and $\hat{\pmb{\theta}}_{s_2}$, and their variance-covarianve matrices $\hat{\pmb{\Sigma}}_{\hat{\pmb{\gamma}}_{s_2}}$ and $\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}$ under the extended auxiliary vector are thus recalculated as
 % 
@@ -280,7 +279,7 @@ The \textbf{extended synthetic} (\textit{extsynth}) and \textbf{extended pseudo 
 \subsubsection{Application}
 
 
-We will demonstrate the use of three-phase small area estimation in the package \pkg{forestinventory} by applying the \textbf{extended synthetic} and the \textbf{synthetic} estimator to the \code{grisons} data set. The setup is thus exactly the same as in the example for global three-phase estimation (Section \ref{sec:glob_est_3p}). However, this time will use the exact auxiliary mean of the mean canopy height variable (\code{mean}) and assume that we do not know the exact means of the remaining explanatory variables \code{stddev}, \code{max} and \code{q75}. We thus first define the true means for each small area likewise we did in the \code{twophase()} example (Section \ref{sec:twophase_sae}):
+We will demonstrate the use of three-phase small area estimation in the package \pkg{forestinventory} by applying the \textbf{extended synthetic} and the \textbf{synthetic} estimator to the \code{grisons} data set. The setup is thus exactly the same as in the example for global three-phase estimation (Section \ref{sec:glob_est_3p}). However, this time will use the exact auxiliary mean of the mean canopy height variable (\code{mean}) and assume that we do not know the exact means of the remaining explanatory variables \code{stddev}, \code{max} and \code{q75}. We thus first define the true means for each small area just as we did in the \code{twophase()} example (Section \ref{sec:twophase_sae}):
 
 \begin{small}
 <<>>=
@@ -314,7 +313,7 @@ extsynth_3p$estimation
 @
 \end{small}
 
-The \textbf{synthetic estimator} can be applied by changing the argument \code{unbiased} to \code{FALSE}, which causes the function to ignore any terrestrial data available in the respective small area.
+The \textbf{synthetic estimator} can be applied by changing the argument \code{unbiased} to \code{FALSE}, which causes the function to not apply a bias correction in the respective small area.
 
 \begin{small}
 <<>>=
