@@ -1,13 +1,20 @@
 % !Rnw root = JStatSoft_forestinventory_master.Rnw
 
-\section{Calculation of Confidence Intervals}
+% set global options for R-output:
+<<echo=FALSE>>=
+options(prompt = "R> ", continue = "+  ", width = 77, useFancyQuotes = FALSE)
+@
+
+\section{Calculation of confidence intervals}
 \label{sec:confint_calc}
 
-Converting the estimated variance into a 95\% \textit{confidence interval} (CI) allows for a more practical interpretation of a point estimate's precision. The correct interpretation of a CI is not that there is a 95\% probability that it contains the true value. In the design-based context, the true value of the population parameter we are trying to estimate, albeit unknown, is fixed and the sample is randomly generated under the sample design. Theoretically, if we were to repreatedly conduct the inventory using the same estimation method, estimator and auxiliary information under newly drawn random samples and calculate the 95\%  CI from each sample, then 95\% of the CIs are expected to contain the true population parameter. The confidence level $1-\alpha$ (e.g. 95\%) is thus the expected frequency or proportion of possible confidence intervals to contain the unknown population parameter under resampling and is therefore often also referred to as \textit{coverage rate}. The CI is also linked to hypothesis testing in that its associated point estimate is considered statistically different from any given value that lies outside the CI boundaries.
+Converting the estimated variance into a 95\% confidence interval (CI) allows for a more practical interpretation of a point estimate's precision. The correct interpretation of a CI is not that there is a 95\% probability that it contains the true value. In the design-based context, the true value of the population parameter we are trying to estimate, albeit unknown, is fixed and the sample is randomly generated under the sample design. Theoretically, if we were to repreatedly conduct the inventory using the same estimation method, estimator and auxiliary information under newly drawn random samples and calculate the 95\%  CI from each sample, then 95\% of the CIs are expected to contain the true population parameter. The confidence level $1-\alpha$ (e.g. 95\%) is thus the expected frequency or proportion of possible confidence intervals to contain the unknown population parameter under resampling and is therefore often also referred to as coverage rate. The CI is also linked to hypothesis testing in that its associated point estimate is considered statistically different from any given value that lies outside the CI boundaries.
 
 Based on the central limit theorem it can be assumed that under hypothetical repeated sampling the point estimates will asymptotically follow a normal distribution. However, on the recommendation of \citet{mandallaz2013a}, better confidence intervals can obtained using the Student's \textit{t} distribution (\citet{mandallaz2013a}) defined as
 
-\textit{One-Phase Estimation}
+\vspace{8mm}
+
+One-phase estimation:
 
 \begin{equation}\label{ci_1phase}
 CI_{1-\alpha}(\hat{Y})=\bigg{\lbrack}\hat{Y}-t_{n_{2}-1, 1-\frac{\alpha}{2}}\sqrt{\hat{\var}(\hat{Y})},
@@ -16,7 +23,7 @@ CI_{1-\alpha}(\hat{Y})=\bigg{\lbrack}\hat{Y}-t_{n_{2}-1, 1-\frac{\alpha}{2}}\sqr
 
 
 % ------------------------------------------ %
-\textit{Two-Phase and Three-Phase Global Estimation}
+Two-phase and three-phase global estimation:
 
 \begin{equation}\label{ci_2phase_global}
 CI_{1-\alpha}(\hat{Y})=\bigg{\lbrack}\hat{Y}-t_{n_{2}-p, 1-\frac{\alpha}{2}}\sqrt{\hat{\var}(\hat{Y})},
@@ -24,14 +31,16 @@ CI_{1-\alpha}(\hat{Y})=\bigg{\lbrack}\hat{Y}-t_{n_{2}-p, 1-\frac{\alpha}{2}}\sqr
 \end{equation}
 
 % ------------------------------------------ %
-\textit{Two-Phase and Three-Phase Small Area Estimation}
+Two-phase and three-phase small area estimation:
 
 \begin{equation}\label{ci_2phase_sae}
 CI_{1-\alpha}(\hat{Y})=\bigg{\lbrack}\hat{Y}-t_{n_{2,G}-1, 1-\frac{\alpha}{2}}\sqrt{\hat{\var}(\hat{Y})},
                               \hat{Y}+t_{n_{2,G}-1, 1-\frac{\alpha}{2}}\sqrt{\hat{\var}(\hat{Y})}\bigg{\rbrack}
 \end{equation}
 
-where $\hat{Y}$ is the point estimate, $\hat{\var}(\hat{Y})$ is the estimated variance, $1-\alpha$ is the confidence level and $p$ constitutes the number of parameters used in the (full) regression model. In case of cluster-sampling, $n_{2,G}$ is the number of terrestrial clusters (a cluster constitutes the sample unit and comprises multiple sample plots). In \pkg{forestinventory}, the confidence intervals for all estimation methods and estimators can be computed by the S3 generic method \code{confint()}, which requires an estimation object created by either the \code{onephase()}, \code{twophase()} or \code{threephase()} function. For example, the 95\% confidence interval for the small area estimates by the \textit{extpsynth} estimator (Section \ref{sec:twophase_sae}) are calculated by:
+\vspace{7mm}
+
+where $\hat{Y}$ is the point estimate, $\hat{\var}(\hat{Y})$ is the estimated variance, $1-\alpha$ is the confidence level and $p$ constitutes the number of parameters used in the (full) regression model. In case of cluster-sampling, $n_{2,G}$ is the number of terrestrial clusters (a cluster constitutes the sample unit and comprises multiple sample plots). In \pkg{forestinventory}, the confidence intervals for all estimation methods and estimators can be computed by the S3 generic method \code{confint()}, which requires an estimation object created by either the \code{onephase()}, \code{twophase()} or \code{threephase()} function. For example, the 95\% confidence interval for the small area estimates by the extpsynth estimator (Section \ref{sec:twophase_sae}) are calculated by:
 
 \begin{small}
 <<>>=

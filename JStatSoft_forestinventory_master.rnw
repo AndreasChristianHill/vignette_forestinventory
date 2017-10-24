@@ -17,10 +17,14 @@
 
 %% an abstract and keywords
 \Abstract{
-Forest inventories provide reliable evidence-based information to assess the state and development of forests over time.  They typically consist of a random sample of plot locations in the forest that are assessed individually by hand. Due to the high costs of these terrestrial campaigns, remote sensing information available in high quantity and low costs (e.g. LiDAR, stereophotogrammetry, etc.) is frequently incorporated in the estimation process in order to reduce inventory costs or improve estimation precision. With respect to this objective, the application of \textit{multi-phase} forest inventory methods (e.g. double- and triple-sampling regression estimators) has proved to be efficient. While these methods have been successfully applied in practice, the availability of open-source software has been rare if not non-existent. The \proglang{R} package \pkg{forestinventory} provides a comprehensive set of global and small area regression estimators for multiphase forest inventories under simple and cluster sampling. The implemented methods have been demonstrated in various scientific studies ranging from small to large scale forest inventories, and can be used for post-stratification, regression and regression within strata. This article summarizes the mathematical theory of this family of design-based estimators and demonstrates their application in the \proglang{R} environment.}
+Forest inventories provide reliable evidence-based information to assess the state and development of forests over time.  They typically consist of a random sample of plot locations in the forest that are assessed individually by hand. Due to the high costs of these terrestrial campaigns, remote sensing information available in high quantity and low costs is frequently incorporated in the estimation process in order to reduce inventory costs or improve estimation precision. With respect to this objective, the application of multi-phase forest inventory methods (e.g., double- and triple-sampling regression estimators) has proved to be efficient. While these methods have been successfully applied in practice, the availability of open-source software has been rare if not non-existent. The \proglang{R} package \pkg{forestinventory} provides a comprehensive set of global and small area regression estimators for multiphase forest inventories under simple and cluster sampling. The implemented methods have been demonstrated in various scientific studies ranging from small to large scale forest inventories, and can be used for post-stratification, regression and regression within strata. This article summarizes the mathematical theory of this family of design-based estimators and demonstrates their application in the \proglang{R} environment.}
 
 \Keywords{forest inventory, design-based, infinite population approach, two- and three-phase sampling, regression estimators, small area estimation}
 \Plainkeywords{forest inventory, design-based, infinite population approach, two- and three-phase sampling, regression estimators, small area estimation}
+
+
+ % ... commential software tends to be expensive and lacks transparency making it less suitable for research purposes ...
+ % ... free --> more suited for forest practice (limited financial ressources)
 
 
 %% publication information
@@ -84,9 +88,6 @@ Forest inventories provide reliable evidence-based information to assess the sta
  left=28mm,
  bottom=28mm
  }
-\usepackage[labelfont=bf]{caption}
-\usepackage[font=footnotesize]{caption}
-\usepackage[font=footnotesize]{subcaption}
 
 % new commands
 \newcommand{\bwi}{BWI3}
@@ -99,7 +100,6 @@ Forest inventories provide reliable evidence-based information to assess the sta
 % -------------------------------------- Main Document------------------------------------------ %
 
 \begin{document}\sloppy
-\SweaveOpts{concordance=TRUE}
 
 
 %------------------------------------------------------------------------------------------------%
@@ -108,7 +108,7 @@ Forest inventories provide reliable evidence-based information to assess the sta
 
 % set global options for R-output:
 <<echo=FALSE>>=
-options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
+options(prompt = "R> ", continue = "+  ", width = 77, useFancyQuotes = FALSE)
 @
 
 % execute everything that goes without echo:
