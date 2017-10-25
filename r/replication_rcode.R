@@ -579,11 +579,13 @@ mphase.gain(grisons.sae.table, pref.vartype = "g_variance")
 
 # ----- 7.3 plot()-method --------
 
-## plot point estimates and confidence intervals:
-plot(grisons.sae.table, ncol = 2, yvar = "estimate") +
-  ylab("Timber Volume [m3/ha]")
-
 ## plot estimation errors:
 plot(grisons.sae.table, ncol = 2) 
+
+## plot point estimates and confidence intervals:
+library("ggplot2")
+plot(grisons.sae.table, ncol = 2, yvar = "estimate") +  
+  ylab("Timber Volume [m3/ha]")
+
 
 
