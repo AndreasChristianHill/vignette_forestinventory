@@ -43,7 +43,7 @@ The variance of all model-assisted estimators included in \pkg{forestinventory} 
 
 As mentioned in Section \ref{sec:packstruc}, cluster sampling is a special case of sample designs where the sample consists of more than one spatially agglomerated sample points. One randomly places the sample location $x$ in the inventory area as in the simple sampling design, but then $M-1$ additional sample locations $x_2,...,x_M$ are created close to the cluster origin $x$ by adding a fixed set of spatial vectors $e_2,...,e_M$ to $x$. The idea of cluster sampling is to increase the amount of information without increasing the travel costs of the terrestrial campaign. However, the information gathered at all sub-locations of a cluster is then averaged on the cluster level, and this average value then references exactly one point, i.e., the cluster origin $x$. Without going into too much mathematical detail, the estimators under simple sampling are thus extended in a way that all parameters (local density, mean vector of explanatory variables, mean model residuals) have to be calculated as the weighted cluster means with $M(x)$ being the cluster weights. Whereas the geometric form and the number of sample locations per cluster $M$ is fixed (i.e., defined by the inventorist), the actual number of points $M(x)$ falling into the forest area $F$ at sample location $x$ is random because the cluster origin $x$ is random. The \pkg{forstinventory} package identifies clusters via a unique cluster ID that is assigned to a column in the input data set. Its column name is passed to the argument \code{cluster} in the \code{twophase()} and \code{threephase()} function calls.
 
-For small area applications, the scenario might occur where the points of a cluster at sample locations $x$ spread over more than one small area, i.e., only a subset $M_{G}(x) < M(x)$ is included in the small area of interest. In this case, the zero mean residual property within the small area, $\frac{\sum_{x \in s_{2,G}}M(x)\hat{R}_{c}(x)}{\sum_{x \in s_{2,G}}M(x)}=0$, is no longer guaranteed when using the extended and pseudo extended synthetic estimator (see EXTSYNTH and EXTPSYNTH in Sections \ref{sec:twophase_sae} and \ref{sec:threephase_sae}). In this case, it is adviseable to use the (pseudo) small area estimator (PSMALL) where the zero mean residual property is still ensured.
+For small area applications, the scenario might occur where the points of a cluster at sample locations $x$ spread over more than one small area, i.e., only a subset $M_{G}(x) < M(x)$ is included in the small area of interest. In this case, the zero mean residual property within the small area, $\frac{\sum_{x \in s_{2,G}}M(x)\hat{R}_{c}(x)}{\sum_{x \in s_{2,G}}M(x)}=0$, is no longer guaranteed when using the extended and pseudo extended synthetic estimator (see EXTSYNTH and EXTPSYNTH in Sections \ref{sec:twophase_sae} and \ref{sec:threephase_sae}). In this case, it is adviseable to use the (pseudo) small area estimator (SMALL or PSMALL) where the zero mean residual property is still ensured.
 
 In order to keep track of such cases, \pkg{forestinventory} tells the user to do so by returning a warning message:
 <<echo=FALSE>>=
@@ -53,13 +53,14 @@ extpsynth.clust <- twophase(formula = basal ~ stade + couver + melange, data=zbe
                       small_area = list(sa.col = "ismallold", areas = c("1"),
                                         unbiased = TRUE))
 @
+
 \begin{small}
 \begin{Schunk}
 \begin{Sinput}
 R> extpsynth.clust <- twophase(formula = basal ~ stade + couver + melange, 
-+  data = zberg, phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
-+  cluster = "cluster",  small_area = list(sa.col = "ismallold", areas = c("1"),
-+  unbiased = TRUE))
++    data = zberg, phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
++    cluster = "cluster",  small_area = list(sa.col = "ismallold", areas = c("1"),
++    unbiased = TRUE))
 Warning message:
 At least one terrestrial cluster not entirely included within small area 1.
 Zero mean residual assumption for small area maybe violated.
@@ -110,9 +111,9 @@ grisons[which(grisons$phase_id_3p == 2)[1], "mean"] <- NA
 \begin{Schunk}
 \begin{Sinput}
 R> threephase(formula.s0 = tvol ~ mean, 
-+  formula.s1 = tvol ~  mean + stddev + max + q75, data = grisons,
-+  phase_id = list(phase.col = "phase_id_3p", s1.id = 1, terrgrid.id = 2),
-+  boundary_weights = "boundary_weights")
++    formula.s1 = tvol ~  mean + stddev + max + q75, data = grisons,
++    phase_id = list(phase.col = "phase_id_3p", s1.id = 1, terrgrid.id = 2),
++    boundary_weights = "boundary_weights")
 Warning messages:
 1: In threephase(formula.s0 = tvol ~ mean, formula.s1 = tvol ~ mean +  :
   Sample design not nested: for 1 terrestrial plots at least one auxiliary 
@@ -141,9 +142,9 @@ grisons[which(grisons$phase_id_3p == 2)[1], "q75"] <- NA
 \begin{Schunk}
 \begin{Sinput}
 R> threephase(formula.s0 = tvol ~ mean, 
-+  formula.s1 = tvol ~  mean + stddev + max + q75, data = grisons,
-+  phase_id = list(phase.col="phase_id_3p", s1.id = 1, terrgrid.id = 2),
-+  boundary_weights = "boundary_weights")
++    formula.s1 = tvol ~  mean + stddev + max + q75, data = grisons,
++    phase_id = list(phase.col="phase_id_3p", s1.id = 1, terrgrid.id = 2),
++    boundary_weights = "boundary_weights")
 Warning messages:
 1: In threephase(formula.s0 = tvol ~ mean, formula.s1 = tvol ~ mean +  :
   Sample design not nested: for 1 terrestrial plots at least one auxiliary 
@@ -171,9 +172,9 @@ grisons[which(grisons$phase_id_3p == 0)[1], "mean"] <- NA
 \begin{Schunk}
 \begin{Sinput}
 R> threephase(formula.s0 = tvol ~ mean, 
-+  formula.s1 = tvol ~  mean + stddev + max + q75,  data = grisons,
-+  phase_id = list(phase.col = "phase_id_3p", s1.id = 1, terrgrid.id = 2),
-+  boundary_weights = "boundary_weights")
++    formula.s1 = tvol ~  mean + stddev + max + q75,  data = grisons,
++    phase_id = list(phase.col = "phase_id_3p", s1.id = 1, terrgrid.id = 2),
++    boundary_weights = "boundary_weights")
 Warning message:
 In threephase(formula.s0 = tvol ~ mean, formula.s1 = tvol ~ mean +  :
   1 rows deleted due to missingness in the set of auxiliary parameters for the 
@@ -199,8 +200,8 @@ zberg <- zberg[-which(zberg.n$phase_id_2p == 2 & zberg.n$stade == "300"), ]
 \begin{Schunk}
 \begin{Sinput}
 R> twophase(formula = basal ~ stade + couver + melange, data = zberg,
-+  phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
-+  cluster = "cluster")
++    phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
++    cluster = "cluster")
 Error in check.mandatoryInputs(formula, data, phase_id) : 
  Level '300' of factor variable 'stade' existing in s1(s0)-but not in s2 sample.
  Calculation of coefficient not feasible.

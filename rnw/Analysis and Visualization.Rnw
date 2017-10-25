@@ -10,7 +10,7 @@ options(prompt = "R> ", continue = "+  ", width = 77, useFancyQuotes = FALSE)
 
 \subsection{Analysis}
 
-We often want to compare the results and performances of different estimation methods and estimators for a given global or small area inventory, which can be easily accomplished in \pkg{forestinventory} using the \code{estTable()} function. This function restructures the results from the \code{onephase()}, \code{twophase()} and \code{threephase()} objects and merges them into one single data set that provides the basis for further analysis. For demonstration purposes, we will first recalculate the one-phase estimator as well as the two-phase and three-phase extended pseudo synthetic and the pseudo synthetic estimators for the \code{grisons} data set:
+We often want to compare the results and performances of different estimation methods and estimators for a given global or small area inventory, which can be easily accomplished in \pkg{forestinventory} using the \code{estTable()} function. This function restructures the results from the \code{onephase()}, \code{twophase()} and \code{threephase()} objects and merges them into one single data set that provides the basis for further analysis. For demonstration purposes, we will first recalculate the one-phase estimator as well as the two-phase and three-phase EXTPSYNTH and PSYNTH estimator for the \code{grisons} data set:
 
 \begin{small}
 <<>>=

@@ -145,9 +145,9 @@ For global two-phase estimation, we have to specify
 The non-exhaustive estimator with boundary weight adjustment can thus be applied as follows:
 
 \begin{small}
-<<width=30>>=
-reg2p_nex <- twophase(formula=tvol ~ mean + stddev + max + q75, data=grisons, 
-  phase_id=list(phase.col = "phase_id_2p", terrgrid.id = 2),
+<<>>=
+reg2p_nex <- twophase(formula = tvol ~ mean + stddev + max + q75, data = grisons, 
+  phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
   boundary_weights = "boundary_weights")
 @
 \end{small}
@@ -190,7 +190,8 @@ The exhaustive estimator can be applied by additionally passing a vector contain
 
 \begin{small}
 <<eval=FALSE>>=
-colnames(lm(formula = tvol ~ mean + stddev + max + q75, data = grisons, x = TRUE)$x)
+colnames(lm(formula = tvol ~ mean + stddev + max + q75, data = grisons, 
+  x = TRUE)$x)
 @
 \end{small}
 
@@ -292,7 +293,7 @@ where the variance-covariance matrix of the auxiliary vector $\hat{\bar{\pmb{Z}}
 %------------------------------------------------------------- %
 % \textbf{Extended Synthetic and Extended Pseudo Synthetic Estimator}\par
 
-The synthetic estimators, SYNTH and PSYNTH, have attractively compact formulas but come with the downside of potential bias in their point estimates which can make the variances seem deceptively optimistic. The SMALL and PSMALL estimators overcome this issue by using a bias correction term, i.e., $\frac{1}{n_{2,G}}\sum_{x \in s_{2,G}}\hat{R}(x)$. The motivation behind the extended synthetic andextended pseudo synthetic estimator (EXTSYNTH and EXTPSYNTH) is to use the same mathematically elegant formulas of the (pseudo) synthetic estimators while at the same time ensuring that the empirical residuals of the prediction model in the entire area $F$ and the small area $G$ are by construction both zero at the same time. This is accomplished by extending the vector of auxiliary information $\pmb{Z}(x)$ by a binary categorical indicator variable $I_G(x)$ which takes the value 1 if the sample location $x$ lies inside the target small area $G$ and is otherwise set to 0. Recalling that linear models fitted using OLS have zero mean residual property by construction also if categorical variables are used, this leads to unbiased point estimates. The new extended auxiliary vector thus becomes $\pmb{\mathbb{Z}}^{\top}(x)=(\pmb{Z}^{\top}(x),I_G(x))$ and can be used to replace its non-extended counterpart $\pmb{Z}^{\top}(x)$ whereever it is used in Eq. \ref{eq:pest_2p_synth_psynth} and \ref{estvarcovaux_G}. Note that the package functions internally extend the data set by the indicator variable if the EXTSYNTH or EXTPSYNTH estimator is called.
+The synthetic estimators, SYNTH and PSYNTH, have attractively compact formulas but come with the downside of potential bias in their point estimates which can make the variances seem deceptively optimistic. The SMALL and PSMALL estimators overcome this issue by using a bias correction term, i.e., $\frac{1}{n_{2,G}}\sum_{x \in s_{2,G}}\hat{R}(x)$. The motivation behind the extended synthetic andextended pseudo synthetic estimator (EXTSYNTH and EXTPSYNTH) is to use the same mathematically elegant formulas of the (pseudo) synthetic estimators while at the same time ensuring that the empirical residuals of the prediction model in the entire area $F$ and the small area $G$ are by construction both zero at the same time. This is accomplished by extending the vector of auxiliary information $\pmb{Z}(x)$ by a binary categorical indicator variable $I_G(x)$ which takes the value 1 if the sample location $x$ lies inside the target small area $G$ and is otherwise set to 0. Recalling that linear models fitted using OLS have zero mean residual property by construction also if categorical variables are used, this leads to unbiased point estimates. The new extended auxiliary vector thus becomes $\pmb{\mathbb{Z}}^{\top}(x)=(\pmb{Z}^{\top}(x),I^{\top}_G(x))$ and can be used to replace its non-extended counterpart $\pmb{Z}^{\top}(x)$ whereever it is used in Eq. \ref{eq:pest_2p_synth_psynth} and \ref{estvarcovaux_G}. Note that the package functions internally extend the data set by the indicator variable if the EXTSYNTH or EXTPSYNTH estimator is called.
 
 Not every equation needs to be re-written here, but to give an example of the notational change, the regression coefficient under extended model approach becomes
 
@@ -310,7 +311,7 @@ The point estimates and their g-weight variances can then be re-written as
 \hat{\var}(\hat{Y}_{G,EXTPSYNTH,2p})& =
 \hat{\bar{\pmb{\mathbb{Z}}}}_{G}^{\top}\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}
 \hat{\bar{\pmb{\mathbb{Z}}}}_{G}
-+ \hat{\pmb{\theta}}^t_{s_2}\hat{\Sigma}_{\hat{\bar{\pmb{\mathbb{Z}}}}_{G}}\hat{\pmb{\theta}}_{s_2} \label{eq:var_2p_extpsynth}
++ \hat{\pmb{\theta}}^{\top}_{s_2}\hat{\Sigma}_{\hat{\bar{\pmb{\mathbb{Z}}}}_{G}}\hat{\pmb{\theta}}_{s_2} \label{eq:var_2p_extpsynth}
 \end{align}
 \end{subequations}
 
@@ -336,20 +337,18 @@ Small area estimates in the \pkg{forestinventory} package can be applied by spec
 
 \begin{itemize}
   \itemsep0em
-  \item the name of the column specifiying the small area of each observation (\code{sa.col})
-  \item a vector specifying the small area(s) for which estimations are desired (\code{areas})
-  \item the argument \code{unbiased} that controls which of the three available estimators is applied
+  \item the name of the column specifiying the small area of each observation (\code{sa.col}).
+  \item a vector specifying the small area(s) for which estimations are desired (\code{areas}).
+  \item the argument \code{unbiased} that controls which of the three available estimators is applied.
 \end{itemize}
 
 In order to apply the pseudo small area estimator (PSMALL) with boundary adjustment, we set \code{unbiased=TRUE} as well as the optional argument \code{psmall=TRUE}:
 \begin{small}
 <<>>=
-psmall_2p <- twophase(formula = tvol ~ mean + stddev + max + q75, data = grisons,
-  phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
-  boundary_weights = "boundary_weights",
+psmall_2p <- twophase(formula = tvol ~ mean + stddev + max + q75, 
+  data = grisons, phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
   small_area = list(sa.col = "smallarea", areas = c("A", "B"),
-  unbiased = TRUE),
-  psmall = TRUE)
+  unbiased = TRUE), psmall = TRUE, boundary_weights = "boundary_weights")
 @
 \end{small}
 
@@ -370,12 +369,11 @@ The extended pseudo synthetic estimator (EXTPSYNTH) can be applied by setting \c
 
 
 \begin{small}
-<<width=77>>=
-extpsynth_2p <- twophase(formula = tvol ~ mean + stddev + max + q75, data = grisons,
-  phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
-  boundary_weights = "boundary_weights",
+<<>>=
+extpsynth_2p <- twophase(formula = tvol ~ mean + stddev + max + q75, 
+  data = grisons, phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
   small_area = list(sa.col = "smallarea", areas = c("A", "B"),
-  unbiased = TRUE))
+  unbiased = TRUE), boundary_weights = "boundary_weights")
 extpsynth_2p$estimation
 @
 \end{small}
@@ -387,23 +385,28 @@ Setting the argument \code{unbiased=FALSE} applies the pseudo synthetic estimato
 
 \begin{small}
 <<>>=
-psynth_2p <- twophase(formula = tvol ~ mean + stddev + max + q75, data = grisons,
-  phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
-  boundary_weights = "boundary_weights",
+psynth_2p <- twophase(formula = tvol ~ mean + stddev + max + q75, 
+  data = grisons, phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
   small_area = list(sa.col = "smallarea", areas = c("A", "B"),
-  unbiased = FALSE))
+  unbiased = FALSE), boundary_weights = "boundary_weights")
+@
+\end{small}
+
+\begin{small}
+<<>>=
 psynth_2p$estimation
 @
 \end{small}
 
-We see here that the PSYNTH variances are almost only half the variances of the PSMALL and extended psynth estimators. However, PSMALL and extended psynth are design unbiased and their variances reflect the fact that they account for potential bias of the regression model predictions. The g-weight variance of PSYNTH completely neglects a potential bias and as a result risks severely overstating the estimation precision.\par
+We see here that the PSYNTH variances are almost only half the variances of the PSMALL and EXTPSYNTH estimator. However, PSMALL and EXTPSYNTH are design unbiased and their variances reflect the fact that they account for potential bias of the regression model predictions. The g-weight variance of PSYNTH completely neglects a potential bias and as a result risks severely overstating the estimation precision.\par
 
 The exhaustive versions of the small area estimators (Eq. \ref{eq:pointest_2p_small}, \ref{eq:var_2p_reg_small}, \ref{eq:varext_2p_reg_small}, \ref{eq:pointest_2p_reg_synth}, \ref{eq:var_2p_reg_synth}) are specified via the optional argument \code{exhaustive}. Its application requires that we know the exact means of all explanatory variables within the small area(s) of interest. In contrast to the global estimators, the exact means have now to be delivered in the form of a \code{data.frame}, where each row corresponds to a small area, and each column specifies the exact mean of the respective explanatory variable. Note that likewise the case of global estimation, the order of the explanatory variables in the data frame has to match the order in which they appear in the design matrix defined by the \code{lm()}-function in \proglang{R}. In order to tell \proglang{R} which row describes which small area, the row names have to match the respective names of the small areas specified in the \code{areas} argument.
 
 For the \code{grisons} data set, the exact means of the explanatory variables for the small areas used in \citet{mandallaz2013b} are thus defined by
 \begin{small}
 <<eval=FALSE>>=
-colnames(lm(formula = tvol ~ mean + stddev + max + q75, data = grisons, x = TRUE)$x)
+colnames(lm(formula = tvol ~ mean + stddev + max + q75, data = grisons, 
+  x = TRUE)$x)
 @
 \end{small}
 \begin{small}
@@ -425,11 +428,10 @@ true.means.Z.G
 The extended synthetic estimator (EXTSYNTH) can then be applied by
 \begin{small}
 <<>>=
-extsynth_2p <- twophase(formula = tvol ~ mean + stddev + max + q75, data = grisons,
-  phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
+extsynth_2p <- twophase(formula = tvol ~ mean + stddev + max + q75, 
+  data = grisons, phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
   small_area = list(sa.col ="smallarea", areas = c("A", "B"),
-  unbiased = TRUE),
-  exhaustive = true.means.Z.G)
+  unbiased = TRUE), exhaustive = true.means.Z.G)
 @
 \end{small}
 
