@@ -138,7 +138,7 @@ For global two-phase estimation, we have to specify
   \itemsep0em
   \item the regression model (\code{formula}) as specified in the \code{lm}()-function \citep{R}.
   \item the inputted \code{data.frame} containing the inventory information (\code{data}).
-  \item the \code{list}-object \code{phase_id} containing: the \code{phase.col} argument identifying the name of the column specifying membership to $s_1$ or $s_2$, and the \code{terrgrid.id} argument specifying which numeric value indicates $s_2$ membership in that column.
+  \item the \code{list}-object \code{phase_id} containing: the \code{phase.col} argument identifying the name of the column specifying membership to $s_1$ or $s_2$, and the \code{terrgrid.id} argument specifying which numeric value indicates $s_2$ membership in that column. Note that \pkg{forestinventory} implicitly assumes that all rows not indcated as $s_2$ belong to the $s_1$ phase.
   \item the name of the column containing the weights $w(x)$ of the boundary adjustments (optional).
 \end{itemize}
 
@@ -261,7 +261,7 @@ The package provides the g-weight variance for SMALL and PSMALL respectively (Eq
   \hat{\var}_{ext}(\hat{Y}_{G,PSMALL,2p}) & := \frac{1}{n_{1,G}}\hat{\var}_{s_{2,G}}(Y(x)) + \Big(1-\frac{n_{2,G}}{n_{1,G}}\Big)\frac{1}{n_{2,G}}\hat{\var}_{s_{2,G}}(\hat{R}(x)) \label{eq:varext_2p_reg_psmall}
 \end{align}
 \end{subequations}
-where $\hat{\var}_{s_{2,G}}$ indicates taking the sample variance over $s_{2,G}$. If boundary adjustment is applied, the simple mean of the explanatory variable over the small area $\hat{\bar{\pmb{Z}}}_G=\frac{1}{n_{1,G}}\sum_{x \in s_{1,G}}\pmb{Z}(x)$ is replaced by its weighted version $\hat{\bar{\pmb{Z}}}_G=\frac{\sum_{x\in{s_{1,G}}}w(x)\pmb{Z}(x)}{\sum_{x\in{s_{1,G}}}w(x)}$, and likewise for exhaustively used auxiliary information.
+where $\hat{\var}_{s_{2,G}}$ indicates taking the sample variance over $s_{2,G}$. If boundary adjustment is applied, the simple mean of the explanatory variable vector over the small area $\hat{\bar{\pmb{Z}}}_G=\frac{1}{n_{1,G}}\sum_{x \in s_{1,G}}\pmb{Z}(x)$ is replaced by its weighted version $\hat{\bar{\pmb{Z}}}_G=\frac{\sum_{x\in{s_{1,G}}}w(x)\pmb{Z}(x)}{\sum_{x\in{s_{1,G}}}w(x)}$, and likewise for exhaustively used auxiliary information.
 
 
 
@@ -293,7 +293,7 @@ where the variance-covariance matrix of the auxiliary vector $\hat{\bar{\pmb{Z}}
 %------------------------------------------------------------- %
 % \textbf{Extended Synthetic and Extended Pseudo Synthetic Estimator}\par
 
-The synthetic estimators, SYNTH and PSYNTH, have attractively compact formulas but come with the downside of potential bias in their point estimates which can make the variances seem deceptively optimistic. The SMALL and PSMALL estimators overcome this issue by using a bias correction term, i.e., $\frac{1}{n_{2,G}}\sum_{x \in s_{2,G}}\hat{R}(x)$. The motivation behind the extended synthetic andextended pseudo synthetic estimator (EXTSYNTH and EXTPSYNTH) is to use the same mathematically elegant formulas of the (pseudo) synthetic estimators while at the same time ensuring that the empirical residuals of the prediction model in the entire area $F$ and the small area $G$ are by construction both zero at the same time. This is accomplished by extending the vector of auxiliary information $\pmb{Z}(x)$ by a binary categorical indicator variable $I_G(x)$ which takes the value 1 if the sample location $x$ lies inside the target small area $G$ and is otherwise set to 0. Recalling that linear models fitted using OLS have zero mean residual property by construction also if categorical variables are used, this leads to unbiased point estimates. The new extended auxiliary vector thus becomes $\pmb{\mathbb{Z}}^{\top}(x)=(\pmb{Z}^{\top}(x),I^{\top}_G(x))$ and can be used to replace its non-extended counterpart $\pmb{Z}^{\top}(x)$ whereever it is used in Eq. \ref{eq:pest_2p_synth_psynth} and \ref{estvarcovaux_G}. Note that the package functions internally extend the data set by the indicator variable if the EXTSYNTH or EXTPSYNTH estimator is called.
+The synthetic estimators, SYNTH and PSYNTH, have attractively compact formulas but come with the downside of potential bias in their point estimates which can make the variances seem deceptively optimistic. The SMALL and PSMALL estimators overcome this issue by using a bias correction term, i.e., $\frac{1}{n_{2,G}}\sum_{x \in s_{2,G}}\hat{R}(x)$. The motivation behind the extended synthetic and extended pseudo synthetic estimator (EXTSYNTH and EXTPSYNTH) is to use the same mathematically elegant formulas of the (pseudo) synthetic estimators while at the same time ensuring that the empirical residuals of the prediction model in the entire area $F$ and the small area $G$ are by construction both zero at the same time. This is accomplished by extending the vector of auxiliary information $\pmb{Z}(x)$ by a binary categorical indicator variable $I_G(x)$ which takes the value 1 if the sample location $x$ lies inside the target small area $G$ and is otherwise set to 0. Recalling that linear models fitted using OLS have zero mean residual property by construction also if categorical variables are used, this leads to unbiased point estimates. The new extended auxiliary vector thus becomes $\pmb{\mathbb{Z}}^{\top}(x)=(\pmb{Z}^{\top}(x),I^{\top}_G(x))$ and can be used to replace its non-extended counterpart $\pmb{Z}^{\top}(x)$ whereever it is used in Eq. \ref{eq:pest_2p_synth_psynth} and \ref{estvarcovaux_G}. Note that the package functions internally extend the data set by the indicator variable if the EXTSYNTH or EXTPSYNTH estimator is called.
 
 Not every equation needs to be re-written here, but to give an example of the notational change, the regression coefficient under extended model approach becomes
 
@@ -305,9 +305,9 @@ The point estimates and their g-weight variances can then be re-written as
 
 \begin{subequations}\label{eq:pest_2p_extsynth_extpsynth}
 \begin{align}
-\hat{Y}_{G,EXTSYNTH,2p} & = \bar{\pmb{\mathbb{Z}}}^t_{G}\hat{\pmb{\theta}}_{s_2} \label{eq:pointest_2p_extsynth} \\
+\hat{Y}_{G,EXTSYNTH,2p} & = \bar{\pmb{\mathbb{Z}}}^{\top}_{G}\hat{\pmb{\theta}}_{s_2} \label{eq:pointest_2p_extsynth} \\
 \hat{Y}_{G,EXTPSYNTH,2p} & =\hat{\bar{\pmb{\mathbb{Z}}}}_{G}^{\top}\hat{\pmb{\theta}}_{s_2} \label{eq:pointest_2p_extsynth} \\
-\hat{\var}(\hat{Y}_{G,EXTSYNTH,2p}) & = \bar{\pmb{\mathbb{Z}}}^t_{G}\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}\bar{\pmb{\mathbb{Z}}}_{G} \label{eq:var_2p_extsynth} \\
+\hat{\var}(\hat{Y}_{G,EXTSYNTH,2p}) & = \bar{\pmb{\mathbb{Z}}}^{\top}_{G}\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}\bar{\pmb{\mathbb{Z}}}_{G} \label{eq:var_2p_extsynth} \\
 \hat{\var}(\hat{Y}_{G,EXTPSYNTH,2p})& =
 \hat{\bar{\pmb{\mathbb{Z}}}}_{G}^{\top}\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}
 \hat{\bar{\pmb{\mathbb{Z}}}}_{G}
@@ -327,7 +327,7 @@ The package also provides the external variance for both the extended synthetic 
 \end{subequations}
 where $\hat{\mathbb{R}}(x)$ are the empirical residuals under the extended auxiliary vector.
 
-To summarize, the (pseudo) synthetic estimator can be applied whether terrestrial inventory sample is found in the small area or not, but has a deceptively small g-weight variance due to its potential bias.  When terrestrial sample is observed in the small area, we can produce (asymptotically) design-unbiased estimates and variances using either SMALL or PSMALL which remove this bias explicitly with a mean residual term, or more elegantly with EXTSYNTH or EXTPSYNTH which simply use the same synthetic formulas while including an indicator variable for the small area in the model formula to remove the bias by construction in OLS.
+To summarize, the synthetic estimators SYNTH and PSYNTH can be applied whether terrestrial inventory sample is found in the small area or not, but has a deceptively small g-weight variance due to its potential bias.  When terrestrial sample is observed in the small area, we can produce (asymptotically) design-unbiased estimates and variances using either SMALL or PSMALL which remove this bias explicitly with a mean residual term, or more elegantly with EXTSYNTH or EXTPSYNTH which simply use the same synthetic formulas while including an indicator variable for the small area in the model formula to remove the bias by construction in OLS.
 
 
 %------------------------------------------------------------- %

@@ -6,7 +6,7 @@
 % --------------------------------------------------------- %
 \subsection{Post-stratification}
 
-A special case of multi-phase regression estimators is post-stratification, which can further be divided into the cases of multi-phase sampling for stratification and multi-phase sampling for regression within strata. Both imply the use of one or more categorical variables in the regression model(s), leading to classical ANOVA and ANCOVA models.
+A special case of multi-phase regression estimation is post-stratification, which can further be divided into the cases of multi-phase sampling for stratification and multi-phase sampling for regression within strata. Both imply the use of one or more categorical variables in the regression model(s), leading to classical ANOVA and ANCOVA models.
 
 To demonstrate post-stratification, we first create an artificial categorical variable development stage (\code{stage}) by clustering the mean canopy heights of the \code{grisons} data set into 3 height classes:
 
@@ -36,7 +36,7 @@ twophase(formula=tvol ~ mean + stddev + max + q75 + stage, data = grisons,
 @
 \end{small}
 
-The variance of all model-assisted estimators included in \pkg{forestinventory} can be decreased by reducing the sum of square residuals of the regression model. In case of post-stratification, this particularly implies minimizing the within strata residual square sum. Also, for post-stratification, the g-weight variance should be trusted over the external variance because it has the advantage that the strata weights are estimated from the large sample rather than the terrestrial sample $s_2$.
+The variance of all design-based estimators included in \pkg{forestinventory} can be decreased by reducing the sum of squared residuals of the regression model. In case of post-stratification, this particularly implies minimizing the within strata residual square sum. Also, for post-stratification, the g-weight variance should be trusted over the external variance because it has the advantage that the strata weights are estimated from the large sample rather than the terrestrial sample $s_2$.
 
 % --------------------------------------------------------- %
 \subsection{Small area estimation under cluster sampling}
