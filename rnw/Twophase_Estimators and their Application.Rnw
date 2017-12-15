@@ -279,7 +279,7 @@ The synthetic estimator (SYNTH) and pseudo synthetic estimator (PSYNTH) are comm
   \hat{Y}_{G,PSYNTH,2p} & =\hat{\bar{\pmb{Z}}}_G^{\top}\hat{\pmb{\beta}}_{s_2} \label{eq:pointest_2p_reg_psynth} \\
   \hat{\var}(\hat{Y}_{G,SYNTH,2p}) & = \bar{\pmb{Z}}_G^{\top}\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}\bar{\pmb{Z}}_G \label{eq:var_2p_reg_synth} \\
   \hat{\var}(\hat{Y}_{G,PSYNTH,2p}) & = \hat{\bar{\pmb{Z}}}_G^{\top}\hat{\pmb{\Sigma}}_{\hat{\pmb{\beta}}_{s_2}}\hat{\bar{\pmb{Z}}}_G
-  + \hat{\pmb{\beta}}_{s_2}^{\top}\hat{\Sigma}_{\hat{\bar{\pmb{Z}}}_G}\hat{\pmb{\beta}}_{s_2}  \label{eq:var_2p_reg_psynth}
+  + \hat{\pmb{\beta}}_{s_2}^{\top}\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{Z}}}_G}\hat{\pmb{\beta}}_{s_2}  \label{eq:var_2p_reg_psynth}
 \end{align}
 \end{subequations}
 
@@ -293,7 +293,7 @@ where the variance-covariance matrix of the auxiliary vector $\hat{\bar{\pmb{Z}}
 %------------------------------------------------------------- %
 % \textbf{Extended Synthetic and Extended Pseudo Synthetic Estimator}\par
 
-The synthetic estimators, SYNTH and PSYNTH, have attractively compact formulas but come with the downside of potential bias in their point estimates which can make the variances seem deceptively optimistic. The SMALL and PSMALL estimators overcome this issue by using a bias correction term, i.e., $\frac{1}{n_{2,G}}\sum_{x \in s_{2,G}}\hat{R}(x)$. The motivation behind the extended synthetic and extended pseudo synthetic estimator (EXTSYNTH and EXTPSYNTH) is to use the same mathematically elegant formulas of the (pseudo) synthetic estimators while at the same time ensuring that the empirical residuals of the prediction model in the entire area $F$ and the small area $G$ are by construction both zero at the same time. This is accomplished by extending the vector of auxiliary information $\pmb{Z}(x)$ by a binary categorical indicator variable $I_G(x)$ which takes the value 1 if the sample location $x$ lies inside the target small area $G$ and is otherwise set to 0. Recalling that linear models fitted using OLS have zero mean residual property by construction also if categorical variables are used, this leads to unbiased point estimates. The new extended auxiliary vector thus becomes $\pmb{\mathbb{Z}}^{\top}(x)=(\pmb{Z}^{\top}(x),I^{\top}_G(x))$ and can be used to replace its non-extended counterpart $\pmb{Z}^{\top}(x)$ whereever it is used in Eq. \ref{eq:pest_2p_synth_psynth} and \ref{estvarcovaux_G}. Note that the package functions internally extend the data set by the indicator variable if the EXTSYNTH or EXTPSYNTH estimator is called.
+The synthetic estimators, SYNTH and PSYNTH, have attractively compact formulas but come with the downside of potential bias in their point estimates which can make the variances seem deceptively optimistic. The SMALL and PSMALL estimators overcome this issue by using a bias correction term, i.e., $\frac{1}{n_{2,G}}\sum_{x \in s_{2,G}}\hat{R}(x)$. The motivation behind the extended synthetic and extended pseudo synthetic estimator (EXTSYNTH and EXTPSYNTH) is to use the same mathematically elegant formulas of the (pseudo) synthetic estimators while ensuring that the mean of the empirical prediction model residuals in the entire area $F$ and the small area $G$ are by construction both zero at the same time. This is accomplished by extending the vector of auxiliary information $\pmb{Z}(x)$ by a binary categorical indicator variable $I_G(x)$ which takes the value 1 if the sample location $x$ lies inside the target small area $G$ and is otherwise set to 0. Recalling that linear models fitted using OLS have zero mean residual property by construction also if categorical variables are used, this leads to unbiased point estimates. The new extended auxiliary vector thus becomes $\pmb{\mathbb{Z}}^{\top}(x)=(\pmb{Z}^{\top}(x),I^{\top}_G(x))$ and can be used to replace its non-extended counterpart $\pmb{Z}^{\top}(x)$ whereever it is used in Eq. \ref{eq:pest_2p_synth_psynth} and \ref{estvarcovaux_G}. Note that the package functions internally extend the data set by the indicator variable if the EXTSYNTH or EXTPSYNTH estimator is called.
 
 Not every equation needs to be re-written here, but to give an example of the notational change, the regression coefficient under extended model approach becomes
 
@@ -311,7 +311,7 @@ The point estimates and their g-weight variances can then be re-written as
 \hat{\var}(\hat{Y}_{G,EXTPSYNTH,2p})& =
 \hat{\bar{\pmb{\mathbb{Z}}}}_{G}^{\top}\hat{\pmb{\Sigma}}_{\hat{\pmb{\theta}}_{s_2}}
 \hat{\bar{\pmb{\mathbb{Z}}}}_{G}
-+ \hat{\pmb{\theta}}^{\top}_{s_2}\hat{\Sigma}_{\hat{\bar{\pmb{\mathbb{Z}}}}_{G}}\hat{\pmb{\theta}}_{s_2} \label{eq:var_2p_extpsynth}
++ \hat{\pmb{\theta}}^{\top}_{s_2}\hat{\pmb{\Sigma}}_{\hat{\bar{\pmb{\mathbb{Z}}}}_{G}}\hat{\pmb{\theta}}_{s_2} \label{eq:var_2p_extpsynth}
 \end{align}
 \end{subequations}
 
