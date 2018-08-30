@@ -87,31 +87,31 @@ The following is a list of minor issues encountered while reading:\\
 	% XX) ++++++++++++++++++++++++++ %
 	\item \textit{On page 3, n2 is not introduced (e. g. say a “a sample of n2 points, s2”)}.
 	
-	\answerfin{}
+	\answerfin{Has been changed accordingly.}
 	% --------------------------- %
 	
     % XX) ++++++++++++++++++++++++++ %
 	\item \textit{On page 27, the element symbol should be a subset symbol.}.
 	
-	\answerfin{}
+	\answerfin{Has been changed accordingly.}
 	% --------------------------- %
 	
     % XX) ++++++++++++++++++++++++++ %
 	\item \textit{On page 32, grisons should probably be capitalized.}.
 	
-	\answerfin{}
+	\answerfin{Has been changed accordingly.}
 	% --------------------------- %
 	
 	% XX) ++++++++++++++++++++++++++ %
 	\item \textit{Equations (1), (4), (13), (16), (20) might be better readable without the n2 fractions}.
 	
-	\answerfin{}
+	\answerfin{Whereas we agree that they might be slightly more readable without the n2 fractions, the decision to include them was based on the fact that this is how the formulas were originally presented in Mandallaz's papers. We feel that the marginal loss in readability is offset by perfect continuity with the original notation.}
 	% --------------------------- %
 	
     % XX) ++++++++++++++++++++++++++ %
 	\item \textit{On page 7, the zero mean residual property requires that the regression model includes a constant term (or equivalent). While the R functions apparently fail when you remove the intercept, this should probably be stated somewhere.}.
 	
-	\answerfin{}
+	\answerfin{It has been added that the models require intercept terms.}
 	% --------------------------- %
 	
 \end{enumerate} 
@@ -128,19 +128,36 @@ The authors presented a well-written and interesting paper that will be an impor
 
 Comments:\\
 
-The paper is rather long which can be a good or bad thing. I think that the 2 and 3 phase estimators are so similar that it may be sufficient to present, for example, SAE only for the 2 phase estimator and global estimation only for the 3 phase estimator. The same is true for the exhaustive and non-exhaustive estimators. Describing just once that in all cases both types are possible (as done for cluster sampling), would make the text a lot easier to read. Also section 5 on CIs could be considerably shortened. Needs to be a section on its own right? Sections 6 and 7 are very interesting but the R code under 7.1 could probably be condensed a lot.\\
+The paper is rather long which can be a good or bad thing. I think that the 2 and 3 phase estimators are so similar that it may be sufficient to present, for example, SAE only for the 2 phase estimator and global estimation only for the 3 phase estimator. The same is true for the exhaustive and non-exhaustive estimators. Describing just once that in all cases both types are possible (as done for cluster sampling), would make the text a lot easier to read. \\
+\\
+\answerfin{Different versions of this article were written that attempted to shorten it in ways just like the review mentioned.  However, we ultimately decided that the purpose of this article is to bridge the gap between likely users of the software (e.g. forest engineers and technical practitioners) and the mathematical details that might be beyond their skillset.  For this reason, we decided to ensure that every function call was connected explicitly to the underlying formula that it applies and a citation is given for those interested in further technical details.  We believe this also enables the reader to write their own routines using the functions which can be used to error check our routines. Considering that the current length is not excessively long compared to other JSS papers, we strongly prefer to not to shorten sections merely for the sake of making the article shorter.} \\
+
+Also section 5 on CIs could be considerably shortened. Needs to be a section on its own right? Sections 6 and 7 are very interesting but the R code under 7.1 could probably be condensed a lot.\\
+\\
+\answerfin{Reviewer 1 made a very valid criticism about designed-based confidence intervals when the sampling fraction is too small that we would like to include in the paper and Section 5 is the most logical place to put it.} \\
 
 The current description of how to obtaining the explanatory variables seems not to fit well into this paper. Explanatory variables have to be calculated by the analyst before using the package (except for an optional boundary adjustment). Also in the interest of making the paper shorter and more general (not only focusing on forest inventories), consider omitting or shorten drastically this part of the document.\\
 
 Furthermore, I wonder whether the infinite population estimators in combination with the explanatory variables used in the examples are applicable without modification for the exhaustive (wall-to-wall) estimators such as eq. 17a. It may be just a misunderstanding of how to interpret the integral in the equations and the sentence above eq. 2b. However, it sounds like it is suggested to use the full cover of auxiliary information such as lidar height returns and to calculate “metrics” that include order statistics such as 75th percentile and the maximum globally. While this approach is unproblematic for the mean, it results in biased order statistics as they are scale-dependent. For example, the mean of the maximum values for grid-cells (population units) tessellating the area should be calculated rather than the global maximum over the area. The grid cells should have approximately the same size as the sampled units because of the scale-dependency of the explanatory variables but do not necessarily be of the same shape. I am sure this was done correctly when calculating the explanatory variables for the examples. However, this seems to be a crucial point that should be made much clearer; maybe especially so if the authors have a different point of view.\\
 
+\answerfin{When the package was orginally beta tested at the Swiss Federal Institute of Forest, Snow and Landscape Management on likely operational users as well as forest engineers, the most contentious area for confusion was the calculation of explanatory variables in the exhaustive case.  The reviewer appears to have confirmed that confusion in the previous paragraph, which is explained in the section on calculating explanatory variables.  It is explictly stated that the exact exhaustive mean vector can only be calculated for explanatory variables based on means (note that polygon layers are means of binary variables). It has now been explicitly added as an example that order statistics are not included in this category with the reviewers example given.  It is already explicitly stated that the size of the support should ideally be chosen to achieve a best possible explanatory power of the regression model on page 9 and a citation has been added for the interested reader.} \\
+
+
 Related to the previous comment is whether the difference between the infinite and finite population approaches is relevant from a practical point of view. At least the estimators may be equivalent (see for example eq. 6a). Furthermore, for some cases as described in the previous comment, the population needs to be tessellated which, in my opinion, practically results in finite populations. I think it would be very helpful to discuss the similarities and differences of the finite and infinite population approach more as most readers familiar with forest inventories are likely to be “indoctrinated” with the finite population approach.\\
+
+\answerfin{The population doesn't need to be tessellated and can be allowed to overlap or not use all the wall-to-wall map in the infinite population approach. This is already mentioned on page 9.  Section 2.1 discusses the Infinite Population Approach.  Some brief discussion comparing to the finite is included, but as this package is about software written for the infinite not finite approach, we prefer not to delve too deeply into a topic that makes little practical difference.} \\
 
 When providing two estimators for the same purpose such as the synthetic or extended synthetic, some (extreme) users might just chose what results in the smallest standard error. Some more guidance or discussion on when to use which estimator may be needed.\\
 
+\answerfin{This is true, but it is already stated many times that the synthetic estimators will usually have a smaller variance than estimators incorporating the regression model uncertainties, but at the cost of a potential bias making them seem deceptively optimistic (see pages 5, 13 (twice), 14, 16 (this is explained here using a concrete example), 21, 26 and 30)} \\
+
 Often when using remotely-sensed auxiliary information in forest inventories, due to temporal or spatial mismatch or other errors, analysts have to exclude “outliers” from the sample that would have large leverage in working models. In this case, the zero mean residual property of internal linear models (after eq. 2) does, strictly speaking, not hold. Consider giving some guidance for these very common cases. In the design-based framework, one could of course ignore the issue. However, a lot of efficiency may be lost just due to few observations.\\
 
+\answerfin{Removing outliers is more of a common practice in model-dependent estimation, which is beyond the scope of this article.  You should never remove outliers in design-based estimation unless you can defend the belief that the resulting (and self-inflicted) non-response is missing at random.  The observed value of the the response/explanatory variable is fixed at each $x$ so deleting an observation effectively means the plot at x has been removed from the forest.  For temporal mismatches this is pretty much indefensible because the outliers likely represent harvesting after the aerial measurement.  We initially included a discussion comparing design-based with model-dependent estimation but we ultimately decided that the paper has more focus if we concentrate only on explaining how to use this software under the design-based infinite population approach.  In any case, many citations are currently included that already discuss these issues.} \\
+
 Dealing with sample plots close to borders (split plots) is a common issue in forest inventories. It would be helpful to mention how to handle them in the estimators.\\
+
+\answerfin{A mention of sample plot boundary adjustments is now included in Section 2.1 with a citation.} \\
 
 
 Specific comments:\\
@@ -157,16 +174,14 @@ Specific comments:\\
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{Multiphase vs. multi-phase}.
 
-\note{\textit{Andi}: There is a slight inconsistency in our article here: Our package says 'multiphase', but here we used 'multi-phase'. However, should we then also change 'two-phase' to 'twophase'?}
-
-\answerfin{}
+\answerfin{Multiphase is now used consistently to match package's spelling}
 % --------------------------- %
 
 
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{Introduction: Consider mentioning the important role of (N)FIs in monitoring carbon change in the context of climate reporting and mitigation.}.
 
-\answerfin{}
+\answerfin{Good point.  Has been changed accordingly.}
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
@@ -181,7 +196,7 @@ Specific comments:\\
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{Section2.1: “population in the finite approach … not well defined”. Can this really be generalized in this way? If not, consider deleting. Think about estimating forest area where every finite population unit is covered by a certain proportion of forest.}.
 
-\answerfin{}
+\answerfin{That suggestion only can be done if the plots form a perfect tesselation.  Circular units, the most common in NFIs, can't do this.  The rest of the sentence actually says "with respect to the forest area".  This is true.  Points can fill any forested area even if it is a fractal whereas a counter example forest area can always be given for any plot shape you put forward.  Extending your tesselation beyond the forest edge is possible, but this increases the weights for boundary cases which likely increases the variance.   Many of the cited articles in the infinite population approach already discuss this but the focus for this article is not a comparison of the finite and infinite approaches, but a presentation of a software package written under the infinite approach.}
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
@@ -205,7 +220,7 @@ Specific comments:\\
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{After eq. 2: Where comes the term g-weight from? No “g” in any of the equations around eq. 2?}.
 
-\answerfin{}
+\answerfin{The g-weight is the name of a variance estimator for the point estimate in eq.2 as opposed to another possible variance estimator here named the external estimator.  The origin of the g-weight name is more obvious in the citation provided in the same paragraph.  The g-weight is analogous to a hat matrix and can be extracted from the more compact form that was included in the article.  It the spirit of not being too verbose we chose the compact form. }
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
@@ -217,7 +232,7 @@ Specific comments:\\
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{After eqs. 12, 25 and possibly elsewhere “…unbiased point estimates…” Can an estimate be biased or is it estimators that are biased?}.
 
-\answerfin{}
+\answerfin{In this context "a biased estimate" is an estimate that is produced from a biased estimator.  It would be a bit tedious to explain every time that an given estimate was produced from a biased estimator.}
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
@@ -241,19 +256,19 @@ Specific comments:\\
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{Some of the estimators are also implemented in the well-known “survey” package which could be mentioned.}.
 
-\answerfin{}
+\answerfin{The "survey" package is in the finite population approach (aka list sampling).  It is mentioned on page 2.}
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{Around eq. 13. The extended estimator is described as being “elegant”. However, it seems to be necessary to fit the model for each small area with a change in the indicator variable. How does this fit?}.
 
-\answerfin{}
+\answerfin{It is elegant in the sense that the SAE estimator is unbiased merely by modifying the design matrix.  It is not necessary to refit every small area with an indicator, but it is  how the package implemented the estimator.}
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{After eq. 14. How can there be a residual correction term in a synthetic estimator? There may not even be observations available from within small area G. Please describe and define the term $\theta_s2$ in more detail.}.
 
-\answerfin{}
+\answerfin{It says that "the formulas look similar to the synthetic estimators", because they are exactly same.  They merely have a modified design matrix.}
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
@@ -265,7 +280,7 @@ Specific comments:\\
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{Acknowledgements: grisons - Grisons}.
 
-\answerfin{}
+\answerfin{Change has been implemented.}
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %

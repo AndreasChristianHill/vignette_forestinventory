@@ -6,7 +6,7 @@
 % --------------------------------------------------------- %
 \subsection{Post-stratification}
 
-A special case of multi-phase regression estimation is post-stratification, which can further be divided into the cases of multi-phase sampling for stratification and multi-phase sampling for regression within strata. Both imply the use of one or more categorical variables in the regression model(s), leading to classical ANOVA and ANCOVA models.
+A special case of multiphase regression estimation is post-stratification, which can further be divided into the cases of multiphase sampling for stratification and multiphase sampling for regression within strata. Both imply the use of one or more categorical variables in the regression model(s), leading to classical ANOVA and ANCOVA models.
 
 To demonstrate post-stratification, we first create an artificial categorical variable development stage (\code{stage}) by clustering the mean canopy heights of the \code{grisons} data set into 3 height classes:
 
@@ -16,7 +16,7 @@ grisons$stage <- as.factor(kmeans(grisons$mean, centers = 3)$cluster)
 @
 \end{small}
 
-Two-phase sampling for stratification is applied if the model only contains categorical variables, in this case the factor variable \code{stage}. Linear regression models only fitted with categorical variables produce ANOVA models, which when used in multi-phase regression estimators, is equivalent to post-stratification. For our example, this means that the model predictions are simply the means of the terrestrial response values within each development stage (within-strata means).
+Two-phase sampling for stratification is applied if the model only contains categorical variables, in this case the factor variable \code{stage}. Linear regression models only fitted with categorical variables produce ANOVA models, which when used in multiphase regression estimators, is equivalent to post-stratification. For our example, this means that the model predictions are simply the means of the terrestrial response values within each development stage (within-strata means).
 
 \begin{small}
 <<eval=FALSE>>=
@@ -26,7 +26,7 @@ twophase(formula = tvol ~ stage, data = grisons,
 @
 \end{small}
 
-Two-phase sampling for regression within strata implies the combination of continuous and categorical variables within the model (i.e., we have an ANCOVA model). If an interaction term is not present between categorical and continuous variables, the regression lines within the strata will have the same slope but different intercepts. If an interaction term is present, both the intercept and the slope are allowed to vary within the strata. Note that one can actually use the entire range of OLS regression techniques in the multi-phase estimators, including higher order terms and transformations of the explanatory variables, which makes them very flexible.
+Two-phase sampling for regression within strata implies the combination of continuous and categorical variables within the model (i.e., we have an ANCOVA model). If an interaction term is not present between categorical and continuous variables, the regression lines within the strata will have the same slope but different intercepts. If an interaction term is present, both the intercept and the slope are allowed to vary within the strata. Note that one can actually use the entire range of OLS regression techniques in the multiphase estimators, including higher order terms and transformations of the explanatory variables, which makes them very flexible.
 
 \begin{small}
 <<eval=FALSE>>=
@@ -95,11 +95,11 @@ Comparing the EXTPSYNTH and PSMALL estimates, we see that in this particular cas
 % --------------------------------------------------------------------- %
 \subsection{Violation of nesting in sample design}
 
-As explained in Section \ref{sec:str_and_mod}, a basic prerequisite for the application of multi-phase estimators is that the sample phases ($s_0$, $s_1$, $s_2$) are nested in each other. The correct nesting thereby concerns the spatial arrangement of the sample phases (Fig. \ref{fig:concmphase_and_sae_a}) as well as the availability of terrestrial and auxiliary information per phase and sample location. For the latter, \pkg{forestinventory} runs validity checks in the background, provides warning and error messages and, if possible, applies first-aid adjustments to the inventory data set to prevent the calculations from failing. We will demonstrate possible nesting violations by applying the global three-phase estimator to the \code{grisons} and \code{zberg} data sets.
+As explained in Section \ref{sec:str_and_mod}, a basic prerequisite for the application of multiphase estimators is that the sample phases ($s_0$, $s_1$, $s_2$) are nested in each other. The correct nesting thereby concerns the spatial arrangement of the sample phases (Fig. \ref{fig:concmphase_and_sae_a}) as well as the availability of terrestrial and auxiliary information per phase and sample location. For the latter, \pkg{forestinventory} runs validity checks in the background, provides warning and error messages and, if possible, applies first-aid adjustments to the inventory data set to prevent the calculations from failing. We will demonstrate possible nesting violations by applying the global three-phase estimator to the \code{grisons} and \code{zberg} data sets.
 
 \subsubsection*{Violation 1}
 
-Based on the nesting rule, $s_2 \in s_1 \in s_0$, each $s_2$ and $s_1$ sample location must have all explanatory variables available that are used in the full (and thus reduced) regression model. If e.g., an $s_2$ and/or $s_1$ point misses a variable which is used in the full and reduced model (in this case \code{mean}), the function will delete this sample point from the dataset and produce the following messages:  
+Based on the nesting rule, $s_2 \subset s_1 \subset s_0$, each $s_2$ and $s_1$ sample location must have all explanatory variables available that are used in the full (and thus reduced) regression model. If e.g., an $s_2$ and/or $s_1$ point misses a variable which is used in the full and reduced model (in this case \code{mean}), the function will delete this sample point from the dataset and produce the following messages:  
 
 \begin{small}
 <<eval=FALSE>>=
