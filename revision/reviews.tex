@@ -81,7 +81,7 @@ The accompanying R package includes more than 7000 lines of code, which in part 
 
 My main concern is that the limitations of the methodology are nowhere clearly specified in the manuscript. On page 5, it is suggested that a consequence of the design-based approach "is that the estimation properties of design-based regression estimators (e. g. unbiasedness) typically hold regardless of the model that is chosen." While this is basically true for unbiasedness, unbiasedness by itself means little, and, more important, the statement does not extend to relevant properties such as coverage rates of confidence intervals. Indeed, if s2 contains less than 1-$\alpha$ of the entire population, any true 1-$\alpha$ confidence interval for the population mean necessarily involves distributional assumptions about the population because otherwise any fixed Y(x0), which has probability > $\alpha$ of not being included in the sample, can be anything, so any conclusion about the mean would be wrong with probability > $\alpha$. (Similarly, with the infinite population approach, one needs assumptions on the tails.) Of course, it is very plausible that such issues go away once reasonable assumptions (suitable sample sizes etc.) are met. While this will be obvious in some situations, I expect many potential uses of the package where this is less so, either because users are specifically looking at edge cases in search of interesting phenomena or, more commonly, because there really is very little data available - the typical situation for a forestry undergraduate writing a thesis. The vague invocation of the central limit theorem (page 24) won't help here. Below I include three numerical examples where the nominal 95\% confidence intervals never exceed a coverage of 85\%.\\
 
-\answerfin{The reviewer is concerned that more attention needs to be given concerning issues in boundary cases with the coverage rates.  Although the given explanation seems to have switched $\alpha$ and $1-\alpha$ in a few places the point is helpful and clear especially with the generously provided examples included for the finite population case.  We have reproduced similar results using simulation in the infinite population 2-phase context and have concluded that this indeed occurs with the sampling fraction between the first and second phases is less than $\alpha$.  For this reason we have expanded the confidence interval section to inform the reader of this situation.}
+\answerfin{The reviewer is concerned that more attention needs to be given concerning issues in boundary cases with the coverage rates.  The given explanation seems to have switched $\alpha$ and $1-\alpha$ in a few places.  Regardless the concept of having a sampling fraction too low for the confidence level isn't really applicable in the infinite population approach where the total population of points is infinity.  We have performed simulations under the infinite population approach and could not reproduce this point.  However, the reviewer does have a valid point that discussing coverage rates would improve the paper. For this reason we have expanded the confidence interval section to include some simulated examples of coverage rates to develop the reader's intuition about when the sample size is too low to produce reliable results.}
 \\
 
 As I personally regard solid knowledge of the limitations of a statistical method as a prerequisite of its use in science and in addition believe it would help many potential users of the package, I ask the authors to consider adding some clarification regarding typical situations where the methods can be or should not be applied. For example, showing a few artificial test cases highlighting the most important requirements would probably not be difficult.\\
@@ -140,7 +140,7 @@ The paper is rather long which can be a good or bad thing. I think that the 2 an
 
 Also section 5 on CIs could be considerably shortened. Needs to be a section on its own right? Sections 6 and 7 are very interesting but the R code under 7.1 could probably be condensed a lot.\\
 \\
-\answerfin{Reviewer 1 made a very valid criticism about designed-based confidence intervals when the sampling fraction is too small that we would like to include in the paper and Section 5 is the most logical place to put it.} \\
+\answerfin{Reader 1 suggested that this section in fact be extended to include discussion about coverage rates.  We prefer to go in this direction.} \\
 
 The current description of how to obtaining the explanatory variables seems not to fit well into this paper. Explanatory variables have to be calculated by the analyst before using the package (except for an optional boundary adjustment). Also in the interest of making the paper shorter and more general (not only focusing on forest inventories), consider omitting or shorten drastically this part of the document.\\
 
@@ -208,7 +208,7 @@ Specific comments:\\
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{Section 2.4: Consider mentioning already here that the bias correction is not deemed reliable for $n_2G < 6$.}.
 
-\answerfin{}
+\answerfin{$n_2G < 6$ is just a rule of thumb.  In Section 2.4, the goal was merely to introduce the small area problem in a general sense for readers that were not familiar.  Rules of thumb should not be blindly obeyed though so we thought it best to refer to it when examples are present to give context allow the reader to develop intuition.  Further discussion of this rule of thumb including simulation examples are included in the confidence interval section in the context of coverage rates.}
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
@@ -232,19 +232,19 @@ Specific comments:\\
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{After eq. 6: “variance … external model … usually slightly smaller than” internal… In the examples for the global estimators further down it is vice versa. Consider rephrasing.}.
 
-\answerfin{}
+\answerfin{This is usually the case, but the estimators are both random and the opposite may sometimes occur.  They are asymptotically equivalent though.  The point is that one should prefer the g-weight because it attempts to account for sampling variation in the coefficients whereas the external variance completely ignores it.  This is explained on page 11 after the example for the global two-phase estimator.}
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{After eqs. 12, 25 and possibly elsewhere “…unbiased point estimates…” Can an estimate be biased or is it estimators that are biased?}.
 
-\answerfin{In this context "a biased estimate" is an estimate that is produced from a biased estimator.  It would be a bit tedious to explain every time that an given estimate was produced from a biased estimator.}
+\answerfin{Unbiased point estimates are point estimates produced by unbiased point estimators.}
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{Section6.1: Ancova model: That means the model of the extended synthetic estimator is also of type ancova. Worth mentioning?}.
 
-\answerfin{}
+\answerfin{The extended synthetic estimator does not necessarily need to implement an ancova model.  That depends on the types of variables that the user has specified.  The extended synthetic estimator merely adds an indicator variable for the small area in addition to the other variables that the user specified.}
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
@@ -256,7 +256,7 @@ Specific comments:\\
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{I think the title of the package is a bit narrow, because it suggests that it could only be used for forest inventories (FIs). FIs were the background and examples for the estimators. However, the methods are generally applicable for all kinds of infinite and finite populations that are sampled by a probability design. The package name may be difficult to change (are package aliases allowed on CRAN?) but at least the function parameters could be general. terrgrid.id in the phase\_id list could for example be replaced by a general term. In this list, consider using the underscore as a consistent separator.}.
 
-\answerfin{}
+\answerfin{The reviewers comments refer to the version of the package that is already available on CRAN and has over 5000 downloads.  We prefer not to alter the function parameters in order to preserve backwards compatibility.}
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
@@ -268,13 +268,13 @@ Specific comments:\\
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{Around eq. 13. The extended estimator is described as being “elegant”. However, it seems to be necessary to fit the model for each small area with a change in the indicator variable. How does this fit?}.
 
-\answerfin{It is elegant in the sense that the SAE estimator is unbiased merely by modifying the design matrix.  It is not necessary to refit every small area with an indicator, but it is  how the package implemented the estimator.}
+\answerfin{It is elegant in the sense that the estimator is unbiased merely by modifying the design matrix.  It is not necessary to refit every small area with an indicator, but this is it was implemented in the package.}
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
-\item \textit{After eq. 14. How can there be a residual correction term in a synthetic estimator? There may not even be observations available from within small area G. Please describe and define the term $\theta_s2$ in more detail.}.
+\item \textit{After eq. 14. How can there be a residual correction term in a synthetic estimator? There may not even be observations available from within small area G. Please describe and define the term $\theta_{s_2}$ in more detail.}.
 
-\answerfin{It says that "the formulas look similar to the synthetic estimators", because they are exactly same.  They merely have a modified design matrix.}
+\answerfin{It says that "the formulas look similar to the synthetic estimators", because the formulas are exactly same.  They merely have a modified design matrix that ensures that the residual correction term is zero by construction and doesn't need to be included.   $\theta_{s_2}$ is now clearly defined in Eq. 13 and the preceeding paragraph.}
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
@@ -292,7 +292,7 @@ Specific comments:\\
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{Value of twophase() (Package forestinventory version 0.3.1): $Z_bar_1G$ is $Z_bar_1$?}.
 
-\answerfin{}
+\answerfin{The reviewer's comment refers to the help documentation of the R-package.  The twophase() function can be used to estimate in both the global and small area contexts.  $Z_bar_1G$ refers to the small area context whereas $Z_bar_1$ is the terminology used for global estimation (i.e. when G = F).  In the future release of the package we will try to include a short reference to this distinction in the help documentation but given that the package already has over 5000 downloads we prefer not to change the names of the function outputs.}
 % --------------------------- %
 
 \end{enumerate}

@@ -60,7 +60,7 @@ target.suface <- function(x0, y0){
 # The true mean value here is 39.17
 
 sample.generator <- function(n1, n2, target.surface=target.surface){
-  realization <- matrix(NA,n1,11)
+  realization <- matrix(NA,n1,6)
   for(i in 1:n1){
     x0=2*runif(1)
     y0=3*runif(1)
@@ -70,14 +70,9 @@ sample.generator <- function(n1, n2, target.surface=target.surface){
     realization[i,4]<-x0*x0
     realization[i,5]<-x0*y0
     realization[i,6]<-y0*y0
-    realization[i,7]<-x0 + rnorm(1, 1, 4)
-    realization[i,8]<-y0 + rnorm(1, -3, 7)
-    realization[i,9]<-x0*x0 + rnorm(1, 2, 3)
-    realization[i,10]<-x0*y0 + rnorm(1, 0.5, 1)
-    realization[i,11]<-y0*y0 + rnorm(1, -0.5, 2)
   }
   realization <- as.data.frame(realization) # warning: still contains true response variable for all 1st phase
-  names(realization) <- c("response","x","y","xx","xy","yy","x_perturbed","y_perturbed","xx_perturbed","xy_perturbed","yy_perturbed")
+  names(realization) <- c("response","x","y","xx","xy","yy")
   realization$phase <- 1
   realization$phase[sample(nrow(realization), n2)] <- 2
   realization
@@ -87,45 +82,25 @@ sample.generator <- function(n1, n2, target.surface=target.surface){
 # Set sample sizes
 num_replications <- 10000
 sampling_fractions <- 1:15/100
-n1_seq <- seq(250, 3000, by = 250)
+n1_seq <- seq(300, 2700, by = 300)
 true_value <- 39.17
 coverage_rates <- data.frame(n1=integer(), n2=integer(), sampling_fractions=numeric(), coverage_rates=numeric())
+pb <- txtProgressBar(min = 0, max = 3000, style = 3)
 
 for(n1 in n1_seq){
   for(n2 in n1*sampling_fractions){
     cover <- replicate(num_replications, {
       realization <- sample.generator(n1, n2)
-      ci <- confint( twophase( response ~ x + y + xx, data = realization,
+      ci <- confint( twophase( response ~ x + xy, data = realization,
                                phase_id = list(phase.col="phase", terrgrid.id = 2) ), level=0.95 )
       ci$ci$ci_lower_g <= true_value & true_value <= ci$ci$ci_upper_g
     }
     )
     coverage_rates <- rbind(coverage_rates, data.frame(n1=n1, n2=n2, sampling_fractions=n2/n1, coverage_rates=mean(cover)))
   }
-  print("sample size complete")
+  setTxtProgressBar(pb, n1)
 }
 
-
-
-# Set sample sizes
-num_replications <- 1000
-sampling_fractions <- 1:15/100
-n1_seq <- 5:15*100
-true_value <- 39.17
-coverage_rates <- data.frame(n1=integer(), n2=integer(), sampling_fractions=numeric(), coverage_rates=numeric())
-
-for(n1 in n1_seq){
-  for(n2 in n1*sampling_fractions){
-    cover <- replicate(num_replications, {
-      realization <- sample.generator(n1, n2)
-      ci <- confint( twophase( response ~ x_perturbed + y_perturbed + xx_perturbed, data = realization,
-                               phase_id = list(phase.col="phase", terrgrid.id = 2) ), level=0.95 )
-      ci$ci$ci_lower_g <= true_value & true_value <= ci$ci$ci_upper_g
-    }
-    )
-    coverage_rates2 <- rbind(coverage_rates2, data.frame(n1=n1, n2=n2, sampling_fractions=n2/n1, coverage_rates=mean(cover)))
-  }
-}
 
 
 # coverage_rates
@@ -134,13 +109,8 @@ coverage_rates$n1 <- as.factor(coverage_rates$n1)
 library(ggplot2)
 ggplot(data=coverage_rates, aes(x=sampling_fractions, y=coverage_rates, group=n1)) +
   geom_line(aes(color=n1)) + geom_vline(xintercept=0.05) + geom_hline(yintercept=0.95) +
-  geom_point(size=0.8) + labs(title="Simulated coverage rates \n by sample size and sampling fraction",
-                            x ="Sampling fraction (n1/n2)", y = "Coverage rate")
-
-coverage_rates2$n1 <- as.factor(coverage_rates2$n1)
-ggplot(data=coverage_rates2, aes(x=sampling_fractions, y=coverage_rates, group=n1)) +
-  geom_line(aes(color=n1)) + geom_vline(xintercept=0.05) + geom_hline(yintercept=0.95) +
-  geom_point(size=0.8)
+  geom_point(size=0.8) + labs(title="Simulated coverage rates by sample size and sampling fraction",
+                              x ="Sampling fraction (n2/n1)", y = "Coverage rate")
 
 
 t(rbind(n1=500,rbind(n2=sampling_fractions*n1,rbind(sampling_fractions=sampling_fractions,coverage_rates))))
