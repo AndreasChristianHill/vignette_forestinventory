@@ -99,7 +99,7 @@ As explained in Section \ref{sec:str_and_mod}, a basic prerequisite for the appl
 
 \subsubsection*{Violation 1}
 
-Based on the nesting rule, $s_2 \in s_1 \in s_0$, each $s_2$ and $s_1$ sample location must have all explanatory variables available that are used in the full (and thus reduced) regression model. If e.g., an $s_2$ and/or $s_1$ point misses a variable which is used in the full and reduced model (in this case \code{mean}), the function will delete this sample point from the dataset and produce the following messages:  
+Based on the nesting rule, $s_2 \subset s_1 \subset s_0$, each $s_2$ and $s_1$ sample location must have all explanatory variables available that are used in the full (and thus reduced) regression model. If e.g., an $s_2$ and/or $s_1$ point misses a variable which is used in the full and reduced model (in this case \code{mean}), the function will delete this sample point from the dataset and produce the following messages:  
 
 \begin{small}
 <<eval=FALSE>>=
