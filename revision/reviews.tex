@@ -81,7 +81,7 @@ The accompanying R package includes more than 7000 lines of code, which in part 
 
 My main concern is that the limitations of the methodology are nowhere clearly specified in the manuscript. On page 5, it is suggested that a consequence of the design-based approach "is that the estimation properties of design-based regression estimators (e. g. unbiasedness) typically hold regardless of the model that is chosen." While this is basically true for unbiasedness, unbiasedness by itself means little, and, more important, the statement does not extend to relevant properties such as coverage rates of confidence intervals. Indeed, if s2 contains less than 1-$\alpha$ of the entire population, any true 1-$\alpha$ confidence interval for the population mean necessarily involves distributional assumptions about the population because otherwise any fixed Y(x0), which has probability > $\alpha$ of not being included in the sample, can be anything, so any conclusion about the mean would be wrong with probability > $\alpha$. (Similarly, with the infinite population approach, one needs assumptions on the tails.) Of course, it is very plausible that such issues go away once reasonable assumptions (suitable sample sizes etc.) are met. While this will be obvious in some situations, I expect many potential uses of the package where this is less so, either because users are specifically looking at edge cases in search of interesting phenomena or, more commonly, because there really is very little data available - the typical situation for a forestry undergraduate writing a thesis. The vague invocation of the central limit theorem (page 24) won't help here. Below I include three numerical examples where the nominal 95\% confidence intervals never exceed a coverage of 85\%.\\
 
-\answerfin{The reviewer is concerned that more attention needs to be given concerning issues in boundary cases with the coverage rates.  The given explanation seems to have switched $\alpha$ and $1-\alpha$ in a few places.  Regardless the concept of having a sampling fraction too low for the confidence level isn't really applicable in the infinite population approach where the total population of points is infinity.  We have performed simulations under the infinite population approach and could not reproduce this point.  However, the reviewer does have a valid point that discussing coverage rates would improve the paper. For this reason we have expanded the confidence interval section to include some simulated examples of coverage rates to develop the reader's intuition about when the sample size is too low to produce reliable results.}
+\answerfin{The reviewer is concerned that more attention needs to be given concerning issues in boundary cases with the coverage rates.  The given explanation seems to have switched $\alpha$ and $1-\alpha$ in a few places but made clear that there was a link between too low sampling fractions and coverage rates under the finite population approach.  However, the concept of having a sampling fraction too low for the confidence level isn't really applicable in the infinite population approach where the total population is a continuum of points and is thus infinity.  We have performed simulations under the infinite population approach and could not reproduce the reviewers examples, but did show that extremely low sample sizes could have an influence.  The cited literature includes many simulations and artificial examples demonstrating the distribution of the parameter of interest (the integral of the local density function) is beyond analytical treatment under the sampling schemes but can be well approximated by t-distribution (and consequently the normal in large samples). The reviewer does have a very valid point that discussing coverage rates would improve the paper. For this reason we have expanded the confidence interval section to include some new simulated examples of coverage rates to develop the reader's intuition about when the sample size is too low to produce reliable results.}
 \\
 
 As I personally regard solid knowledge of the limitations of a statistical method as a prerequisite of its use in science and in addition believe it would help many potential users of the package, I ask the authors to consider adding some clarification regarding typical situations where the methods can be or should not be applied. For example, showing a few artificial test cases highlighting the most important requirements would probably not be difficult.\\
@@ -146,7 +146,7 @@ The current description of how to obtaining the explanatory variables seems not 
 
 Furthermore, I wonder whether the infinite population estimators in combination with the explanatory variables used in the examples are applicable without modification for the exhaustive (wall-to-wall) estimators such as eq. 17a. It may be just a misunderstanding of how to interpret the integral in the equations and the sentence above eq. 2b. However, it sounds like it is suggested to use the full cover of auxiliary information such as lidar height returns and to calculate “metrics” that include order statistics such as 75th percentile and the maximum globally. While this approach is unproblematic for the mean, it results in biased order statistics as they are scale-dependent. For example, the mean of the maximum values for grid-cells (population units) tessellating the area should be calculated rather than the global maximum over the area. The grid cells should have approximately the same size as the sampled units because of the scale-dependency of the explanatory variables but do not necessarily be of the same shape. I am sure this was done correctly when calculating the explanatory variables for the examples. However, this seems to be a crucial point that should be made much clearer; maybe especially so if the authors have a different point of view.\\
 
-\answerfin{When the package was orginally beta tested at the Swiss Federal Institute of Forest, Snow and Landscape Management on likely operational users as well as forest engineers, the most contentious area for confusion was the calculation of explanatory variables in the exhaustive case.  The reviewer appears to have confirmed that confusion in the previous paragraph, which is explained in the section on calculating explanatory variables.  It is explictly stated that the exact exhaustive mean vector can only be calculated for explanatory variables based on means (note that polygon layers are means of binary variables). It has now been explicitly added as an example that order statistics are not included in this category with the reviewers example given.  It is already explicitly stated that the size of the support should ideally be chosen to achieve a best possible explanatory power of the regression model on page 9 and a citation has been added for the interested reader.} \\
+\answerfin{This is explained in the section on calculating explanatory variables.  It is explictly stated that the exact exhaustive mean vector can only be calculated for explanatory variables based on means (note that polygon layers are means of binary variables). It has now been explicitly added as an example that order statistics are not included in this category with the reviewers example given.  It is already explicitly stated that the size of the support should ideally be chosen to achieve a best possible explanatory power of the regression model on page 9 and a citation has been added for the interested reader.} \\
 
 
 Related to the previous comment is whether the difference between the infinite and finite population approaches is relevant from a practical point of view. At least the estimators may be equivalent (see for example eq. 6a). Furthermore, for some cases as described in the previous comment, the population needs to be tessellated which, in my opinion, practically results in finite populations. I think it would be very helpful to discuss the similarities and differences of the finite and infinite population approach more as most readers familiar with forest inventories are likely to be “indoctrinated” with the finite population approach.\\
@@ -193,9 +193,7 @@ Specific comments:\\
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{Section2.1: Forest area is often itself an important parameter to be estimated. For completeness, it should be mentioned that (or how) it is possible to estimate forest area under the infinite population approach.}.
 
-\answerfin{The estimators presented in our article particularly rely on the assumption that the forest area $\lambda$ is known. The reason for this is that the local density $Y(x)$ is actually the Horwitz-Thompson}
-
-\note{\textit{Andi}: Whereas the forest area $\lambda(F)$ appears in the Horwitz-Thompson estimator, we actually only have to know the forest boundaries to compute the intersection of the circle and the forest boundary. The exact forest area is only needed to compute the total by multiplying, e.g., the sample mean with $\lambda(F)$. The author is, however, right by saying that in most NFIs the forest area is rather estimated than known exactly. A solution, as applied in the Swiss NFI, is to estimate the forest area by multiplying the \textit{known} country area by the percentage of (randomly and uniformly distributed) sample points falling within the forest (decision made by field crews) -> see Mandallaz 2014: Note on the estimation of totals. So actually, its no big deal "to do it in the infinite population approach". However, in the case of multiphase sampling, also $s_1$ or $s_0$ points can no longer be restricted to the forest, which can lead to loss of efficiency (see also Mandallaz 2014).}
+\answerfin{The estimators presented in our article particularly rely on the assumption that the forest area $\lambda$ is known. The exact forest area is only needed to compute the total by multiplying, e.g., the sample mean with $\lambda(F)$. The author is, however, right by saying that in most NFIs the forest area is rather estimated than known exactly. A solution, as applied in the Swiss NFI, is to estimate the forest area by multiplying the \textit{known} country area by the percentage of (independent and uniformly distributed) sample points falling within the forest (decision made by field crews) -> see Mandallaz 2014: Note on the estimation of totals. So actually, its no big deal "to do it in the infinite population approach" but how the user wants to estimate forest area is up to them.  A citation noting where the reader can find more information on this topic has been included but further discussion was not included as it was outside the scope of this paper.}
 
 % --------------------------- %
 
@@ -214,7 +212,7 @@ Specific comments:\\
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{S2.5: systematic grids are not used for reducing travel costs but rather because of practicalities around obtaining a spatially balanced sample.}.
 
-\answerfin{}
+\answerfin{The reviewer is correct and this change has been implemented.}
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
@@ -250,13 +248,13 @@ Specific comments:\\
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{To me, the term “estimation error” seems a bit unconventional.}.
 
-\answerfin{}
+\answerfin{The term is consistent with much of the already published literature included in the citations.}
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{I think the title of the package is a bit narrow, because it suggests that it could only be used for forest inventories (FIs). FIs were the background and examples for the estimators. However, the methods are generally applicable for all kinds of infinite and finite populations that are sampled by a probability design. The package name may be difficult to change (are package aliases allowed on CRAN?) but at least the function parameters could be general. terrgrid.id in the phase\_id list could for example be replaced by a general term. In this list, consider using the underscore as a consistent separator.}.
 
-\answerfin{The reviewers comments refer to the version of the package that is already available on CRAN and has over 5000 downloads.  We prefer not to alter the function parameters in order to preserve backwards compatibility.}
+\answerfin{The reviewers comments refer to the version of the package that is already available on CRAN and has over 5000 downloads.  We prefer not to alter the function parameters in order to preserve backwards compatibility.  In the future if the usefulness of more general package names becomes apparent a wrapper package could be created.}
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
@@ -268,7 +266,7 @@ Specific comments:\\
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{Around eq. 13. The extended estimator is described as being “elegant”. However, it seems to be necessary to fit the model for each small area with a change in the indicator variable. How does this fit?}.
 
-\answerfin{It is elegant in the sense that the estimator is unbiased merely by modifying the design matrix.  It is not necessary to refit every small area with an indicator, but this is it was implemented in the package.}
+\answerfin{It is elegant in the sense that the estimator is unbiased merely by modifying the design matrix.  It is not necessary to refit every small area with an indicator, but this is how it was implemented in the package.}
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
@@ -280,7 +278,7 @@ Specific comments:\\
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{Sentence after eq. 17: difficult to follow. Consider rephrasing.}.
 
-\answerfin{}
+\answerfin{Parts of the equation are directly referenced in the sentence to make it easier to follow.}
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
