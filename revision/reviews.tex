@@ -224,7 +224,7 @@ Specific comments:\\
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{After eq. 2: Where comes the term g-weight from? No “g” in any of the equations around eq. 2?}.
 
-\answerfin{The g-weight is the name of a variance estimator for the point estimate in eq.2 as opposed to another possible variance estimator here named the external estimator.  The origin of the g-weight name is more obvious in the citation provided in the same paragraph.  The g-weight is analogous to a hat matrix and can be extracted from the more compact form that was included in the article.  It the spirit of not being too verbose we chose the compact form. }
+\answerfin{The g-weight is the name of a variance estimator for the point estimate in eq.2 as opposed to another possible variance estimator here named the external estimator.  The origin of the g-weight name is more obvious in the citation provided in the same paragraph.  The g-weight is analogous to a hat matrix and can be extracted from the more compact form that was included in the article. In the spirit of not being too verbose we chose the compact form. }
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
@@ -242,13 +242,13 @@ Specific comments:\\
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{Section6.1: Ancova model: That means the model of the extended synthetic estimator is also of type ancova. Worth mentioning?}.
 
-\answerfin{The extended synthetic estimator does not necessarily need to implement an ancova model.  That depends on the types of variables that the user has specified.  The extended synthetic estimator merely adds an indicator variable for the small area in addition to the other variables that the user specified.}
+\answerfin{The extended synthetic estimator does not necessarily need to implement an ancova model.  That depends on the types of variables that the user has specified.  The extended synthetic estimator merely adds an indicator variable for the small area in addition to the other variables that the user specified. This can in fact extend the model to an ancova model if the explanatory variables contain at least one continuous predictor. However, the reason of adding the indicator variable exclusively is to ensure the zero-mean-residual property in both the global domain F and small area G, and not to improve the model fit. We think that linking the indicator variable to the anova or ancova modeling technique might probably cause misunderstanding of the indicator purpose on the side of the readers.}
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{To me, the term “estimation error” seems a bit unconventional.}.
 
-\answerfin{The term is consistent with much of the already published literature included in the citations.}
+\answerfin{The term is consistent with much of the already published literature included in the citations (e.g., von L{\"u}pke et al. 2012).}
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
@@ -260,7 +260,7 @@ Specific comments:\\
 % XX) ++++++++++++++++++++++++++ %
 \item \textit{Some of the estimators are also implemented in the well-known “survey” package which could be mentioned.}.
 
-\answerfin{The "survey" package is in the finite population approach (aka list sampling).  It is mentioned on page 2.}
+\answerfin{The \textit{survey} package is in the finite population approach (aka list sampling).  It is mentioned on page 2.}
 % --------------------------- %
 
 % XX) ++++++++++++++++++++++++++ %
