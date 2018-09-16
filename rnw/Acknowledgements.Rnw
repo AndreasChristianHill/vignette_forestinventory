@@ -3,3 +3,5 @@
 \section*{Acknowledgements}
 
 We want to express our gratitude to Prof. H. Heinimann (Chair of Land Use Engineering, ETH Zurich) for supporting this study and providing the possibility of working on the package. We also want to thank Daniel Mandallaz for his support in completing the range of the already published estimators in the frame of the three-phase small area estimators, as well as many helpful discussions and advice throughout the implementation of our package. Our thanks also go to Meinrad Abegg for proofreading the manuscript, and to the Amt f{\"u}r Wald und Naturgefahren of the Swiss canton of Grisons for providing the example data.
+
+\newpage
