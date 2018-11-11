@@ -1,0 +1,17 @@
+
+#1: He creates a finite population with N=500. That means that the realizations of the response variable 
+    as well as those of the auxiliary variable are taken from a finite population instead from an infinite population.
+    This is a fundamental misunderstanding of the infinite population theory, which was exclusively used to derive all estimators 
+    contained in "forestinventory". So in he reviewer's simulation code, he randomly samples s2 from a finite rather than an infinite 
+    population. As a consequence of doing so, he also determines the true value by taking the mean of a finite population, rather
+    than calculating the spatial mean (i.e. the integral) of the function determining the surface of the local density (as explained 
+    in section 2.1).
+
+    In order to avoid any confusion between the infinite and the finite population framework, we explained the fundamental basics of 
+    the infinite population framework in very detail in section 2.1. The misunderstanding of the reviewer, who has without 
+    question high expertise in the field of forest inventory and sampling theory, supported our decision to place a sound portion of 
+    easily-explained theory in our article (maybe with the consequence making the article longer at some places).
+
+#2: From the reviewer's simulation code, it is also obvious that he uses (in his finite framework) the entire population (N=500)
+    of auxiliary values instead of taking a random sample of n1. By doing so
+    

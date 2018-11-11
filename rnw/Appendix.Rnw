@@ -140,7 +140,7 @@ return(coverage_rates)
  \begin{small}
 <<eval=FALSE>>= 
 # --- run global simulations --- #
-library(forstinventory)
+library(forestinventory)
 global.sims<- data.frame()
 n1_sims<- c(250, 500, 750, 1000, 1500, 2000) # n1 sample sizes
   for (i in 1:length(n1_sims)){
