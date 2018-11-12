@@ -65,8 +65,8 @@ From the simulation example for global estimation (Figure \ref{fig:covrate_sim})
 
 \begin{figure}[h]
 \centering
-\resizebox{0.80\hsize}{!}{\includegraphics{fig/globalsim.png}}
-\caption{Coverage rates realized under varying sample sizes $n_1$ and sampling fractions for an artificial simulation example given in \citet{mandallaz2013a}. The nominal confidence level was 95\% and for each setup, 10000 simulations were performed using simple random sampling.}
+\resizebox{0.78\hsize}{!}{\includegraphics{fig/globalsim.png}}
+\caption{Coverage rates of the global two-phase estimator realized under varying sample sizes $n_1$ and sampling fractions for an artificial simulation example given in \citet{mandallaz2013a}. The confidence intervals were based on the g-weight variance with a nominal confidence level of 95\%. For each setup, 10000 simulations were performed using simple random sampling.}
 \label{fig:covrate_sim}
 \end{figure}
 
