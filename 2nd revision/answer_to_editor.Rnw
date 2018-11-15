@@ -78,11 +78,11 @@ In the revised version of the manuscript (ID 3280), the authors include a new di
 %------------------------------------------------------------------------------------------------%
 % ---------------------------------- Answer -----------------------------------------------------%
 
-\section{Answer}
+\section*{Answer}
 
 The reviewers code runs without bugs but the simulation was incorrectly formulated. One fundamental problem with the reviewers simulation is that he seems to pose all three examples in the \textit{finite} population context rather than the \textit{infinite} population context. We can see this right at the beginning:\\
 
-Here, the reviewer sets up a dataframe that he then uses in his simulation examples:
+Here, the reviewer sets up a dataframe defining a \textit{finite} population that he then uses in his simulation examples:
 
 \begin{small}
 <<>>=
@@ -114,7 +114,8 @@ mean(cover)
 @
 \end{small}
 
-As obvious, the true population mean (\code{true\_value}) that has to be estimated is here calculated by taking the mean of a \textit{finite} number of response variable values ($N=500$, i.e. \code{nrow(d)}). This shows that the reviewer actually defined a finite population of the response variable (\code{vol1}), and he does the same for the auxiliary variable (\code{elv}). In his simulation, he then samples the set of observed response variable values $s_2$ (and also the auxiliary variable) from a finite population. This is a fundamental misunderstanding of the infinite population theory, which was exclusively used to derive all estimators contained in \code{forestinventory}. First of all, the true value should be an integral (i.e. spatial mean over infinite points, as described in section 2.1 in the article), but by using the finite mean, the reviewer has effectively acknowledged that actually $N=500$ instead of infinity. Second, we then see that every population unit is assigned to the first phase (\code{d\$phase<- 1}) indicating the intention to apply an \textit{exhaustive} two-phase estimator. Notice that in the \code{twophase()}-function call, the reviewer, however, did not to set the exhaustive parameter making this a non-exhaustive function call. This means that by simulation design $s_1$ does not get resampled with every replicate so the variability coming from resampling the first phase is ignored.\\
+As obvious, the true population mean (\code{true\_value}) that has to be estimated is here calculated by taking the mean of a \textit{finite} number of response variable values ($N=500$, i.e. \code{nrow(d)}). This shows that the reviewer actually defined a finite population for the response variable (\code{vol1}), and likewise for the auxiliary variable (\code{elv}). In every iteration of his simulation, he then resamples from a finite set of observed response variable values $s_2$. This is a fundamental misunderstanding of the infinite population theory, which was exclusively used to derive all estimators contained in \code{forestinventory}. First of all, the true population mean (\code{true\_value}) should be an integral (i.e. spatial mean) over infinite points, as described in section 2.1 in the article, but by using the finite mean, the reviewer has effectively acknowledged that actually $N=500$ instead of infinity.\par
+Second, we then see that every population unit of his finite population is assigned to the first phase (\code{d\$phase<- 1}). Basically, this means that the auxiliary information is not resampled in every simulation iteration, but the entire population ($N=500$) of auxiliary information \code{elv} is used. This indicates that the reviewer intended to apply an \textit{exhaustive} two-phase estimator where the true population mean of the auxiliary information is used. Notice that in the \code{twophase()}-function call, the reviewer, however, did \textit{not} set the exhaustive parameter as demonstrated in section 3.1 pp. 11-12 in the article, making this a non-exhaustive function call. This means that by simulation design $s_1$ does not get resampled with every replicate so the variability coming from resampling the first phase is ignored.\\
 
 All 3 examples given by the reviewer made these same errors so the results clearly can't be considered conclusive on their own merits.  This is why we attempted to reformulate the simulation examples correctly in the infinite population context and mimic the examples intended effects. The following is some sample code (similar code was added to the Appendix in the last submission) to demonstrate simulation in the infinite population context.  This technique has already applied in Mandallaz (2013a), Mandallaz et al. (2013) and Massey et al. (2015):
 
@@ -160,10 +161,10 @@ sample.generator<- function(n1, n2){
 @
 \end{small}
 
-As obvious, we take a finite random sample $s_2$ and $s_1$ from an infinite number of points. The randomness in the sampling procedure comes from the uniform independent selection of points (\code{x0, y0}) that are randomly distributed over the density surface defining the distribution of the target variable at every possible point in the plane.
+As obvious, we take a finite random sample $s_2$ and $s_1$ from an infinite number of points (note that the number of possible points, i.e., coordinate pairs \code{x0, y0}) as input for the density function \code{target.surface} is infinite). The randomness in the sampling procedure comes from the uniform independent selection of points that are randomly distributed over the density surface defining the distribution of the target variable at every possible point in the plane.
 
 
-\subsection{Reviewer Problem \#1}
+\subsection*{Reviewer Problem \#1}
 
 \begin{small}
 <<eval=FALSE>>=
@@ -196,9 +197,9 @@ mean(ci.op.logical)  # 0.9457, coverage rate of one-phase estimator
 The one-phase estimator has the correct coverage rate even with sample size 5 (it would also have it for $n_2$ = 2) but it will probably have a very large margin of variance (i.e. estimation error). The g-weight variance has lower than nominal coverage rates because the contribution of the variance by calculating the beta vector is based on approximations (i.e. a first order taylor approximation for the g-weight) which are not adequate for this sample size.  The article has already included a graphic with sample code that addresses the sample size issue and the reviewer has already accepted it so we can leave this issue alone for the time being.
 
 
-\subsection{Reviewer Problem \#2 and \#3}
+\subsection*{Reviewer Problem \#2 and \#3}
 
-The 2nd reviewer example involves creating a response variable \code{vol2}, that is \code{0} for 98.2\% of the values and non-zero where the auxiliary information yields a low value.  Presumably this would occur in situations where there is a treeline dependent on elevation and the vast majority of the inventory domain is at elevations where no trees can grow.  This is problematic for the g-weight and external estimators because all plots in $s_2$ where trees actually exist are high leverage outliers. However, a quick look at the reported R-squared, which would be very close to zero, should trigger the  the question why the model is included in the first place.\\
+The 2nd reviewer example involves creating a response variable \code{vol2}, that is \code{0} for 98.2\% of the values and non-zero where the auxiliary information yields a low value.  Presumably this would occur in situations where there is a treeline dependent on elevation and the vast majority of the inventory domain is at elevations where no trees can grow.  This is problematic for the g-weight and external estimators because all plots in $s_2$ where trees actually exist are high leverage outliers. However, a quick look at the reported R-squared, which would be very close to zero, should immediately trigger the  question why the model is included in the first place.\\
 
 Problem 3 is actually the exact same example except that the response variable takes exclusively the value \code{1} at non-zero plots and these non-zero plots (and thus plots with response variable value=1) are uniformly distributed among the auxiliary variables. This means that there is per-definition no causal correlation between the auxiliary variable values and the response value, which arises the question why one should use the auxiliary information at all. Nevertheless, such a situation may occur if say the inventorist wanted to count how many trees are in the desert where there are just a handful of uniformly distributed oases.  Even in this case, the nonzero plots will again be highly influential leverage points in the presence of so many zeros. This issue is easily seen by low R-squared values as well as by a look at the residuals of the linear model.\\
 
