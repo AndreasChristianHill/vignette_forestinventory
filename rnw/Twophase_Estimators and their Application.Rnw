@@ -106,6 +106,13 @@ An extension to the so-far published estimators by Mandallaz is the consideratio
   \hat{\bar{\pmb{Z}}}=\frac{\sum_{x\in{s_1}}w(x)\pmb{Z}(x)}{\sum_{x\in{s_1}}w(x)}
 \end{equation}
 
+
+% --------------------------- %
+\subsubsection{Restricting the inventory domain to forested area}
+
+In some national forest inventories it has been common to sample information over the entire country, i.e., also at places outside forest even including areas such as high mountain sides where no trees can actually grow. This is caused by the fact that in order to calculate totals by multiplying the estimated density (e.g., timber volume per hectare) with the area value of the inventory domain, the area of a country is well known, whereas the precise area of the forest is often much harder to determine. In \citet{mandallaz2014} it is demonstrated that by doing so, one usually inflates the sample by a large number of zeros for the target variable (i.e., at sample locations outside forest). It has been mathematically shown that by this procedure, the coefficient of determination (R$^2$) of the regression model can be overoptimistic as the zeros are easy to predict. This is particularly the case if the occurence of zeros correlate with an explanatory variable, such as the elevation above sea level. Furthermore, \citet{mandallaz2014} showed that this procedure is inefficient as it inflates the estimated variance. In order to mitigate this effect, a solution is to filter out most of the non-forested areas where one can certainly assume that no forest exists.
+
+
 % --------------------------- %
 \subsubsection{Application}
 
