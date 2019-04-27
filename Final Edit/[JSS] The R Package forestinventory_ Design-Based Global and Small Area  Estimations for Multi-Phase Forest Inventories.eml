@@ -1,0 +1,79 @@
+MIME-Version: 1.0
+Date: Mon, 25 Feb 2019 13:15:27 +0200
+From: jstatsoft admin <editor@jstatsoft.org>
+Subject: [JSS] The R Package forestinventory: Design-Based Global and Small
+ Area  Estimations for Multi-Phase Forest Inventories
+Thread-Topic: [JSS] The R Package forestinventory: Design-Based Global and
+ Small Area  Estimations for Multi-Phase Forest Inventories
+To: "Hill  Andreas" <andreas.hill@usys.ethz.ch>, 
+	Alexander Massey <afmass@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+
+Your submission
+
+=C2=A0 JSS 3280
+
+has just finished the post-processing stage. In order to continue in the
+process there are a few changes that need to be made. Attached to this emai=
+l
+is a comments file where you can find all the necessary changes.
+
+Please upload the full sources for your submission as a single .zip (or
+.tar.gz) to http://www.jstatsoft.org/author/submissionReview/XXXX. It shoul=
+d
+contain:
+
+(1) The full sources of the latest version of the software. (Binary version=
+s
+can be provided in addition.)=C2=A0
+
+(2) The .tex, .bib, and final .pdf for the manuscript. Please name all file=
+s
+jssXXXX.tex, jssXXXX.bib, jssXXXX.pdf, and so on, where XXXX is the number
+that has been assigned to your manuscript in the review process. =C2=A0Also
+include all graphics in a Figures/ directory, uploaded as a compressed .zip
+or .tar.gz file.
+
+(3) Information on how to replicate the examples in the manuscript.
+(Typically, this is a self-contained standalone script file that
+loads/calls/sources the software package from (1). If data or other externa=
+l
+files are needed, that are not yet provided with the software package,
+include these as well.) =C2=A0Please use subdirectories for Figures/ and Co=
+de/,
+and upload these subdirectories as a single .zip or .tar.gz file. =C2=A0All
+scripts should be in the subdirectory Code/, and all figures produced by th=
+e
+scripts, if they are written to file, should be written to Figures/.
+=C2=A0Please make sure only necessary files are included. =C2=A0That is, pl=
+ease do
+not include .aux, .log, etc. files and any unused files such as jss.cls,
+jss.bst, jsslogo.jpg, etc.
+
+Note for R authors: If you have prepared your manuscript using Sweave, the
+files for replication of the examples in (3) can be produced by Sweave.
+=C2=A0The files for the Code/ directory can be produced by Tangle (possibly
+enhancing the comments). Also indicate in your submission that Sweave was
+used.
+
+After we receive the post-processed code for your
+manuscript/software/replication materials, your submission will be=20
+added to our publication queue. Due to various major changes in JSS over th=
+e
+last years, the publication delay (between being added to the queue and
+final publication) is currently about one year. We apologize for any
+inconveniences caused by this delay and ask for your patience. We try our
+best to reduce the delay.
+
+Thanks for choosing JSS and contributing to free statistical software.
+
+Best regards,
+
+Achim Zeileis
+Bettina Gr=C3=BCn
+Edzer Pebesma
+Torsten Hothorn
+-------------------------------
+Journal of Statistical Software
+http://www.jstatsoft.org/

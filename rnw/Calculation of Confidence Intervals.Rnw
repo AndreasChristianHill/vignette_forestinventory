@@ -8,9 +8,7 @@ options(prompt = "R> ", continue = "+  ", width = 77, useFancyQuotes = FALSE)
 \section{Calculation of confidence intervals}
 \label{sec:confint_calc}
 
-Converting the estimated variance into a 95\% confidence interval (CI) allows for a more practical interpretation of a point estimate's precision. The correct interpretation of a CI is not that there is a 95\% probability that it contains the true value. In the design-based context, the true value of the population parameter we are trying to estimate, albeit unknown, is fixed and the sample is randomly generated under the sample design. Theoretically, if we were to repreatedly conduct the inventory using the same estimation method, estimator and auxiliary information under newly drawn random samples and calculate the 95\%  CI from each sample, then 95\% of the CIs are expected to contain the true population parameter. The confidence level $1-\alpha$ (e.g., 95\%) is thus the expected frequency or proportion of possible confidence intervals to contain the unknown population parameter under resampling and is therefore often also referred to as coverage rate. The CI is also linked to hypothesis testing in that its associated point estimate is considered statistically different from any given value that lies outside the CI boundaries.
-
-Based on the central limit theorem it can be assumed that under hypothetical repeated sampling the point estimates will asymptotically follow a normal distribution. However, on the recommendation of \citet{mandallaz2013a}, better confidence intervals can obtained using the Student's \textit{t} distribution defined as
+Converting the estimated variance into a 95\% confidence interval (CI) allows for a more practical interpretation of a point estimate's precision. The correct interpretation of a CI is not that there is a 95\% probability that it contains the true value. In the design-based context, the true value of the population parameter we are trying to estimate, albeit unknown, is fixed and the sample is randomly generated under the sample design. Theoretically, if we were to repreatedly conduct the inventory using the same estimation method, estimator and auxiliary information under newly drawn random samples and calculate the 95\%  CI from each sample, then 95\% of the CIs are expected to contain the true population parameter. The confidence level $1-\alpha$ (e.g., 95\%) is thus the expected frequency or proportion of possible confidence intervals to contain the unknown population parameter under resampling and is therefore often also referred to as coverage rate. The CI is also linked to hypothesis testing in that its associated point estimate is considered statistically different from any given value that lies outside the CI boundaries. Based on the central limit theorem it can be assumed that under hypothetical repeated sampling the point estimates will asymptotically follow a normal distribution. However, on the recommendation of \citet{mandallaz2013a}, better confidence intervals can obtained using the Student's \textit{t} distribution defined as
 
 \vspace{4mm}
 
@@ -42,11 +40,11 @@ CI_{1-\alpha}(\hat{Y})=\bigg{\lbrack}\hat{Y}-t_{n_{2,G}-1, 1-\frac{\alpha}{2}}\s
 
 where $\hat{Y}$ is the point estimate, $\hat{\var}(\hat{Y})$ is the estimated variance, $1-\alpha$ is the confidence level and $p$ constitutes the number of parameters used in the (full) regression model. In case of cluster-sampling, $n_{2,G}$ is the number of terrestrial clusters (a cluster constitutes the sample unit and comprises multiple sample plots). Note that in case of synthetic estimations (SYNTH, PSYNTH), the degrees of freedom are $n_{2}-p$ as is the case for global estimation. In \pkg{forestinventory}, the confidence intervals for all estimation methods and estimators can be computed by the S3 generic method \code{confint()}, which requires an estimation object created by either the \code{onephase()}, \code{twophase()} or \code{threephase()} function. For example, the 95\% confidence interval for the small area estimates by the EXTPSYNTH estimator (Section \ref{sec:twophase_sae}) are calculated by:
 
-\begin{small}
+
 <<>>=
 confint(extpsynth_2p)
 @
-\end{small}
+
 
 
 % ---------------------------------------------- %

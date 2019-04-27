@@ -12,34 +12,34 @@ options(prompt = "R> ", continue = "+  ", width = 77, useFancyQuotes = FALSE)
 
 We often want to compare the results and performances of different estimation methods and estimators for a given global or small area inventory, which can be easily accomplished in \pkg{forestinventory} using the \code{estTable()} function. This function restructures the results from the \code{onephase()}, \code{twophase()} and \code{threephase()} objects and merges them into one single data set that provides the basis for further analysis. For demonstration purposes, we will first recalculate the one-phase estimator as well as the two-phase and three-phase EXTPSYNTH and PSYNTH estimator for the \code{grisons} data set:
 
-\begin{small}
+
 <<>>=
 op <- onephase(formula = tvol~1, data = grisons,
   phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
   area = list(sa.col = "smallarea", areas = c("A", "B", "C", "D")))
 @
-\end{small}
 
 
-\begin{small}
+
+
 <<>>=
 extpsynth_2p <- twophase(formula = tvol ~ mean + stddev + max + q75, 
   data = grisons, phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
   small_area = list(sa.col = "smallarea", areas = c("A", "B","C", "D"),
   unbiased = TRUE), boundary_weights = "boundary_weights")
 @
-\end{small}
 
-\begin{small}
+
+
 <<>>=
 psynth_2p <- twophase(formula = tvol ~ mean + stddev + max + q75, 
   data = grisons, phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
   small_area = list(sa.col = "smallarea", areas = c("A", "B", "C", "D"),
   unbiased = FALSE), boundary_weights = "boundary_weights")
 @
-\end{small}
+
           
-\begin{small}
+
 <<>>=
 extpsynth_3p <- threephase(formula.s0 = tvol ~ mean,
   formula.s1 = tvol ~ mean + stddev + max + q75, data = grisons,
@@ -47,9 +47,9 @@ extpsynth_3p <- threephase(formula.s0 = tvol ~ mean,
   small_area = list(sa.col = "smallarea", areas = c("A", "B", "C", "D"),
   unbiased = TRUE), boundary_weights = "boundary_weights")
 @
-\end{small}
 
-\begin{small}
+
+
 <<>>=
 psynth_3p <- threephase(formula.s0 = tvol ~ mean,
  formula.s1 = tvol ~ mean + stddev + max + q75, data = grisons,
@@ -57,29 +57,29 @@ psynth_3p <- threephase(formula.s0 = tvol ~ mean,
  small_area = list(sa.col = "smallarea", areas = c("A", "B", "C", "D"),
  unbiased = FALSE), boundary_weights = "boundary_weights")
 @
-\end{small}
+
 
 We can then aggregate all estimation objects in a \code{list} and pass it to the \code{estTable()}-function:
 
-\begin{small}
+
 <<>>=
 grisons.sae.table <- estTable(est.list = list(op, extpsynth_2p, psynth_2p,
   extpsynth_3p, psynth_3p), sae = TRUE, vartypes = c("variance", "g_variance", 
   "ext_variance"))
 @
-\end{small}
+
 
 The function merges the estimation results and returns a \code{list} object with the subclasses \code{"esttable"  "smallarea"}. The \code{vartypes} argument can be used to restrict the \code{estTable()} output to certain types of variances. If one prefers the \code{data.frame} format for further analysis, this can easily be done using \code{as.data.frame(grisons.sae.table)}. Note however that \pkg{forestinventory} provides several \code{S3} generic methods specifically for the class \code{"esttable"}.
 
 The structure of an \code{esttable} object is very similar to the objects created by the small area estimation functions of the package. However, the point estimates and variances from all estimation objects passed to \code{estTable()} have been stored in one single column (\code{estimate} and \code{variance}) and can be distinguished by the variables \code{method}, \code{estimator} and \code{vartype} which specify the estimation method (one, two or three-phase), the estimator and the type of variance that was applied (\code{g_} for \textit{g-weight} and \code{ext_} for external variance). By default, the confidence intervals are also added.
 
-\begin{small}
+
 <<eval=FALSE>>=
 str(grisons.sae.table)
 @
-\end{small}
 
-\begin{small}
+
+
 \begin{Schunk}
 \begin{Sinput}
 List of 20
@@ -107,7 +107,7 @@ List of 20
  - attr(*, "class")= chr [1:3] "list" "esttable" "smallarea"
 \end{Sinput}
 \end{Schunk}
-\end{small}
+
 
 Note that \code{estTable()} also returns the estimation error (\code{error}) that is defined as the standard error devided by the point estimate:
 
@@ -117,11 +117,11 @@ Note that \code{estTable()} also returns the estimation error (\code{error}) tha
 
 As multiphase estimation techniques are primary intended to increase estimation precision, the function \code{mphase.gain()} can be applied to quantify the potential benefit of a multiphase global or small area estimate compared to its respective one-phase estimate. The function takes an \code{esttable} object as input and returns a summary of which multiphase method and estimator performed best using the precision from the one-phase estimator as a baseline. If the \code{esttable} object contains more than one multiphase estimation object, \code{mphase.gain()} identifies the one with the smallest variance and compares it to the \code{onephase} estimation. The argument \code{pref.vartype} can be used to define what type of variance (g-weight or external) should be used for the comparison. Synthetic estimates (SYNTH and PSYNTH estimator) are not considered for the comparison under the default setting (\code{exclude.synth = TRUE}) since they usually have a much smaller variance at the cost of a potential bias.
 
-\begin{small}
+
 <<>>=
 mphase.gain(grisons.sae.table, pref.vartype = "g_variance")
 @
-\end{small}
+
 
 % Interpretation: (gain and rel.eff)
 The function call returns a data frame containing the one-phase variance (\code{var_onephase}) and the variance of the best performing multiphase estimator (\code{var_multiphase}). The multiphase estimation procedure is again specified in the \code{method} and \code{estimator} column. The last two columns quantify the potential benefit of the multiphase estimation. The \code{gain} is the reduction (if its value is positive) in variance when applying the multiphase as alternative to the one-phase estimation. For example, it is indicated that the two-phase extended PSYNTH estimation procedure for small area \code{"B"} leads to a 67.9 \% reduction in variance compared to the one-phase procedure. The column \code{rel.eff} specifies the relative efficiency which is defined as the ratio between the one-phase variance and the multiphase variance:
@@ -137,11 +137,11 @@ The relative efficiency can be interpreted as the relative sample size of the on
 
 The \pkg{forestinventory} package also provides a \code{S3} generic plot method based on the \pkg{ggplot2} package \citep{ggplot2} to visualize the estimation results in two ways: 1) the point estimates with overlayed confidence intervals, and 2) the estimation errors. Both plots can be obtained by passing the \code{esstable} object to the \code{plot()} function.
 
-\begin{small}
+
 <<eval=FALSE>>=
 plot(grisons.sae.table, ncol = 2)
 @
-\end{small}
+
 
 \begin{figure}[h]
 \centering
@@ -152,12 +152,12 @@ plot(grisons.sae.table, ncol = 2)
 
 Whereas the estimation errors are plotted by default, the point estimates and confidence intervals are returned when setting the argument \code{yvar = "estimate"}. Note that the graphics can arbitrarily be extended by additional \pkg{ggplot2} parameterizations.
 
-\begin{small}
+
 <<eval=FALSE>>=
 plot(grisons.sae.table, ncol = 2, yvar = "estimate") +
   ylab("Timber Volume [m3/ha]")
 @
-\end{small}
+
 
 \begin{figure}[h]
 \centering

@@ -41,8 +41,7 @@ Forest inventories provide reliable evidence-based information to assess the sta
   ETH Z\"urich\\
   Universit\"atstrasse 16\\
   8092 Z\"urich, Switzerland\\
-  E-mail: \email{andreas.hill@usys.ethz.ch}\\
-  Telephone: +41/44/632 32 36\\
+  E-mail: \email{andreas.hill@forestinventory.de}\\
   
   \noindent Alexander Massey\\
   Department of Environmental Systems Science\\

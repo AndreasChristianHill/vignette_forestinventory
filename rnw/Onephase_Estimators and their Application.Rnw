@@ -30,11 +30,11 @@
 
 In the package \pkg{forestinventory}, calculating estimates exclusively based on terrestrial observations, i.e. one-phase estimations, can be applied with the \code{onephase()} function. To demonstrate the function, we will use the \code{grisons} data frame that comes with installing the package from the CRAN repository. The dataset contains data from a two-phase forest inventory under simple sampling design conducted in 2007 that was used in \citet{mandallaz2013b} and comprises observations from 306 sample locations ($s_1$ sample). A systematic subsample of 67 out of the 306 observations ($s_2$ sample) provides the local density $Y(x)$, in this case the timber volume per hectare (\code{tvol}) derived from the terrestrial inventory campaign. We can load the data frame by executing:
 
-\begin{small}
+
 <<>>=
 data("grisons", package = "forestinventory")
 @
-\end{small}
+
 
 The inventory data for the \code{onephase} estimation must be provided as a \code{data.frame} that contains a column with the local density values and additionally a column specifying to which sample ($s_0$, $s_1$, $s_2$) the respective observation belongs. In the simple one-phase case, all observations in the data frame will of course only belong to one, i.e. the terrestrial phase. However, the specification is mandatory since in most applications, the input dataset will contain observations from multiple phases, and the indication of the terrestrial sample is thus required to identify the terrestrial sample. 
 
@@ -47,12 +47,12 @@ We apply the \code{onephase()} function by specifying the following arguments:
   \item the \code{list}-object \code{phase_id} taking the column name (\code{phase.col}) specifying the sample association of an observation ($s_1$ or $s_2$) and the indicator for the $s_2$ phase (\code{terrgrid.id})
 \end{itemize}
 
-\begin{small}
+
 <<>>=
 op <- onephase(formula = tvol~1 ,data = grisons,
               phase_id =list(phase.col = "phase_id_2p",terrgrid.id = 2))y
 @
-\end{small}
+
 
 
 

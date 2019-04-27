@@ -1,5 +1,7 @@
 % !Rnw root = JStatSoft_forestinventory_master.Rnw
 
+\newpage
+
 \section{Future plans}
 \label{sec:future}
 

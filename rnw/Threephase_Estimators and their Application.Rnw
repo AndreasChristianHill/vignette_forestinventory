@@ -95,28 +95,28 @@ where $\hat{\var}_{s_0}$ indicates taking the sample variance over $s_0$.
 
 In order to demonstrate the three-phase estimators in the package, we created an artificial three-phase scenario by recoding the phase indicators in the \code{grisons} data set (column \code{phase_id_3p}) according to the terminology used in this article (\code{0} for $s_0$, \code{1} for $s_1$, \code{2} for $s_2$). We now assume that the mean canopy height (\code{mean}) is available at all 306 sample locations $x \in s_0$, whereas we have the explanatory variables \code{stddev}, \code{max} and \code{q75} only at 128 subsamples $s_1$ of $s_0$. At 40 further subsamples $s_2$ we have the observations $Y(x)$ from the field inventory. Based on this setup, we can now define the reduced and full regression model formulas to be used in the \code{threephase()} function (note that the models are nested):
 
-\begin{small}
+
 <<>>=
 formula.rm <- tvol ~ mean
 formula.fm <- tvol ~ mean + stddev + max + q75
 @
-\end{small}
+
 
 Compared to the \code{twophase()}-function, we now have to specify two regression models, i.e., the nested reduced (\code{formula.s0}) and full (\code{formula.s1}) regression model. In addition, we also have to specify the indication of the $s_1$ phase (\code{s1.id}) in the argument \code{phase_id} (note that \pkg{forestinventory} implicitly assumes that all other rows in the input data set belong to $s_0$). The global three-phase estimation can thus be applied by
 
-\begin{small}
+
 <<>>=
 reg3p_nex <- threephase(formula.s0 = formula.rm, formula.s1 = formula.fm, 
   data = grisons, phase_id = list(phase.col = "phase_id_3p", s1.id = 1,  
   terrgrid.id = 2), boundary_weights = "boundary_weights")
 @
-\end{small}
 
-\begin{small}
+
+
 <<>>=
 summary(reg3p_nex)
 @
-\end{small}
+
 
 The \code{summary()} of a \code{threephase()}-function now recalls both regression model formulas and also gives the $R^2$ for both the reduced (\code{r.squared_reduced}) and the full (\code{r.squared_full}) models. We are told that including \code{stddev}, \code{max} and \code{q75} yields a 20 \% improvement in R$^2$. When comparing to using only \code{mean} under a two-phase approach, we would see a considerable reduction in variance by the three-phase extension.
 
@@ -218,67 +218,67 @@ The extended synthetic (EXTSYNTH) and extended pseudo synthetic (EXTPSYNTH) esti
 
 We will demonstrate the use of three-phase small area estimation in the package \pkg{forestinventory} by applying the EXTSYNTH and SYNTH estimator to the \code{grisons} data set. The setup is thus exactly the same as in the example for global three-phase estimation (Section \ref{sec:glob_est_3p}). However, this time will use the exact auxiliary mean of the mean canopy height variable (\code{mean}) and assume that we do not know the exact means of the remaining explanatory variables \code{stddev}, \code{max} and \code{q75}. We thus first define the true means for each small area just as we did in the \code{twophase()} example (Section \ref{sec:twophase_sae}):
 
-\begin{small}
+
 <<>>=
 truemeans.G <- data.frame(Intercept = rep(1, 4),
   mean = c(12.85, 12.21, 9.33, 10.45))
 rownames(truemeans.G) <- c("A", "B", "C", "D")
 @
-\end{small}
+
 
 Three-phase small area estimation in the package can in general be applied by additionally specifying the \code{small_area} list argument. The exhaustive estimators can be called by optionally passing a \code{data.frame} containing the exact auxiliary means to the \code{exhaustive} argument. The EXTSYNTH estimator can be applied by setting the argument \code{unbiased} to \code{TRUE} (default):
 
-\begin{small}
+
 <<>>=
 extsynth_3p <- threephase(formula.rm, formula.fm, data = grisons,
   phase_id = list(phase.col = "phase_id_3p", s1.id = 1, terrgrid.id = 2),
   small_area = list(sa.col = "smallarea", areas = c("A", "B"), unbiased = TRUE),
   exhaustive = truemeans.G, boundary_weights = "boundary_weights")
 @
-\end{small}
 
 
-\begin{small}
+
+
 <<>>=
 extsynth_3p$estimation
 @
-\end{small}
+
 
 The SYNTH estimator can be applied by changing the argument \code{unbiased} to \code{FALSE}, which causes the function to not apply a bias correction in the respective small area.
 
-\begin{small}
+
 <<>>=
 synth_3p <- threephase(formula.rm, formula.fm, data = grisons,
   phase_id = list(phase.col = "phase_id_3p", s1.id = 1, terrgrid.id = 2),
   small_area = list(sa.col = "smallarea", areas = c("A", "B"), unbiased = FALSE),
   exhaustive = truemeans.G, boundary_weights = "boundary_weights")
 @
-\end{small}
 
-\begin{small}
+
+
 <<>>=
 synth_3p$estimation
 @
-\end{small}
+
 
 We see that the \code{threephase()}-function returns the sample sizes in the entire inventory area as well as within each small area. The value \code{Inf} for \code{n0G} indicates that the explanatory variables at $s_0$ sample locations used in the reduced model were in our case derived exhaustively. If we compare the two results, we see that the SYNTH estimation again yields a much smaller variance than the EXTSYNTH estimation, but at the cost of a potential bias.
 
 We can also analyse how the exhaustive derivation of \code{mean} performed compared to the case where \code{mean} is non-exhaustively available but at a very large $s_0$ phase with $n_{0,G}>>n_{1,G}$. To do this, we additionally compute the EXTPSYNTH estimates. As we can see, the exhaustive derivation of \code{mean} only yielded a slightly smaller variance.
 
-\begin{small}
+
 <<>>=
 extpsynth_3p <- threephase(formula.rm, formula.fm, data = grisons,
   phase_id = list(phase.col = "phase_id_3p", s1.id = 1, terrgrid.id = 2),
   small_area = list(sa.col = "smallarea", areas = c("A", "B"), unbiased = TRUE), 
   boundary_weights = "boundary_weights")
 @
-\end{small}
 
-\begin{small}
+
+
 <<>>=
 extpsynth_3p$estimation
 @
-\end{small}
+
 
 
 \newpage

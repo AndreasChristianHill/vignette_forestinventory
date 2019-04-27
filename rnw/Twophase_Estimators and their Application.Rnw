@@ -110,7 +110,7 @@ An extension to the so-far published estimators by Mandallaz is the consideratio
 % --------------------------- %
 \subsubsection{Restricting the inventory domain to forested area}
 
-In some national forest inventories it has been common to sample information over the entire country, i.e., also at places outside forest even including areas such as high mountain sides where no trees can actually grow. This is caused by the fact that in order to calculate totals by multiplying the estimated density (e.g., timber volume per hectare) with the area value of the inventory domain, the area of a country is well known, whereas the precise area of the forest is often much harder to determine. In \citet{mandallaz2014} it is demonstrated that by doing so, one usually inflates the sample by a large number of zeros for the target variable (i.e., at sample locations outside forest). It has been mathematically shown that by this procedure, the coefficient of determination (R$^2$) of the regression model can be overoptimistic as the zeros are easy to predict. This is particularly the case if the occurence of zeros correlate with an explanatory variable, such as the elevation above sea level. Furthermore, \citet{mandallaz2014} showed that this procedure is inefficient as it inflates the estimated variance. In order to mitigate this effect, a solution is to filter out most of the non-forested areas where one can certainly assume that no forest exists.
+In some national forest inventories it has been common to sample information over the entire country, i.e., also at places outside forest even including areas such as high mountain sides where no trees can actually grow. This is caused by the fact that in order to calculate totals by multiplying the estimated density (e.g., timber volume per hectare) with the area value of the inventory domain, the area of a country is well known, whereas the precise area of the forest is often much harder to determine. In \citet{mandallaz2014} it is demonstrated that by doing so, one usually inflates the sample by a large number of zeros for the target variable (i.e., at sample locations outside forest). It has been mathematically shown that by this procedure, the coefficient of determination (R$^2$) of the regression model can be overoptimistic as the zeros are easy to predict. This is particularly the case if the occurence of zeros correlates with an explanatory variable, such as the elevation above sea level. Furthermore, \citet{mandallaz2014} showed that this procedure is inefficient as it inflates the estimated variance. In order to mitigate this effect, a solution is to filter out most of the non-forested areas where one can certainly assume that no forest exists.
 
 
 % --------------------------- %
@@ -118,15 +118,15 @@ In some national forest inventories it has been common to sample information ove
 
 To demonstrate the use of the global two-phase estimators, we will use the \code{grisons} data set that comes with installing the package from the CRAN repository. The data set contains data from a simple (i.e., non-cluster) two-phase forest inventory conducted in 2007 that was used in \citet{mandallaz2013b} as a case study. The $s_1$ sample is comprised of 306 sample locations arranged on a systematic grid containing auxiliary information in the form of airborne laserscanning (LiDAR) canopy height metrics (\code{mean}, \code{stddev}, \code{max}, \code{q75}). For a systematic subsample of 67 ($s_2$ sample), terrestrial information of the timber volume per hectare (\code{tvol}) on the sample plot level is provided from a terrestrial survey. We can load \pkg{forestinventory} and examine the \code{grisons} data set in the \proglang{R} environment as follows:
 
-\begin{small}
+
 <<eval=FALSE>>=
 library("forestinventory")
 data("grisons", package = "forestinventory")
 head(grisons)
 @
-\end{small}
 
-\begin{small}
+
+
 <<eval=TRUE, echo=FALSE>>=
 library("forestinventory")
 set.seed(666)
@@ -135,7 +135,7 @@ g.temp<- grisons[sample(1:306,10),c(1,3,4,5,6,7,8,9)]
 print(head(g.temp, n = 10), row.names = seq(1:10))
 rm(g.temp)
 @
-\end{small}
+
 
 Estimates can be made using the \code{onephase()}, \code{twophase()} or \code{threephase()} functions. The data frame inputted to these functions must have the structure where each row corresponds to a unique sample location and the columns specify the attributes associated to that respective sample location. Attributes that are missing, e.g., because they are associated with sample locations that were not selected in the subsample for the subsequent phase, should be designated as \code{NA} and the phase membership is encoded as numeric.
 
@@ -151,21 +151,21 @@ For global two-phase estimation, we have to specify
 
 The non-exhaustive estimator with boundary weight adjustment can thus be applied as follows:
 
-\begin{small}
+
 <<>>=
 reg2p_nex <- twophase(formula = tvol ~ mean + stddev + max + q75, data = grisons, 
   phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
   boundary_weights = "boundary_weights")
 @
-\end{small}
+
 
 The \code{twophase()} function creates an \code{S3} object of class \code{"twophase"} with subclass \code{"global"}. A readable summary of the estimation results can be obtained by passing this object to the \code{summary()} function, which automatically interprets what type of estimator was used and returns pertinent information such as the regression model formula, the point estimate (\code{estimate}), the g-weight and external variance (\code{g_variance} and \code{ext_variance}) as well as the sample sizes and the model R$^2$:
 
-\begin{small}
+
 <<>>=
 summary(reg2p_nex)
 @
-\end{small}
+
 
 % \begin{Schunk}
 % \begin{Sinput}
@@ -195,16 +195,16 @@ For practical use, one should normally always prefer the g-weight variance over 
 The exhaustive estimator can be applied by additionally passing a vector containing the exact means of the explanatory variables, i.e., $\bar{\pmb{Z}}$, to the optional argument \code{exhaustive}. This vector must be calculated beforehand in such a way that any desired boundary adjustment has already been applied. Note that the vector input to \code{exhaustive} must be in the same order that the \code{lm()}-function processes a \code{formula} object including the intercept term whose exact mean will always be 1. Particular caution must be taken if categorical variables are present because the \code{lm()}-function, which is internally used to set up the design-matrix, automatically creates dummy variables with one of the categories used as a reference. Using our \code{grisons} example, the correct order can always be extracted by the following \proglang{R}-code:
 
 
-\begin{small}
+
 <<eval=FALSE>>=
 colnames(lm(formula = tvol ~ mean + stddev + max + q75, data = grisons, 
   x = TRUE)$x)
 @
-\end{small}
+
 
 The exhaustive estimator can be applied after defining the vector of exact means $\bar{\pmb{Z}}$ taken from \citet{mandallaz2013b}, denoted as \code{true.means.Z}:
 
-\begin{small}
+
 <<>>=
 true.means.Z <- c(1, 11.39, 8.84, 32.68, 18.03)
 
@@ -213,14 +213,14 @@ reg2p_ex <- twophase(formula = tvol ~ mean + stddev + max + q75,
   phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
   exhaustive = true.means.Z)
 @
-\end{small}
+
 
 An alternative way to look at the estimation results without using the \code{summary()} is to query \code{reg2p_ex} directly:
-\begin{small}
+
 <<>>=
 reg2p_ex$estimation
 @
-\end{small}
+
 Note that both variances of the exhaustive estimation are smaller than those of the non-exhaustive estimation. This is essentially because we eliminated one component of uncertainty by substituting the estimated means of the explanatory variables $\hat{\bar{\pmb{Z}}}$ by their exact means $\bar{\pmb{Z}}$.
 
 
@@ -350,32 +350,32 @@ Small area estimates in the \pkg{forestinventory} package can be applied by spec
 \end{itemize}
 
 In order to apply the pseudo small area estimator (PSMALL) with boundary adjustment, we set \code{unbiased=TRUE} as well as the optional argument \code{psmall=TRUE}:
-\begin{small}
+
 <<>>=
 psmall_2p <- twophase(formula = tvol ~ mean + stddev + max + q75, 
   data = grisons, phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
   small_area = list(sa.col = "smallarea", areas = c("A", "B"),
   unbiased = TRUE), psmall = TRUE, boundary_weights = "boundary_weights")
 @
-\end{small}
 
-\begin{small}
+
+
 <<>>=
 summary(psmall_2p)
 @
-\end{small}
+
 
 The small area functions all return an \code{S3} object of class \code{"twophase"} with subclass \code{"smallarea"}. In addition to global estimation, the \code{estimation} object now comprises the estimates and variances for all small areas (column \code{area}). We can view the sample sizes by looking into the object itself
-\begin{small}
+
 <<>>=
 psmall_2p$samplesizes
 @
-\end{small}
+
 
 The extended pseudo synthetic estimator (EXTPSYNTH) can be applied by setting \code{unbiased=TRUE} and leaving the optional argument \code{psmall} to its default value of \code{FALSE}:
 
 
-\begin{small}
+
 <<>>=
 extpsynth_2p <- twophase(formula = tvol ~ mean + stddev + max + q75, 
   data = grisons, phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
@@ -383,40 +383,40 @@ extpsynth_2p <- twophase(formula = tvol ~ mean + stddev + max + q75,
   unbiased = TRUE), boundary_weights = "boundary_weights")
 extpsynth_2p$estimation
 @
-\end{small}
+
 
 The \pkg{forestinventory} package automatically includes the indicator variable for the small area behind the scenes so there is no need for the user to implement it. Notice that the $R^2$s (\code{r.squared}) under the EXTPSYNTH estimator vary between the small areas, while they are identical under the PSMALL estimator. This is because under the EXTPSYNTH estimator, the regression model is recalculated for each small area estimation after adding the indicator variable for the respective small area in the globally derived design matrix. In case of the PSMALL estimator, the regression model stays the same for each small area estimation. Although the results of both estimators should always be close to each other, we recommend applying both estimators and compare the results afterwards in order to reveal unsuspected patterns in the data, particularly in the case of cluster sampling (see Section \ref{sec:speccas_and_scen}).\par
 
 Setting the argument \code{unbiased=FALSE} applies the pseudo synthetic estimator to the selected small areas. Note that in the \code{grisons} data set, all small areas possess much more than the suggested minimum number of terrestrial observations (a rule of thumb is that $n_{2,G} \geq 6$) required to produce reliable design-unbiased estimates. Hence, choosing to use PSYNTH is probably not desireable and is just applied here for demonstration purposes. In this case the residual correction will not be applied.
 
 
-\begin{small}
+
 <<>>=
 psynth_2p <- twophase(formula = tvol ~ mean + stddev + max + q75, 
   data = grisons, phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
   small_area = list(sa.col = "smallarea", areas = c("A", "B"),
   unbiased = FALSE), boundary_weights = "boundary_weights")
 @
-\end{small}
 
-\begin{small}
+
+
 <<>>=
 psynth_2p$estimation
 @
-\end{small}
+
 
 We see here that the PSYNTH variances are almost only half the variances of the PSMALL and EXTPSYNTH estimator. However, PSMALL and EXTPSYNTH are design unbiased and their variances reflect the fact that they account for potential bias of the regression model predictions. The g-weight variance of PSYNTH completely neglects a potential bias and as a result risks severely overstating the estimation precision.\par
 
 The exhaustive versions of the small area estimators (Eq. \ref{eq:pointest_2p_small}, \ref{eq:var_2p_reg_small}, \ref{eq:varext_2p_reg_small}, \ref{eq:pointest_2p_reg_synth}, \ref{eq:var_2p_reg_synth}) are specified via the optional argument \code{exhaustive}. Its application requires that we know the exact means of all explanatory variables within the small area(s) of interest. In contrast to the global estimators, the exact means have now to be delivered in the form of a \code{data.frame}, where each row corresponds to a small area, and each column specifies the exact mean of the respective explanatory variable. Note that likewise the case of global estimation, the order of the explanatory variables in the data frame has to match the order in which they appear in the design matrix defined by the \code{lm()}-function in \proglang{R}. In order to tell \proglang{R} which row describes which small area, the row names have to match the respective names of the small areas specified in the \code{areas} argument.
 
 For the \code{grisons} data set, the exact means of the explanatory variables for the small areas used in \citet{mandallaz2013b} are thus defined by
-\begin{small}
+
 <<eval=FALSE>>=
 colnames(lm(formula = tvol ~ mean + stddev + max + q75, data = grisons, 
   x = TRUE)$x)
 @
-\end{small}
-\begin{small}
+
+
 <<>>=
 true.means.Z.G <- data.frame(Intercept = rep(1, 4),
   mean = c(12.85, 12.21, 9.33, 10.45),
@@ -425,28 +425,28 @@ true.means.Z.G <- data.frame(Intercept = rep(1, 4),
   q75 = c(19.77, 19.16, 15.40, 16.91))
 rownames(true.means.Z.G) <- c("A", "B", "C", "D")
 @
-\end{small}
-\begin{small}
+
+
 <<>>=
 true.means.Z.G
 @
-\end{small}
+
 
 The extended synthetic estimator (EXTSYNTH) can then be applied by
-\begin{small}
+
 <<>>=
 extsynth_2p <- twophase(formula = tvol ~ mean + stddev + max + q75, 
   data = grisons, phase_id = list(phase.col = "phase_id_2p", terrgrid.id = 2),
   small_area = list(sa.col ="smallarea", areas = c("A", "B"),
   unbiased = TRUE), exhaustive = true.means.Z.G)
 @
-\end{small}
 
-\begin{small}
+
+
 <<>>=
 extsynth_2p$estimation
 @
-\end{small}
+
 
 Just as in the global case, we see that the variance has again been significantly decreased by substituting the exact auxiliary means and both first phase sample sizes are now infinity. Note that the function extracts the required exact means for small area \code{"A"} and \code{"B"} from the complete set of exact means defined in \code{true.means.Z.G}.
 

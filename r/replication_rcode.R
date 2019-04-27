@@ -589,3 +589,208 @@ plot(grisons.sae.table, ncol = 2, yvar = "estimate") +
 
 
 
+
+# -------------------------------------------------------------------------- #
+# ----- Simulation Code --------
+# -------------------------------------------------------------------------- #
+
+# function to create density surface:
+
+target.suface <- function(x0, y0){
+  30 + 13*x0 - 6*y0 - 4*x0^2 + 3*x0*y0 + 2*y0^2 + 6*cos(pi*x0)*sin(pi*y0)}
+# The true mean value is derived from an integral can be calculated in analytically or in Matlab.
+# The true mean value here is 39.17
+
+# --- True spatial mean for Small area surface area: --- #
+library(rmutil)
+int2(target.suface, a = c(0.5, 0.3), b=c(2, 1.3))/(1*1.5) # 37.16243
+
+
+# -------------------------------------------------------------------------- #
+# -------------------------------------------------------------------------- #
+
+
+# --- sample generator for simple sampling: --- #
+sample.generator<- function(n1, n2, target.surface=target.surface){
+  realization <- matrix(NA,n1,7)
+  for(i in 1:n1){
+    x0=2*runif(1)
+    y0=3*runif(1)
+    realization[i,1] <- target.suface(x0, y0)
+    realization[i,2]<-x0
+    realization[i,3]<-y0
+    realization[i,4]<-x0*x0
+    realization[i,5]<-x0*y0
+    realization[i,6]<-y0*y0
+    realization[i,7]<-0
+  }
+  realization <- as.data.frame(realization) # warning: still contains true response variable for all 1st phase
+  names(realization) <- c("response","x","y","xx","xy","yy", "area")
+  realization$phase <- 1
+  realization$phase[sample(nrow(realization), n2)] <- 2
+  realization$response[realization$phase == 1]<- NA
+  realization$area[realization$x >= 0.3 & realization$x <= 1.3 & realization$y >= 0.5 & realization$y <= 2]<- 1
+  return(realization)
+}
+
+# -------------------------------------------------------------------------- #
+# -------------------------------------------------------------------------- #
+
+# simulation for small area edge cases:
+
+library(forestinventory)
+num_replications <- 10000
+n1.vec <- c(100, 150, 200, 250, 500, 750, 1000) 
+sfrac <- 0.25
+true_value.sae<- 37.16
+
+# data.frame to store results:
+coverage_rates <- data.frame(n1=integer(), n2=integer(), 
+                             sampling_fractions=numeric(), 
+                             avg.n2G=numeric(),
+                             avg.n1G=numeric(),
+                             avg.error.ext=numeric(),
+                             avg.error.g=numeric(),
+                             covrate.ext=numeric(),
+                             covrate.g=numeric(),
+                             no.valid.sims = integer())
+
+# -------------- #
+# simulations:
+
+for(i in 1:length(n1.vec)){
+  
+  print(i)
+  
+  # variables to store temp. results:
+  n2G<- integer()
+  n1G<- integer()
+  n2<- integer()
+  error.ext<- numeric()
+  error.g<- numeric()
+  ci.ext.logical<- logical()
+  ci.g.logical<- logical()
+  no.valid.sims.<- integer()
+  
+  
+  for(j in 1:num_replications){
+    
+    realization <- sample.generator(n1 = n1.vec[i], n2 = round(n1.vec[i]*sfrac))
+    
+    est <- twophase(formula = response ~ y + x + xx, data=realization,
+                    phase_id = list(phase.col = "phase", terrgrid.id = 2),
+                    small_area = list(sa.col = "area", areas = "1",
+                                      unbiased = TRUE))
+    
+    ci<- confint(est)
+    ci.ext.logical<- append(ci.ext.logical, ci$ci$ci_lower_ext <= true_value.sae & true_value.sae <= ci$ci$ci_upper_ext)
+    ci.g.logical<- append(ci.g.logical, ci$ci$ci_lower_g <= true_value.sae & true_value.sae <= ci$ci$ci_upper_g)
+    error.ext <- append(error.ext, sqrt(est$estimation$ext_variance)/est$estimation$estimate)
+    error.g <- append(error.g, sqrt(est$estimation$g_variance)/est$estimation$estimate)
+    
+    n2G <- append(n2G, est$estimation$n2G)
+    n1G <- append(n1G, est$estimation$n1G)
+    n2 <- append(n2, est$estimation$n2)
+    no.valid.sims. <- sum(n2G > 1)
+    
+  }
+  
+  # calculate cove.rates, avg. n2G etc:
+  coverage_rates <- rbind(coverage_rates, data.frame(n1=n1.vec[i], n2=round(mean(n2)), 
+                                                     sampling_fractions=sfrac, 
+                                                     avg.n2G=round(mean(n2G)), 
+                                                     avg.n1G=round(mean(n1G)), 
+                                                     avg.error.ext=mean(error.ext, na.rm = TRUE),
+                                                     avg.error.g=mean(error.g, na.rm = TRUE),
+                                                     covrate.ext=mean(ci.ext.logical, na.rm = TRUE), 
+                                                     covrate.g=mean(ci.g.logical, na.rm = TRUE),
+                                                     no.valid.sims=no.valid.sims.))
+  
+} # end of sim
+
+
+# -------------------------------------------------------------------------- #
+# -------------------------------------------------------------------------- #
+
+# simulation for global cases:
+
+
+run.global.sim <- function(num_replications, n1.vec){
+  
+  sfrac <- seq(0.02, 0.26, by=0.02) # fixed sampling fractions
+  true_value<- 39.17
+  library(forestinventory)
+  
+  
+  # data.frame to store results:
+  coverage_rates <- data.frame(n1=integer(), n2=integer(), 
+                               sampling_fractions=numeric(), 
+                               avg.error.ext=numeric(),
+                               avg.error.g=numeric(),
+                               covrate.ext=numeric(),
+                               covrate.g=numeric(),
+                               no.valid.sims = integer())
+  
+  # -------------- #
+  # simulations:
+  
+  for(i in 1:length(sfrac)){ # loop over sfrac-values
+    
+    print(i)
+    
+    # temp. vars to store temp. results:
+    n2<- integer()
+    error.ext<- numeric()
+    error.g<- numeric()
+    ci.ext.logical<- logical()
+    ci.g.logical<- logical()
+    no.valid.sims.<- integer()
+    
+    
+    for(j in 1:num_replications){ # loop over replications for fixed n1
+      
+      realization <- sample.generator(n1 = n1.vec, n2 = round(n1.vec*sfrac[i]))
+      
+      est <- twophase(formula = response ~ y + x + xx, data=realization,
+                      phase_id = list(phase.col = "phase", terrgrid.id = 2))
+      
+      ci<- confint(est)
+      ci.ext.logical<- append(ci.ext.logical, ci$ci$ci_lower_ext <= true_value & true_value <= ci$ci$ci_upper_ext)
+      ci.g.logical<- append(ci.g.logical, ci$ci$ci_lower_g <= true_value & true_value <= ci$ci$ci_upper_g)
+      error.ext <- append(error.ext, sqrt(est$estimation$ext_variance)/est$estimation$estimate)
+      error.g<- append(error.g, sqrt(est$estimation$g_variance)/est$estimation$estimate)
+      
+      n2<- append(n2, est$estimation$n2)
+      no.valid.sims. <- sum(n2 > 1)
+      
+    }
+    
+    # calculate cove.rates, avg. n2G etc:
+    coverage_rates <- rbind(coverage_rates, data.frame(n1=n1.vec, n2=round(mean(n2)), 
+                                                       sampling_fractions=sfrac[i], 
+                                                       avg.error.ext=mean(error.ext, na.rm = TRUE),
+                                                       avg.error.g=mean(error.g, na.rm = TRUE),
+                                                       covrate.ext=mean(ci.ext.logical, na.rm = TRUE), 
+                                                       covrate.g=mean(ci.g.logical, na.rm = TRUE),
+                                                       no.valid.sims=no.valid.sims.))
+    
+  } # end of sim
+  
+  
+  return(coverage_rates)
+  
+} # end of function
+
+
+# ------- #
+
+global.sims<- data.frame()
+n1_sims<- c(250, 500, 750, 1000, 1500, 2000)
+
+for (i in 1:length(n1_sims)){
+  
+  res<- run.global.sim(num_replications = 10000, n1.vec = n1_sims[i])
+  
+  global.sims <- rbind(global.sims, res)
+  
+}
